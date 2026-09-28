@@ -20,9 +20,11 @@ Site **100 % statique** (HTML, CSS, JavaScript), sans base de données ni serveu
 1. Fusionner la branche dans la branche principale du dépôt.
 2. Sur GitHub : **Settings → Pages → Build and deployment → Source : Deploy from a branch**, choisir la branche principale et le dossier `/ (root)`.
 3. Le site est publié à l’adresse `https://<compte>.github.io/<dépôt>/` (quelques minutes).
-4. Si l’adresse finale diffère de `https://vegadarkk.github.io/clementine-romain/`, mettre à jour `SITE_URL` dans `tools/build-pages.mjs` puis relancer `npm run pages` (sert à l’aperçu du lien partagé sur WhatsApp/SMS).
+4. Si l’adresse finale diffère de `https://vegadarkk.github.io/Clementine-Romain/`, mettre à jour `SITE_URL` dans `tools/build-pages.mjs` puis relancer `npm run pages` (sert à l’aperçu du lien partagé sur WhatsApp/SMS).
 
-> GitHub Pages gratuit nécessite un dépôt **public**. Le site est marqué `noindex` (non référencé par Google) et `robots.txt` bloque les moteurs : seules les personnes ayant le lien y accèdent.
+> GitHub Pages gratuit nécessite un dépôt **public** (le dépôt est actuellement privé). Deux options :
+> - rendre le dépôt public (Settings → General → Danger Zone → Change visibility) : le site est marqué `noindex` et `robots.txt` bloque les moteurs, seules les personnes ayant le lien y accèdent ;
+> - garder le dépôt privé et publier via **Netlify** ou **Cloudflare Pages** (gratuits) : « Import from GitHub », aucun réglage de build, dossier de publication `/`.
 
 ## Réponses RSVP par e-mail (à faire une seule fois)
 

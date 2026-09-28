@@ -5,7 +5,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 
 const PAGES = ["index.html", "hebergements.html", "temoins.html", "environs.html", "rsvp.html", "404.html"];
-const SITE_URL = "https://vegadarkk.github.io/clementine-romain/";
+const SITE_URL = "https://vegadarkk.github.io/Clementine-Romain/";
 
 /* ----------------------------------------------------- Paysage de montagnes */
 let seed = 11;
