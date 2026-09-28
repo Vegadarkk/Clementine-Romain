@@ -14,16 +14,32 @@ export const CORMORANT_I = font("cormorant-garamond/files/cormorant-garamond-lat
 
 const r2 = (n) => Math.round(n * 100) / 100;
 
+// Sérialisation maison des contours (toPathData d’opentype.js produit parfois des NaN à petite taille)
+export function pathData(path) {
+  let d = "";
+  for (const c of path.commands) {
+    if (c.type === "M" || c.type === "L") d += `${c.type}${r2(c.x)} ${r2(c.y)}`;
+    else if (c.type === "Q") d += `Q${r2(c.x1)} ${r2(c.y1)} ${r2(c.x)} ${r2(c.y)}`;
+    else if (c.type === "C") d += `C${r2(c.x1)} ${r2(c.y1)} ${r2(c.x2)} ${r2(c.y2)} ${r2(c.x)} ${r2(c.y)}`;
+    else if (c.type === "Z") d += "Z";
+  }
+  return d;
+}
+
+// Chasse d’un glyphe (certaines polices sous-ensemble omettent celle de l’espace)
+const adv = (f, g) => (Number.isFinite(g.advanceWidth) ? g.advanceWidth : f.unitsPerEm * 0.26);
+
 // Chemin d’une chaîne, avec interlettrage, centré horizontalement sur cx
 export function textPath(f, str, cx, baseline, size, tracking = 0) {
+  str = str.normalize("NFC");
   let w = 0;
   const glyphs = f.stringToGlyphs(str);
-  glyphs.forEach((g, i) => { w += g.advanceWidth * (size / f.unitsPerEm) + (i < glyphs.length - 1 ? tracking : 0); });
+  glyphs.forEach((g, i) => { w += adv(f, g) * (size / f.unitsPerEm) + (i < glyphs.length - 1 ? tracking : 0); });
   let x = cx - w / 2;
   let d = "";
   glyphs.forEach((g) => {
-    d += g.getPath(x, baseline, size).toPathData(2);
-    x += g.advanceWidth * (size / f.unitsPerEm) + tracking;
+    d += pathData(g.getPath(x, baseline, size));
+    x += adv(f, g) * (size / f.unitsPerEm) + tracking;
   });
   return { d, w };
 }
@@ -32,7 +48,7 @@ export function textPath(f, str, cx, baseline, size, tracking = 0) {
 export function glyph(f, ch, x, y, size) {
   const p = f.getPath(ch, x, y, size);
   const bb = p.getBoundingBox();
-  return { d: p.toPathData(2), bb };
+  return { d: pathData(p), bb };
 }
 
 /**
@@ -154,16 +170,16 @@ export function sceau({ id = "ls", paper = "#FFF9F2" } = {}) {
   // texte circulaire en contours
   const ringText = "CLÉMENTINE & ROMAIN · 3 JUILLET 2027 · ";
   const size = 12.5, R = 101;
-  const glyphs = CORMORANT.stringToGlyphs(ringText);
-  const total = glyphs.reduce((w, g) => w + g.advanceWidth * (size / CORMORANT.unitsPerEm) + 2.2, 0);
+  const glyphs = CORMORANT.stringToGlyphs(ringText.normalize("NFC"));
+  const total = glyphs.reduce((w, g) => w + adv(CORMORANT, g) * (size / CORMORANT.unitsPerEm) + 2.2, 0);
   const scale = (2 * Math.PI * R) / total;
   let ang = -90, ring = "";
   glyphs.forEach((g) => {
-    const adv = (g.advanceWidth * (size / CORMORANT.unitsPerEm) + 2.2) * scale;
-    const mid = ang + ((adv / 2) / (2 * Math.PI * R)) * 360;
-    const gp = g.getPath(-g.advanceWidth * (size / CORMORANT.unitsPerEm) / 2, 0, size).toPathData(2);
+    const step = (adv(CORMORANT, g) * (size / CORMORANT.unitsPerEm) + 2.2) * scale;
+    const mid = ang + ((step / 2) / (2 * Math.PI * R)) * 360;
+    const gp = pathData(g.getPath(-adv(CORMORANT, g) * (size / CORMORANT.unitsPerEm) / 2, 0, size));
     if (gp) ring += `<path d="${gp}" transform="rotate(${r2(mid + 90)} 150 150) translate(150 ${150 - R + 4})"></path>`;
-    ang += (adv / (2 * Math.PI * R)) * 360;
+    ang += (step / (2 * Math.PI * R)) * 360;
   });
   return {
     viewBox: "0 0 300 300",
