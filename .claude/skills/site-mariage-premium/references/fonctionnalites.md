@@ -43,6 +43,7 @@ l'adapter. Les fonctions JS citées sont dans `assets/js/main.js`, sauf mention 
 | Élément | Où | Notes |
 |---|---|---|
 | En-tête (logo + nav + bouton « Je réponds ») qui se cache en descendant | `build-pages.mjs` (HEADER), `onScroll()` | `aria-current` posé automatiquement selon `data-page` du `<body>` |
+| Logos (en-tête et pied de page) cliquables vers l'accueil | `build-pages.mjs` (`.brand`, `.site-footer__home`) | un lien vers la page courante (logo ou « Accueil » sur l'accueil) remonte en douceur au lieu de recharger |
 | Menu mobile plein écran | `setMenu()` | tout le reste devient `inert`, Échap ferme, focus sur le 1er lien |
 | Intro monogramme (1re visite) | `playIntro()`, `.intro-screen` | une seule fois par session (`sessionStorage cr-intro`), cliquable pour passer |
 | Rideau entre les pages | `curtainOut()`, `isInternalPage()` | `/index.html` et `/` sont la même page (sinon l'ancre `#programme` recharge) |

@@ -163,8 +163,11 @@ const FOOTER = `<footer class="site-footer">
     ${landscape("landscape--footer")}
     <div class="site-footer__body">
       <div class="container">
-        <svg class="site-footer__mark" viewBox="0 0 240 300" aria-hidden="true" focusable="false"><use href="#logo-arche"></use></svg>
-        <p class="site-footer__names">Clémentine <span>&amp;</span> Romain</p>
+        <a class="site-footer__home" href="index.html">
+          <svg class="site-footer__mark" viewBox="0 0 240 300" aria-hidden="true" focusable="false"><use href="#logo-arche"></use></svg>
+          <span class="site-footer__names">Clémentine <span>&amp;</span> Romain</span>
+          <b class="visually-hidden"> · retour à l’accueil</b>
+        </a>
         <p class="site-footer__date">Samedi 3 juillet 2027 · Héry-sur-Alby · Saint-Offenge</p>
         <nav aria-label="Pied de page">
           <ul>

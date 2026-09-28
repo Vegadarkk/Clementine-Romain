@@ -369,6 +369,17 @@
     if (norm(url.pathname) === norm(location.pathname) && url.hash) return false;
     return /(\.html|\/)$/.test(url.pathname);
   }
+  // Lien vers la page où l'on se trouve déjà (logo, « Accueil » sur l'accueil) : on remonte en douceur, sans recharger
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest("a[href]");
+    if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.target === "_blank") return;
+    const url = new URL(a.href, location.href);
+    const norm = (path) => path.replace(/\/index\.html$/, "/");
+    if (url.origin !== location.origin || norm(url.pathname) !== norm(location.pathname) || url.hash || /^(mailto|tel):/.test(a.getAttribute("href"))) return;
+    e.preventDefault();
+    if (lenis) lenis.scrollTo(0, { duration: 1.4, force: true });
+    else window.scrollTo({ top: 0, behavior: motion ? "smooth" : "auto" });
+  });
   if (motion && curtain) {
     document.addEventListener("click", (e) => {
       const a = e.target.closest("a");

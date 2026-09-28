@@ -504,7 +504,12 @@ html:not(.js) .countdown, html:not(.js) [data-ics] { display: none; }
 .site-footer__body { background: var(--moss-deep); padding: clamp(2.5rem, 6vw, 4rem) 0 calc(2rem + env(safe-area-inset-bottom, 0px)); text-align: center; }
 @media (max-width: 760px) { .site-footer__body { padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px)); } }
 .site-footer__mark { --mono-accent: var(--blossom); --mono-sw: 3.6; --mono-sw2: 1.6; --mono-ink-sw: 1.4; display: block; width: auto; height: clamp(110px, 13vw, 140px); margin: 0 auto 1.2rem; color: var(--paper); }
-.site-footer__names { font: 400 clamp(2.6rem, 6vw, 3.6rem)/1 var(--f-script); margin: 0; color: var(--paper); }
+.site-footer__home { display: inline-block; color: var(--paper); text-decoration: none; border-radius: 12px; }
+.site-footer__home:hover { color: var(--paper); }
+.site-footer__home .site-footer__mark { transition: transform .6s var(--ease); }
+.site-footer__home:hover .site-footer__mark, .site-footer__home:focus-visible .site-footer__mark { transform: translateY(-4px) scale(1.04); }
+.site-footer__home:focus-visible { outline-color: var(--blossom); outline-offset: 8px; }
+.site-footer__names { display: block; font: 400 clamp(2.6rem, 6vw, 3.6rem)/1 var(--f-script); margin: 0; color: var(--paper); }
 .site-footer__names span { color: var(--blossom); }
 .site-footer__date { margin: .8rem 0 1.8rem; font: 500 .78rem/1.5 var(--f-body); letter-spacing: .3em; text-transform: uppercase; color: var(--paper); }
 .site-footer nav ul { display: flex; flex-wrap: wrap; justify-content: center; gap: .4rem 1.6rem; list-style: none; margin: 0 0 2rem; padding: 0; }
