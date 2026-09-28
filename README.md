@@ -17,14 +17,13 @@ Site **100 % statique** (HTML, CSS, JavaScript), sans base de données ni serveu
 
 ## Mise en ligne (GitHub Pages)
 
-1. Fusionner la branche dans la branche principale du dépôt.
-2. Sur GitHub : **Settings → Pages → Build and deployment → Source : Deploy from a branch**, choisir la branche principale et le dossier `/ (root)`.
-3. Le site est publié à l’adresse `https://<compte>.github.io/<dépôt>/` (quelques minutes).
-4. Si l’adresse finale diffère de `https://vegadarkk.github.io/Clementine-Romain/`, mettre à jour `SITE_URL` dans `tools/build-pages.mjs` puis relancer `npm run pages` (sert à l’aperçu du lien partagé sur WhatsApp/SMS).
+1. **Rendre le dépôt public** : Settings → General → tout en bas « Danger Zone » → **Change visibility** → Public.
+2. **Activer Pages** : Settings → **Pages** → Build and deployment → Source : **Deploy from a branch** → branche `claude/eloquent-hamilton-t3b9w6` (ou `main` si la branche a été renommée/fusionnée), dossier **`/ (root)`** → Save.
+3. Après 1 à 2 minutes, le site est en ligne à l’adresse **https://vegadarkk.github.io/Clementine-Romain/**.
 
-> GitHub Pages gratuit nécessite un dépôt **public** (le dépôt est actuellement privé). Deux options :
-> - rendre le dépôt public (Settings → General → Danger Zone → Change visibility) : le site est marqué `noindex` et `robots.txt` bloque les moteurs, seules les personnes ayant le lien y accèdent ;
-> - garder le dépôt privé et publier via **Netlify** ou **Cloudflare Pages** (gratuits) : « Import from GitHub », aucun réglage de build, dossier de publication `/`.
+Le site est marqué `noindex` et `robots.txt` bloque les moteurs de recherche : il n’apparaît pas sur Google, seules les personnes ayant le lien y accèdent.
+
+Si l’adresse finale change (autre compte, nom de domaine), mettre à jour `SITE_URL` dans `tools/build-pages.mjs` puis lancer `npm run pages` (sert à l’aperçu du lien partagé sur WhatsApp/SMS).
 
 ## Réponses RSVP par e-mail (à faire une seule fois)
 
