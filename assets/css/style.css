@@ -654,6 +654,7 @@ html:not(.js) .countdown, html:not(.js) [data-ics] { display: none; }
 .hp { position: absolute !important; left: -9999px !important; width: 1px; height: 1px; overflow: hidden; }
 .form-status { margin-top: 1.2rem; padding: 1rem 1.2rem; border-radius: 14px; font-size: .97rem; }
 .form-status:empty { display: none; }
+.form-status--info { background: var(--sage-soft); border: 1px solid rgba(107, 127, 94, .3); color: var(--moss-deep); }
 .form-status--error { background: #FFF0F4; border: 1px solid rgba(194, 24, 91, .3); color: var(--fuchsia-deep); }
 .form-status--error a { font-weight: 500; }
 .btn .spinner { width: 1.1em; height: 1.1em; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; animation: spin .8s linear infinite; }

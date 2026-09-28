@@ -286,6 +286,12 @@
       if (motion) gsap.fromTo(invalid.closest(".form-step"), { x: -8 }, { x: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
       return;
     }
+    // Aucun service d’envoi configuré (aperçu du site) : on le dit clairement, sans rien simuler
+    if (!endpoint) {
+      statusEl.className = "form-status form-status--info";
+      statusEl.textContent = "Aperçu du site : l’envoi automatique des réponses sera actif une fois le site mis en ligne.";
+      return;
+    }
     // Pot de miel anti-robots : on simule un succès sans rien envoyer
     if ($("input[name='_honey']", form).value) { showSuccess(); return; }
 
