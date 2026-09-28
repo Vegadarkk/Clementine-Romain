@@ -60,18 +60,19 @@
   /* --------------------------------------------------------- Défilement fluide */
   let lenis = null;
   if (motion && window.Lenis) {
-    lenis = new window.Lenis({ lerp: 0.11, wheelMultiplier: 0.95, smoothWheel: true, anchors: { offset: -80 } });
+    lenis = new window.Lenis({ lerp: 0.11, wheelMultiplier: 0.95, smoothWheel: true, anchors: true });
     lenis.on("scroll", ST.update);
     gsap.ticker.add((t) => lenis.raf(t * 1000));
     gsap.ticker.lagSmoothing(0);
     html.classList.add("lenis");
   }
   window.__lenis = lenis;
+  // Le décalage sous l’en-tête vient du CSS (scroll-padding-top / scroll-margin-top),
+  // respecté à la fois par Lenis et par le défilement natif.
   const scrollToEl = (el, immediate = false) => {
     if (!el) return;
-    const offset = -(($(".site-header") || {}).offsetHeight || 70) - 10;
-    if (lenis) { lenis.resize(); lenis.scrollTo(el, { offset, immediate, force: true }); }
-    else window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY + offset, behavior: immediate ? "auto" : "smooth" });
+    if (lenis) { lenis.resize(); lenis.scrollTo(el, { immediate, force: true }); }
+    else el.scrollIntoView({ behavior: immediate ? "auto" : "smooth", block: "start" });
   };
   window.crScrollTo = scrollToEl;
 
@@ -96,7 +97,9 @@
   const toggle = $(".nav-toggle");
   const menu = $("#menu-mobile");
   if (toggle && menu) {
+    const outside = [$(".skip-link"), $(".brand"), $("main"), $(".site-footer")].filter(Boolean);
     const setMenu = (open) => {
+      outside.forEach((el) => el.toggleAttribute("inert", open));
       toggle.setAttribute("aria-expanded", String(open));
       menu.classList.toggle("is-open", open);
       document.body.classList.toggle("menu-open", open);
@@ -180,7 +183,7 @@
       link.click();
       link.remove();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
-      toast("Invitation ajoutée : ouvrez le fichier pour l’enregistrer dans votre agenda");
+      toast("Invitation ajoutée\u00a0: ouvrez le fichier pour l’enregistrer dans votre agenda");
     });
   });
 
@@ -215,7 +218,8 @@
     if (!href || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:")) return false;
     const url = new URL(a.href, location.href);
     if (url.origin !== location.origin) return false;
-    if (url.pathname === location.pathname && url.hash) return false;
+    const norm = (path) => path.replace(/\/index\.html$/, "/");
+    if (norm(url.pathname) === norm(location.pathname) && url.hash) return false;
     return /(\.html|\/)$/.test(url.pathname);
   }
   if (motion && curtain) {
@@ -520,7 +524,19 @@
       $$(".moment, .programme__outro", sec).forEach((m) => {
         gsap.fromTo(m, { opacity: 0, rotation: 3, yPercent: 20 }, { opacity: 1, rotation: 0, yPercent: 0, duration: 1, scrollTrigger: { trigger: m, containerAnimation: tween, start: "left 88%", toggleActions: "play none none reverse" } });
       });
-      return () => { sec.classList.remove("is-horizontal", "is-dusk"); gsap.set(track, { clearProps: "transform" }); };
+      // Clavier : amener dans le champ de vision l’élément du fil qui reçoit le focus
+      const onFocus = (e) => {
+        const st = tween.scrollTrigger;
+        const item = e.target.closest(".moment, .programme__intro, .programme__outro");
+        if (!st || !item) return;
+        sec.scrollLeft = 0;
+        const x = gsap.utils.clamp(0, distance(), item.offsetLeft - window.innerWidth * 0.3);
+        const y = st.start + (distance() ? (x / distance()) * (st.end - st.start) : 0);
+        if (lenis) lenis.scrollTo(y, { immediate: true, force: true });
+        else window.scrollTo(0, y);
+      };
+      sec.addEventListener("focusin", onFocus);
+      return () => { sec.removeEventListener("focusin", onFocus); sec.classList.remove("is-horizontal", "is-dusk"); gsap.set(track, { clearProps: "transform" }); };
     });
     mm.add("(max-width: 1023px), (max-height: 619px)", () => {
       gsap.to($$(".programme__intro > *", sec), { opacity: 1, y: 0, startAt: { y: 30 }, duration: 1, stagger: 0.1, scrollTrigger: { trigger: sec, start: "top 80%" } });
@@ -564,6 +580,7 @@
   /* ---------- Lancement ---------- */
   const fontsReady = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
   Promise.all([fontsReady, curtainOut()]).then(async () => {
+    try {
     splitTitles();
     reveals();
     revealPhoto();
@@ -575,12 +592,19 @@
     document.dispatchEvent(new CustomEvent("cr:animations"));
     ST.refresh();
     if (location.hash) {
-      const target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      let id = location.hash.slice(1);
+      try { id = decodeURIComponent(id); } catch (e) { /* ancre mal formée : ignorée */ }
+      const target = document.getElementById(id);
       if (target) requestAnimationFrame(() => scrollToEl(target, true));
     }
     await playIntro();
     heroIn();
     pageHero();
+    } catch (err) {
+      // En cas d’imprévu, on affiche tout le contenu plutôt que de le laisser masqué
+      html.classList.remove("motion", "intro", "curtain-in");
+      if (window.console) console.error(err);
+    }
   });
   window.addEventListener("load", () => ST.refresh());
 })();

@@ -2,6 +2,14 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8">
+  <script>
+    /* GitHub Pages sert cette page à n’importe quelle adresse introuvable : on fixe la base des liens relatifs */
+    (function () {
+      var seg = location.pathname.split("/")[1];
+      var base = /\.github\.io$/.test(location.hostname) && seg ? "/" + seg + "/" : "/";
+      document.write('<base href="' + base + '">');
+    })();
+  </script>
   <title>Page introuvable · Clémentine &amp; Romain</title>
   <meta name="description" content="Cette page n’existe pas.">
   <!-- HEAD:START -->

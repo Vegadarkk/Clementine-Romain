@@ -105,7 +105,7 @@
         <div>
           <div class="deadline" data-reveal>
             <div class="deadline__date" aria-hidden="true"><div><strong>15</strong><span>mars 2027</span></div></div>
-            <p>Merci de nous répondre <u>avant le 15 mars 2027</u>, sans réponse de votre part à cette date nous vous considérerons comme absent le 3 juillet 2027&nbsp;<span aria-label="visage inquiet" role="img">😟</span><span class="deadline__left" data-deadline-left></span></p>
+            <p>Merci de nous répondre <u>avant le 15 mars 2027</u>. Sans réponse de votre part à cette date, nous vous considérerons comme absent(s) le 3 juillet 2027&nbsp;<span aria-label="visage inquiet" role="img">😟</span><span class="deadline__left" data-deadline-left></span></p>
           </div>
 
           <div class="rsvp-card" data-reveal>
@@ -113,7 +113,7 @@
 
             <form class="rsvp-form" id="rsvp-form" action="https://formsubmit.co/clementine.leytier@hotmail.fr" method="POST"
                   data-endpoint="https://formsubmit.co/ajax/clementine.leytier@hotmail.fr"
-                  data-mailto="clementine.leytier@hotmail.fr" novalidate>
+                  data-mailto="clementine.leytier@hotmail.fr">
               <input type="hidden" name="_subject" value="RSVP mariage Clémentine &amp; Romain">
               <input type="hidden" name="_template" value="table">
               <input type="hidden" name="_captcha" value="false">
@@ -138,14 +138,14 @@
               </fieldset>
 
               <fieldset class="form-step">
-                <legend><span class="step-num">2</span>Je serai / nous serons présent(s)&nbsp;: <span class="req" aria-hidden="true">*</span></legend>
-                <div class="choices" data-choices aria-describedby="presence-error">
+                <legend id="presence-legend"><span class="step-num">2</span>Je serai / nous serons présent(s)&nbsp;: <span class="req" aria-hidden="true">*</span></legend>
+                <div class="choices" data-choices role="radiogroup" aria-labelledby="presence-legend" aria-describedby="presence-error" aria-required="true">
                   <div class="choice">
-                    <input type="radio" id="presence-oui" name="Présence" value="Oui" required>
+                    <input type="radio" id="presence-oui" name="Présence" value="Oui" required aria-describedby="presence-error">
                     <label for="presence-oui"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#i-party-popper"/></svg><strong>Oui</strong><span>Avec grand plaisir&nbsp;!</span></label>
                   </div>
                   <div class="choice choice--no">
-                    <input type="radio" id="presence-non" name="Présence" value="Non">
+                    <input type="radio" id="presence-non" name="Présence" value="Non" aria-describedby="presence-error">
                     <label for="presence-non"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#i-heart"/></svg><strong>Non</strong><span>Malheureusement, nous ne pourrons pas venir</span></label>
                   </div>
                 </div>
@@ -168,7 +168,7 @@
 
               <div class="form-step field">
                 <label for="email"><span class="step-num" data-email-num>5</span>Votre e-mail <small class="text-soft">(facultatif, pour que nous puissions vous répondre)</small></label>
-                <input class="input" id="email" name="E-mail" type="email" autocomplete="email" inputmode="email" placeholder="vous@exemple.fr" aria-describedby="email-error">
+                <input class="input" id="email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="vous@exemple.fr" aria-describedby="email-error">
                 <p class="field-error" id="email-error" data-error="email"></p>
               </div>
 

@@ -6,6 +6,7 @@
   const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
   const form = $("#rsvp-form");
   if (!form) return;
+  form.noValidate = true;
 
   const gsap = window.gsap;
   const motion = document.documentElement.classList.contains("motion") && !!gsap;
@@ -28,7 +29,7 @@
   if (left) {
     const deadline = new Date("2027-03-15T23:59:59+01:00").getTime();
     const days = Math.ceil((deadline - Date.now()) / 86400000);
-    left.textContent = days > 1 ? `Encore ${days} jours pour répondre` : days === 1 ? "Dernier jour pour répondre !" : "La date est passée, mais écrivez-nous quand même !";
+    left.textContent = days > 1 ? `Encore ${days} jours pour répondre` : days === 1 ? "Dernier jour pour répondre\u00a0!" : "La date est passée, mais écrivez-nous quand même\u00a0!";
   }
 
   /* ---------------------------------------------- Réponse déjà envoyée */
@@ -37,7 +38,7 @@
     try {
       const prev = JSON.parse(store.getItem(STORE_KEY) || "null");
       if (!prev) return;
-      $("span", already).textContent = `Vous avez déjà répondu le ${prev.date} (${prev.presence === "Oui" ? "présent·e·s" : "absent·e·s"} · ${prev.names}). Vous pouvez envoyer une nouvelle réponse si quelque chose change.`;
+      $("span", already).textContent = `Vous avez déjà répondu le ${prev.date} (${prev.presence === "Oui" ? "présent(s)" : "absent(s)"} · ${prev.names}). Vous pouvez envoyer une nouvelle réponse si quelque chose change.`;
       already.hidden = false;
     } catch (e) { /* stockage indisponible */ }
   }
@@ -45,6 +46,7 @@
 
   /* ------------------------------------------------------------ Invités */
   const guestRows = () => $$(".guest", list);
+  const guestTemplate = guestRows()[0].cloneNode(true);
   function renumber() {
     const rows = guestRows();
     rows.forEach((row, i) => {
@@ -82,7 +84,7 @@
   function addGuest(focus = true) {
     const rows = guestRows();
     if (rows.length >= MAX_GUESTS) return;
-    const row = rows[0].cloneNode(true);
+    const row = guestTemplate.cloneNode(true);
     $(".input", row).value = "";
     $(".input", row).removeAttribute("aria-invalid");
     $(".guest__child input", row).checked = false;
@@ -249,8 +251,8 @@
     const who = firsts.length > 1 ? `${firsts.slice(0, -1).join(", ")} et ${firsts[firsts.length - 1]}` : firsts[0];
     $("[data-success-title]").textContent = `Merci ${who} !`;
     $("[data-success-text]").textContent = p === "Oui"
-      ? "Votre réponse est bien arrivée. Nous avons hâte de vous retrouver le 3 juillet 2027 pour célébrer ce grand jour ensemble !"
-      : "Votre réponse est bien arrivée. Vous allez nous manquer… Merci de nous avoir prévenus !";
+      ? "Votre réponse est bien arrivée. Nous avons hâte de vous retrouver le 3 juillet 2027 pour célébrer ce grand jour ensemble\u00a0!"
+      : "Votre réponse est bien arrivée. Vous allez nous manquer… Merci de nous avoir prévenus\u00a0!";
     if (store) {
       try { store.setItem(STORE_KEY, JSON.stringify({ date: new Date().toLocaleDateString("fr-FR"), presence: p, names: s.names })); } catch (e) { /* ignore */ }
     }
@@ -302,7 +304,7 @@
       "Petit mot": $("#message").value.trim() || "—",
       "E-mail de l’invité": email || "—",
     };
-    if (email) payload._replyto = email;
+    if (email) { payload._replyto = email; payload.email = email; }
 
     setLoading(true);
     const ctrl = "AbortController" in window ? new AbortController() : null;

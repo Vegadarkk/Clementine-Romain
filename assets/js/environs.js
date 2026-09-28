@@ -8,6 +8,14 @@
   const motion = html.classList.contains("motion") && !!window.gsap;
   const gsap = window.gsap;
   const places = $$(".place");
+  let revealTriggers = [];
+  // Au premier filtrage, on abandonne l’apparition au défilement : toutes les cartes deviennent visibles
+  function revealAllPlaces() {
+    if (!revealTriggers.length) return;
+    revealTriggers.forEach((t) => t.kill());
+    revealTriggers = [];
+    gsap.set(places, { opacity: 1, y: 0 });
+  }
   const CATS = { balades: "Balades & panoramas", villages: "Villages & patrimoine", lacs: "Lacs & activités" };
 
   /* ------------------------------------------------------------ Filtres */
@@ -23,13 +31,19 @@
         chips.forEach((c) => c.setAttribute("aria-pressed", String(c === chip)));
         const apply = () => places.forEach((p) => { p.hidden = cat !== "all" && p.dataset.cat !== cat; });
         if (motion && window.Flip) {
-          const state = window.Flip.getState(places, { props: "opacity" });
+          revealAllPlaces();
+          gsap.killTweensOf(places);
+          gsap.set(places, { opacity: 1, scale: 1, y: 0 });
+          const state = window.Flip.getState(places);
           apply();
           window.Flip.from(state, {
             duration: 0.7, ease: "power3.inOut", stagger: 0.03, absolute: true, nested: true,
             onEnter: (els) => gsap.fromTo(els, { opacity: 0, scale: 0.9, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.6, delay: 0.15 }),
             onLeave: (els) => gsap.to(els, { opacity: 0, scale: 0.9, duration: 0.35 }),
-            onComplete: () => window.ScrollTrigger && window.ScrollTrigger.refresh(),
+            onComplete: () => {
+              gsap.set(places.filter((p) => !p.hidden), { opacity: 1, scale: 1, y: 0 });
+              window.ScrollTrigger && window.ScrollTrigger.refresh();
+            },
           });
         } else {
           apply();
@@ -43,7 +57,7 @@
   /* ------------------------------------------------ Apparition des cartes */
   if (motion && window.ScrollTrigger) {
     gsap.set(places, { opacity: 0, y: 40 });
-    window.ScrollTrigger.batch(places, {
+    revealTriggers = window.ScrollTrigger.batch(places, {
       start: "top 90%",
       onEnter: (batch) => gsap.to(batch, { opacity: 1, y: 0, duration: 0.9, stagger: 0.08, ease: "power3.out", overwrite: true }),
     });
