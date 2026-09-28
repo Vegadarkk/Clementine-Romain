@@ -23,7 +23,7 @@
   <link rel="preload" href="assets/fonts/pinyon-script-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/cormorant-garamond-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/jost-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css?v=05d06701">
+  <link rel="stylesheet" href="assets/css/style.css?v=9745570c">
   <script>
     /* Active les animations si le visiteur ne les a pas désactivées ; filet de sécurité si le JS ne se charge pas */
     (function (d) {
@@ -481,6 +481,106 @@
       </div>
     </section>
 
+    <!-- ============================== Le domaine ============================== -->
+    <section class="section section--tint domaine" id="domaine" aria-labelledby="domaine-title">
+      <div class="container">
+        <header class="section-head">
+          <p class="overline" data-reveal>Château de Saint-Offenge</p>
+          <h2 class="title" id="domaine-title" data-split>Bienvenue <em>au domaine</em></h2>
+          <p class="lead" data-reveal>Touchez un numéro sur le plan pour découvrir les lieux de la fête.</p>
+        </header>
+        <div class="domaine__grid" data-domaine>
+          <div class="domaine__plan" data-reveal>
+            <img class="domaine__map" src="assets/img/chateau/plan-640.webp" srcset="assets/img/chateau/plan-640.webp 640w, assets/img/chateau/plan-1000.webp 1000w" sizes="(max-width: 900px) 92vw, 540px" width="1000" height="1000" loading="lazy" alt="Plan du domaine : le château, la cour du vin d’honneur, le chapiteau, la dépendance, le parc et sa gloriette, le jardin, le porche d’entrée et l’espace tentes">
+            <div class="domaine__spots" role="group" aria-label="Lieux du domaine">
+            <button class="spot" type="button" style="left:30%;top:50%" data-spot="cour" aria-pressed="true" aria-controls="domaine-cour"><span class="spot__dot" aria-hidden="true">1</span><span class="spot__label">La cour</span></button>
+            <button class="spot" type="button" style="left:45.5%;top:62%" data-spot="dependance" aria-pressed="false" aria-controls="domaine-dependance"><span class="spot__dot" aria-hidden="true">2</span><span class="spot__label">La dépendance</span></button>
+            <button class="spot" type="button" style="left:16.4%;top:34%" data-spot="chateau" aria-pressed="false" aria-controls="domaine-chateau"><span class="spot__dot" aria-hidden="true">3</span><span class="spot__label">Le château</span></button>
+            <button class="spot" type="button" style="left:28%;top:74%" data-spot="jardin" aria-pressed="false" aria-controls="domaine-jardin"><span class="spot__dot" aria-hidden="true">4</span><span class="spot__label">Le jardin</span></button>
+            <button class="spot" type="button" style="left:52.8%;top:18%" data-spot="parc" aria-pressed="false" aria-controls="domaine-parc"><span class="spot__dot" aria-hidden="true">5</span><span class="spot__label">Le parc & sa gloriette</span></button>
+            <button class="spot" type="button" style="left:46.9%;top:31%" data-spot="chapiteau" aria-pressed="false" aria-controls="domaine-chapiteau"><span class="spot__dot" aria-hidden="true">6</span><span class="spot__label">Le chapiteau</span></button>
+            <button class="spot" type="button" style="left:74.5%;top:67%" data-spot="porche" aria-pressed="false" aria-controls="domaine-porche"><span class="spot__dot" aria-hidden="true">7</span><span class="spot__label">Le porche</span></button>
+            <button class="spot" type="button" style="left:18.8%;top:17.5%" data-spot="tentes" aria-pressed="false" aria-controls="domaine-tentes"><span class="spot__dot" aria-hidden="true">8</span><span class="spot__label">L’espace tentes</span></button>
+            </div>
+          </div>
+          <div class="domaine__viewer" data-reveal>
+            <figure class="domaine__slide is-active" id="domaine-cour" data-slide="cour">
+              <div class="domaine__photo"><img src="assets/img/chateau/cour-480.webp" srcset="assets/img/chateau/cour-480.webp 480w, assets/img/chateau/cour-768.webp 768w" sizes="(max-width: 900px) 92vw, 560px" width="768" height="1024" loading="lazy" alt="Cour gravillonnée du château ombragée par un grand catalpa, tables hautes nappées de blanc"></div>
+              <figcaption>
+                <span class="domaine__tag"><b>01</b>Vin d’honneur · 17h00</span>
+                <h3>La cour</h3>
+                <p>Une cour gravillonnée où trône un magnifique catalpa&nbsp;: c’est à son ombre que nous trinquerons ensemble.</p>
+              </figcaption>
+            </figure>
+            <figure class="domaine__slide" id="domaine-dependance" data-slide="dependance">
+              <div class="domaine__photo"><img src="assets/img/chateau/dependance-640.webp" srcset="assets/img/chateau/dependance-640.webp 640w, assets/img/chateau/dependance-1024.webp 1024w" sizes="(max-width: 900px) 92vw, 560px" width="1024" height="768" loading="lazy" alt="Salle de la dépendance dressée pour un dîner, guirlandes lumineuses au plafond et mezzanine en bois"></div>
+              <figcaption>
+                <span class="domaine__tag"><b>02</b>Salle de réception</span>
+                <h3>La dépendance</h3>
+                <p>Une grande salle lumineuse surplombée d’une vaste mezzanine. Son ciel étoilé promet une soirée scintillante.</p>
+              </figcaption>
+            </figure>
+            <figure class="domaine__slide" id="domaine-chateau" data-slide="chateau">
+              <div class="domaine__photo"><img src="assets/img/chateau/chateau-640.webp" srcset="assets/img/chateau/chateau-640.webp 640w, assets/img/chateau/chateau-1024.webp 1024w" sizes="(max-width: 900px) 92vw, 560px" width="1024" height="766" loading="lazy" alt="Façade du Château de Saint-Offenge et ses toits en tourelles, au milieu des arbres"></div>
+              <figcaption>
+                <span class="domaine__tag"><b>03</b>Au cœur des Bauges</span>
+                <h3>Le château</h3>
+                <p>La demeure qui donne son nom au domaine, nichée dans le parc naturel régional du massif des Bauges.</p>
+              </figcaption>
+            </figure>
+            <figure class="domaine__slide" id="domaine-jardin" data-slide="jardin">
+              <div class="domaine__photo"><img src="assets/img/chateau/jardin-640.webp" srcset="assets/img/chateau/jardin-640.webp 640w, assets/img/chateau/jardin-1024.webp 1024w" sizes="(max-width: 900px) 92vw, 560px" width="1024" height="768" loading="lazy" alt="Jardin du château vu du ciel, chaises blanches disposées en arc de cercle sur la pelouse"></div>
+              <figcaption>
+                <span class="domaine__tag"><b>04</b>Bordé d’hortensias</span>
+                <h3>Le jardin</h3>
+                <p>Un grand jardin bordé d’une haie d’hortensias, au pied du château.</p>
+              </figcaption>
+            </figure>
+            <figure class="domaine__slide" id="domaine-parc" data-slide="parc">
+              <div class="domaine__photo"><img src="assets/img/chateau/parc-640.webp" srcset="assets/img/chateau/parc-640.webp 640w, assets/img/chateau/parc-1024.webp 1024w" sizes="(max-width: 900px) 92vw, 560px" width="1024" height="768" loading="lazy" alt="Gloriette en fer forgé couverte de roses dans le parc du château"></div>
+              <figcaption>
+                <span class="domaine__tag"><b>05</b>Arbres centenaires</span>
+                <h3>Le parc & sa gloriette</h3>
+                <p>Un grand parc aux arbres centenaires et sa gloriette romantique, où il fera bon se retrouver pour partager les émotions de la journée.</p>
+              </figcaption>
+            </figure>
+            <figure class="domaine__slide" id="domaine-chapiteau" data-slide="chapiteau">
+              <div class="domaine__photo"><img src="assets/img/chateau/chapiteau-640.webp" srcset="assets/img/chateau/chapiteau-640.webp 640w, assets/img/chateau/chapiteau-1024.webp 1024w" sizes="(max-width: 900px) 92vw, 560px" width="1024" height="576" loading="lazy" alt="Chapiteau blanc aux fenêtres arrondies installé sur le gravier de la cour"></div>
+              <figcaption>
+                <span class="domaine__tag"><b>06</b>100&nbsp;m² à l’abri</span>
+                <h3>Le chapiteau</h3>
+                <p>Un chapiteau de 100&nbsp;m² dressé sur la cour, à l’abri du soleil comme d’une averse.</p>
+              </figcaption>
+            </figure>
+            <figure class="domaine__slide" id="domaine-porche" data-slide="porche">
+              <div class="domaine__photo"><img src="assets/img/chateau/porche-480.webp" srcset="assets/img/chateau/porche-480.webp 480w, assets/img/chateau/porche-621.webp 621w" sizes="(max-width: 900px) 92vw, 560px" width="621" height="1097" loading="lazy" alt="Porche d’entrée en pierre du domaine, surmonté d’un toit en tuiles"></div>
+              <figcaption>
+                <span class="domaine__tag"><b>07</b>L’entrée du domaine</span>
+                <h3>Le porche</h3>
+                <p>Le porche en pierre par lequel vous entrerez dans le domaine&nbsp;: c’est ici que tout commence.</p>
+              </figcaption>
+            </figure>
+            <figure class="domaine__slide" id="domaine-tentes" data-slide="tentes">
+              <div class="domaine__photo"><img src="assets/img/chateau/espace-tentes-640.webp" srcset="assets/img/chateau/espace-tentes-640.webp 640w, assets/img/chateau/espace-tentes-1024.webp 1024w" sizes="(max-width: 900px) 92vw, 560px" width="1024" height="707" loading="lazy" alt="Grande pelouse plate au pied d’une grange en pierre, réservée aux tentes des invités"></div>
+              <figcaption>
+                <span class="domaine__tag"><b>08</b>Pour dormir sur place</span>
+                <h3>L’espace tentes</h3>
+                <p>Un espace herbeux plat, au calme et à l’abri des regards, pour planter sa tente après la fête.</p>
+                <a class="domaine__more" href="hebergements.html#camping">Tentes &amp; vans&nbsp;: les infos<svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=1ce5df6c#i-arrow-right"/></svg></a>
+              </figcaption>
+            </figure>
+            <p class="visually-hidden" aria-live="polite" data-domaine-status></p>
+            <div class="domaine__nav" hidden>
+              <button class="domaine__arrow" type="button" data-step="-1" aria-label="Lieu précédent"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=1ce5df6c#i-arrow-right"/></svg></button>
+              <span class="domaine__count" aria-hidden="true"><b data-count>01</b> / 08</span>
+              <button class="domaine__arrow" type="button" data-step="1" aria-label="Lieu suivant"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=1ce5df6c#i-arrow-right"/></svg></button>
+            </div>
+          </div>
+        </div>
+        <p class="credit" data-reveal>Plan et photos&nbsp;: © <a href="https://chateaudesaintoffenge.fr/mariage-chateau-saint-offenge/" target="_blank" rel="noopener">Château de Saint-Offenge</a></p>
+      </div>
+    </section>
+
     <!-- ============================== À découvrir ============================== -->
     <section class="section" id="preparer" aria-labelledby="preparer-title">
       <div class="container">
@@ -560,7 +660,7 @@
   <script src="assets/vendor/ScrollTrigger.min.js?v=05ca5ad8" defer></script>
   <script src="assets/vendor/SplitText.min.js?v=6c4c7716" defer></script>
   <script src="assets/vendor/lenis.min.js?v=b5cf15f0" defer></script>
-  <script src="assets/js/main.js?v=33ad560d" defer></script>
+  <script src="assets/js/main.js?v=44854ba9" defer></script>
   <!-- SCRIPTS:END -->
 </body>
 </html>

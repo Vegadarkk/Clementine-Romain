@@ -121,6 +121,39 @@
     });
   }
 
+  /* ------------------------------------------------ Plan interactif du domaine */
+  const domaine = $("[data-domaine]");
+  if (domaine) {
+    const spots = $$("[data-spot]", domaine);
+    const slides = $$("[data-slide]", domaine);
+    const nav = $(".domaine__nav", domaine);
+    const count = $("[data-count]", domaine);
+    const status = $("[data-domaine-status]", domaine);
+    let current = 0;
+    const show = (i, announce = true) => {
+      current = (i + slides.length) % slides.length;
+      const slide = slides[current];
+      slides.forEach((s) => {
+        const on = s === slide;
+        s.classList.toggle("is-active", on);
+        s.toggleAttribute("inert", !on);
+        s.setAttribute("aria-hidden", String(!on));
+      });
+      spots.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.spot === slide.dataset.slide)));
+      if (count) count.textContent = String(current + 1).padStart(2, "0");
+      if (announce && status) status.textContent = `Lieu ${current + 1} sur ${slides.length} : ${$("h3", slide).textContent}`;
+    };
+    spots.forEach((b) => b.addEventListener("click", () => show(slides.findIndex((s) => s.dataset.slide === b.dataset.spot))));
+    if (nav) {
+      nav.hidden = false;
+      $$("[data-step]", nav).forEach((b) => b.addEventListener("click", () => show(current + Number(b.dataset.step))));
+    }
+    show(0, false);
+    if (motion) document.addEventListener("cr:animations", () => {
+      gsap.from(spots, { scale: 0, duration: 0.7, ease: "back.out(2)", stagger: 0.07, scrollTrigger: { trigger: domaine, start: "top 70%" } });
+    });
+  }
+
   /* ------------------------------------------------------------ Menu mobile */
   const toggle = $(".nav-toggle");
   const menu = $("#menu-mobile");
@@ -451,8 +484,23 @@
   }
 
   /* ---------- Bandeau défilant réactif à la vitesse ---------- */
+  // Duplique le groupe autant que nécessaire pour couvrir tout l’écran (même très large)
+  // et fait défiler exactement d’un groupe : la boucle est continue, sans trou.
+  function fillMarquee(m) {
+    const track = $(".marquee__track", m);
+    const first = $(".marquee__group", track);
+    const gw = first ? first.getBoundingClientRect().width : 0;
+    if (!gw) return;
+    const need = Math.ceil(window.innerWidth / gw) + 1;
+    for (let n = $$(".marquee__group", track).length; n < need; n++) track.appendChild(first.cloneNode(true));
+    track.style.setProperty("--marquee-shift", `${-gw}px`);
+  }
+
   function marquee() {
     $$("[data-marquee]").forEach((m) => {
+      fillMarquee(m);
+      let rt;
+      window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => fillMarquee(m), 200); });
       const track = $(".marquee__track", m);
       const anim = track.getAnimations ? track.getAnimations()[0] : null;
       if (!anim) return;
