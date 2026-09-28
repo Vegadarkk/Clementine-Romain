@@ -27,8 +27,9 @@
   /* -------------------------------------------------- Délai de réponse */
   const left = $("[data-deadline-left]");
   if (left) {
-    const deadline = new Date("2027-03-15T23:59:59+01:00").getTime();
-    const days = Math.ceil((deadline - Date.now()) / 86400000);
+    // Jours calendaires jusqu’au 15 mars inclus (indépendant de l’heure d’été)
+    const now = new Date();
+    const days = Math.round((Date.UTC(2027, 2, 15) - Date.UTC(now.getFullYear(), now.getMonth(), now.getDate())) / 86400000) + 1;
     left.textContent = days > 1 ? `Encore ${days} jours pour répondre` : days === 1 ? "Dernier jour pour répondre\u00a0!" : "La date est passée, mais écrivez-nous quand même\u00a0!";
   }
 
@@ -61,6 +62,7 @@
       label.htmlFor = input.id;
       label.textContent = `Prénom et nom de la personne ${n}`;
       child.name = `Enfant ${n}`;
+      child.setAttribute("aria-label", `Personne ${n} : enfant`);
       remove.setAttribute("aria-label", `Retirer la personne ${n}`);
       remove.hidden = rows.length === 1;
     });
@@ -98,12 +100,16 @@
     const btn = e.target.closest(".guest__remove");
     if (!btn) return;
     const row = btn.closest(".guest");
+    // Clics rapides : on ignore une ligne déjà en cours de suppression et on garde toujours une ligne
+    if (row.dataset.removing || guestRows().filter((r) => !r.dataset.removing).length <= 1) return;
+    row.dataset.removing = "1";
+    row.style.pointerEvents = "none";
     const rows = guestRows();
     const idx = rows.indexOf(row);
     const done = () => {
       row.remove();
       renumber();
-      const target = guestRows()[Math.max(0, idx - 1)];
+      const target = guestRows().filter((r) => !r.dataset.removing)[Math.max(0, idx - 1)] || guestRows()[0];
       target && $(".input", target).focus();
     };
     if (motion) gsap.to(row, { opacity: 0, x: 30, height: 0, marginTop: 0, duration: 0.35, ease: "power2.in", onComplete: done });
@@ -113,6 +119,7 @@
   list.addEventListener("change", updateCount);
   // « Entrée » dans le dernier champ ajoute une personne au lieu d’envoyer le formulaire
   list.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && e.target.matches(".guest__child input")) { e.preventDefault(); e.target.click(); return; }
     if (e.key !== "Enter" || !e.target.matches(".input")) return;
     e.preventDefault();
     const rows = guestRows();
@@ -128,6 +135,7 @@
     const no = p === "Non";
     allergies.classList.toggle("is-collapsed", no);
     $("#allergies").disabled = no;
+    allergies.inert = no;
     $("[data-message-num]", form).textContent = no ? "3" : "4";
     $("[data-email-num]", form).textContent = no ? "4" : "5";
     const choices = $("[data-choices]", form);
@@ -161,8 +169,8 @@
     const first = $(".guest .input", list);
     if (!guests().length) {
       setError("guests", "Indiquez au moins un nom et prénom.");
-      first.setAttribute("aria-invalid", "true");
-      firstInvalid = firstInvalid || first;
+      if (first) first.setAttribute("aria-invalid", "true");
+      firstInvalid = firstInvalid || first || addBtn;
     } else {
       setError("guests", "");
       $$(".guest .input", list).forEach((i) => i.removeAttribute("aria-invalid"));
@@ -192,10 +200,20 @@
     const v = emailInput.value.trim();
     if (!v || emailRe.test(v)) { setError("email", ""); emailInput.removeAttribute("aria-invalid"); }
   });
-  emailInput.addEventListener("blur", () => {
-    const v = emailInput.value.trim();
-    if (v && !emailRe.test(v)) { setError("email", "Cette adresse e-mail ne semble pas valide."); emailInput.setAttribute("aria-invalid", "true"); }
-  });
+
+  /* ------------------------------------------------ Compteur du petit mot */
+  const msgEl = $("#message");
+  const msgCount = $("#message-count");
+  if (msgEl && msgCount) {
+    const max = Number(msgEl.getAttribute("maxlength")) || 1000;
+    const upd = () => {
+      const n = msgEl.value.length;
+      msgCount.textContent = n ? `${n}\u00a0/\u00a0${max} caractères` : "";
+      msgCount.classList.toggle("is-near", n > max * 0.9);
+    };
+    msgEl.addEventListener("input", upd);
+    upd();
+  }
 
   /* -------------------------------------------------------------- Envoi */
   function summary() {
@@ -247,11 +265,16 @@
   function showSuccess() {
     const s = summary();
     const p = presence();
-    const firsts = guests().map((g) => g.name.split(" ")[0]);
+    // Premier prénom de chaque invité, sans civilité (« M. », « Famille »…), avec majuscule initiale
+    const SKIP = /^(famille|fam\.?|m\.?|mr\.?|mme\.?|mlle\.?|monsieur|madame|mademoiselle|dr\.?|et|&)$/i;
+    const firsts = guests()
+      .map((g) => g.name.split(" ").find((w) => !SKIP.test(w)))
+      .filter(Boolean)
+      .map((w) => w.charAt(0).toLocaleUpperCase("fr") + w.slice(1));
     const who = firsts.length > 1 ? `${firsts.slice(0, -1).join(", ")} et ${firsts[firsts.length - 1]}` : firsts[0];
-    $("[data-success-title]").textContent = `Merci ${who} !`;
+    $("[data-success-title]").textContent = who ? `Merci ${who}\u00a0!` : "Merci\u00a0!";
     $("[data-success-text]").textContent = p === "Oui"
-      ? "Votre réponse est bien arrivée. Nous avons hâte de vous retrouver le 3 juillet 2027 pour célébrer ce grand jour ensemble\u00a0!"
+      ? "Votre réponse est bien arrivée. Nous avons hâte de vous retrouver le 3\u00a0juillet\u00a02027 pour célébrer ce grand jour ensemble\u00a0!"
       : "Votre réponse est bien arrivée. Vous allez nous manquer… Merci de nous avoir prévenus\u00a0!";
     if (store) {
       try { store.setItem(STORE_KEY, JSON.stringify({ date: new Date().toLocaleDateString("fr-FR"), presence: p, names: s.names })); } catch (e) { /* ignore */ }
@@ -304,8 +327,8 @@
       _captcha: "false",
       "Réponse": p === "Oui" ? "Oui, présent(s)" : "Non, absent(s)",
       "Invités": g.map((x) => (x.child ? `${x.name} (enfant)` : x.name)).join(", "),
-      "Nombre d’adultes": String(g.filter((x) => !x.child).length),
-      "Nombre d’enfants": String(g.filter((x) => x.child).length),
+      "Nombre d’adultes": p === "Oui" ? String(g.filter((x) => !x.child).length) : "—",
+      "Nombre d’enfants": p === "Oui" ? String(g.filter((x) => x.child).length) : "—",
       "Allergies / intolérances": p === "Oui" ? ($("#allergies").value.trim() || "—") : "—",
       "Petit mot": $("#message").value.trim() || "—",
       "E-mail de l’invité": email || "—",
@@ -330,6 +353,8 @@
     } finally {
       clearTimeout(timer);
       setLoading(false);
+      // Le bouton était désactivé pendant l'envoi : le focus ne doit pas se perdre sur la page
+      if (document.activeElement === document.body && !form.hidden) submitBtn.focus();
     }
   });
 

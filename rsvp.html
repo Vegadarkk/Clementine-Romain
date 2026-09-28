@@ -23,7 +23,7 @@
   <link rel="preload" href="assets/fonts/pinyon-script-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/cormorant-garamond-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/jost-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css?v=9e6b69b8">
+  <link rel="stylesheet" href="assets/css/style.css?v=5ab08e63">
   <script>
     /* Active les animations si le visiteur ne les a pas désactivées ; filet de sécurité si le JS ne se charge pas */
     (function (d) {
@@ -128,7 +128,7 @@
         <div>
           <div class="deadline" data-reveal>
             <div class="deadline__date" aria-hidden="true"><div><strong>15</strong><span>mars 2027</span></div></div>
-            <p>Merci de nous répondre <u>avant le 15 mars 2027</u>. Sans réponse de votre part à cette date, nous vous considérerons comme absent(s) le 3 juillet 2027&nbsp;<span aria-label="visage inquiet" role="img">😟</span><span class="deadline__left" data-deadline-left></span></p>
+            <p>Merci de nous répondre <u>avant le 15 mars 2027</u>. Sans réponse de votre part à cette date, nous vous considérerons comme absent(s) le 3&nbsp;juillet&nbsp;2027&nbsp;<span aria-label="visage inquiet" role="img">😟</span><span class="deadline__left" data-deadline-left></span></p>
           </div>
 
           <div class="rsvp-card" data-reveal>
@@ -179,14 +179,15 @@
                 <div>
                   <div class="form-step field">
                     <label for="allergies"><span class="step-num">3</span>Une allergie ou intolérance alimentaire&nbsp;? C’est le moment de nous en faire part&nbsp;!</label>
-                    <textarea class="textarea" id="allergies" name="Allergies / intolérances" rows="3" placeholder="Ex. : Lucie est allergique aux fruits à coque"></textarea>
+                    <textarea class="textarea" id="allergies" name="Allergies / intolérances" rows="3" placeholder="Ex.&nbsp;: Lucie est allergique aux fruits à coque"></textarea>
                   </div>
                 </div>
               </div>
 
               <div class="form-step field">
                 <label for="message"><span class="step-num" data-message-num>4</span>Une remarque, une suggestion, un petit mot&nbsp;? Dites-nous tout&nbsp;!</label>
-                <textarea class="textarea" id="message" name="Petit mot" rows="4" placeholder="Votre message pour les mariés…"></textarea>
+                <textarea class="textarea" id="message" name="Petit mot" rows="4" maxlength="1000" aria-describedby="message-count" placeholder="Votre message pour les mariés…"></textarea>
+                <p class="char-count" id="message-count" aria-live="polite"></p>
               </div>
 
               <div class="form-step field">
@@ -263,6 +264,6 @@
   <script src="assets/vendor/lenis.min.js?v=b5cf15f0" defer></script>
   <script src="assets/js/main.js?v=4f63a486" defer></script>
   <!-- SCRIPTS:END -->
-  <script src="assets/js/rsvp.js?v=76289088" defer></script>
+  <script src="assets/js/rsvp.js?v=0e692ced" defer></script>
 </body>
 </html>
