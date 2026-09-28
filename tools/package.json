@@ -4,11 +4,12 @@
   "type": "module",
   "description": "Scripts de génération des assets du site (carte, polices, vendor). Non nécessaires pour servir le site.",
   "scripts": {
-    "build": "node build-icons.mjs && node build-flowers.mjs && node build-map.mjs && node build-pages.mjs",
+    "build": "node build-icons.mjs && node build-flowers.mjs && node build-logo.mjs --site && node build-map.mjs && node build-pages.mjs",
     "icons": "node build-icons.mjs",
     "flowers": "node build-flowers.mjs",
     "map": "node build-map.mjs",
-    "pages": "node build-pages.mjs"
+    "pages": "node build-pages.mjs",
+    "logo": "node build-logo.mjs --site"
   },
   "devDependencies": {
     "@fontsource/cormorant-garamond": "^5.3.0",

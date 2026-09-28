@@ -4,6 +4,9 @@
 // Usage : cd tools && npm run pages
 import { readFileSync, writeFileSync } from "node:fs";
 import { createHash } from "node:crypto";
+import { siteLogo } from "./build-logo.mjs";
+
+const LOGO = siteLogo();
 
 // Empreinte courte d’un fichier : ajoutée aux URL (?v=…) pour que chaque mise à jour
 // soit prise en compte immédiatement malgré le cache du navigateur.
@@ -117,18 +120,22 @@ const NAV = [
   ["environs", "environs.html", "Environs"],
 ];
 
-const HEADER = `<a class="skip-link" href="#contenu">Aller au contenu</a>
+const HEADER = `${LOGO.symbols}
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
   <div class="intro-screen" aria-hidden="true">
     <div class="intro-screen__inner">
-      <svg class="intro-screen__mono" viewBox="0 0 400 160"><text x="200" y="118" text-anchor="middle">C<tspan dx="8" class="amp">&amp;</tspan><tspan dx="8">R</tspan></text></svg>
-      <p class="intro-screen__date">03 · 07 · 2027</p>
+      <svg class="intro-screen__mono" viewBox="0 0 240 300"><use href="#logo-arche-date"></use></svg>
     </div>
   </div>
-  <div class="page-curtain" aria-hidden="true"><div class="page-curtain__panel"></div><div class="page-curtain__panel page-curtain__panel--front"><span>C<em>&amp;</em>R</span></div></div>
+  <div class="page-curtain" aria-hidden="true"><div class="page-curtain__panel"></div><div class="page-curtain__panel page-curtain__panel--front"><svg class="page-curtain__mark" viewBox="0 0 240 300"><use href="#logo-arche"></use></svg></div></div>
   <div class="scroll-progress" aria-hidden="true"><span></span></div>
   <header class="site-header" data-header>
     <div class="container site-header__inner">
-      <a class="brand" href="index.html">C<span>&amp;</span>R<b class="visually-hidden"> · Clémentine et Romain, accueil</b></a>
+      <a class="brand" href="index.html">
+        <svg class="brand__mark" viewBox="0 0 240 300" aria-hidden="true" focusable="false"><use href="#logo-arche"></use></svg>
+        <span class="brand__text"><span class="brand__names">Clémentine <em>&amp;</em> Romain</span><span class="brand__date">03 · 07 · 2027</span></span>
+        <b class="visually-hidden"> · accueil</b>
+      </a>
       <nav class="nav" aria-label="Navigation principale">
         <ul class="nav__list">
 ${NAV.map(([k, href, label]) => `          <li><a class="nav__link" data-nav="${k}" href="${href}">${label}</a></li>`).join("\n")}
@@ -154,6 +161,7 @@ const FOOTER = `<footer class="site-footer">
     ${landscape("landscape--footer")}
     <div class="site-footer__body">
       <div class="container">
+        <svg class="site-footer__mark" viewBox="0 0 240 300" aria-hidden="true" focusable="false"><use href="#logo-arche"></use></svg>
         <p class="site-footer__names">Clémentine <span>&amp;</span> Romain</p>
         <p class="site-footer__date">Samedi 3 juillet 2027 · Héry-sur-Alby · Saint-Offenge</p>
         <nav aria-label="Pied de page">

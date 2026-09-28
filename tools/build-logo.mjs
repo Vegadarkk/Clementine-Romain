@@ -71,8 +71,8 @@ export function monogram({ id, size = 150, gap = 3.2, dx = 0.46, splitY = null, 
     <mask id="${id}-mc" maskUnits="userSpaceOnUse" ${big}><rect ${big} fill="#fff"/><g clip-path="url(#${id}-bot)"><path d="${r.d}" fill="#000" stroke="#000" stroke-width="${gap * 2}" stroke-linejoin="round"/></g></mask>
     <mask id="${id}-mr" maskUnits="userSpaceOnUse" ${big}><rect ${big} fill="#fff"/><g clip-path="url(#${id}-top)"><path d="${c.d}" fill="#000" stroke="#000" stroke-width="${gap * 2}" stroke-linejoin="round"/></g></mask>
   </defs>
-  <path class="mono-c" d="${c.d}" mask="url(#${id}-mc)" fill="${fill}"/>
-  <path class="mono-r" d="${r.d}" mask="url(#${id}-mr)" fill="${fill}"/>`;
+  <path class="mono-c" d="${c.d}" mask="url(#${id}-mc)" fill="${fill}" stroke="${fill}" style="stroke-width: var(--mono-ink-sw, 0)"/>
+  <path class="mono-r" d="${r.d}" mask="url(#${id}-mr)" fill="${fill}" stroke="${fill}" style="stroke-width: var(--mono-ink-sw, 0)"/>`;
   return { svg, bb: { x1, y1, x2, y2, w: x2 - x1, h: y2 - y1 }, c, r };
 }
 
@@ -108,15 +108,24 @@ function placeMono(id, cx, cy, width, fill) {
 // A · L’Arche
 export function arche({ id = "la", date = true, ink = "currentColor", accent = "#C2185B", sub = "#4E5E43" } = {}) {
   const f = bloom(`${id}-b`, 17);
+  // Guirlande : feuillage le long de l’arc, de la clé de voûte vers chaque côté
   let deco = "";
-  [[-1, 0], [1, 0]].forEach(([sgn]) => {
-    for (let i = 0; i < 3; i++) {
-      const a = (sgn < 0 ? 180 + 28 : -28) + sgn * i * 16;
+  const R = 90, cx = 120, cy = 125;
+  for (const side of [-1, 1]) {
+    const n = 8;
+    for (let i = 0; i < n; i++) {
+      const a = 270 + side * (12 + i * 10.5);          // 270° = sommet de l’arche
       const rad = (a * Math.PI) / 180;
-      const x = 120 + Math.cos(rad) * 90, y = 125 + Math.sin(rad) * 90;
-      deco += leaf(x, y, a + sgn * 90 + (i % 2 ? 30 : -30) * sgn, 17 - i * 2.5, 5.5 - i * 0.8, `url(#${id}-lf)`);
+      const out = i % 2 ? 1 : -1;
+      const x = cx + Math.cos(rad) * (R + out * 1.5), y = cy + Math.sin(rad) * (R + out * 1.5);
+      const tangent = a + side * 90;
+      deco += leaf(x, y, tangent + out * side * 46, 15 - i * 1.1, 5.2 - i * 0.35, `url(#${id}-lf)`);
+      if (i === 3 || i === 6) {
+        const bx = cx + Math.cos(rad) * (R - out * 8), by = cy + Math.sin(rad) * (R - out * 8);
+        deco += `<circle cx="${r2(bx)}" cy="${r2(by)}" r="2.4" fill="${i === 3 ? "#F06292" : "#FFB085"}"></circle>`;
+      }
     }
-  });
+  }
   const d = date ? textPath(CORMORANT, "03 · 07 · 2027", 120, 266, 14, 2.6).d : "";
   return {
     viewBox: "0 0 240 300",
@@ -132,24 +141,34 @@ export function arche({ id = "la", date = true, ink = "currentColor", accent = "
 
 // B · La Couronne
 export function couronne({ id = "lc", ink = "currentColor", sub = "#4E5E43" } = {}) {
-  const p = bloom(`${id}-p`, 26), q = bloom(`${id}-q`, 18, ["#E0754C", "#F29468", "#FFC4A6", "#FFE3D4"]);
-  let leaves = "";
-  for (let side of [-1, 1]) {
-    for (let i = 0; i < 11; i++) {
-      const a = 90 + side * (22 + i * 13.5);
-      const rad = (a * Math.PI) / 180;
-      const x = 150 + Math.cos(rad) * 116, y = 150 + Math.sin(rad) * 116;
-      const tangent = a + side * 90;
-      leaves += leaf(x, y, tangent + (i % 2 ? 38 : -38) * side, 24 - i * 0.9, 8 - i * 0.25, `url(#${id}-lf)`);
+  const p = bloom(`${id}-p`, 25), q = bloom(`${id}-q`, 17, ["#E0754C", "#F29468", "#FFC4A6", "#FFE3D4"]);
+  const R = 114, C = 150;
+  const pt = (deg, rr = R) => [C + Math.cos((deg * Math.PI) / 180) * rr, C + Math.sin((deg * Math.PI) / 180) * rr];
+  let stems = "", leaves = "", berries = "";
+  for (const side of [-1, 1]) {
+    // branche : du bas (90°) vers le haut, en laissant une ouverture au sommet
+    const a0 = 90 + side * 6, a1 = 90 + side * 158;
+    const [x0, y0] = pt(a0), [x1, y1] = pt(a1);
+    stems += `<path d="M${r2(x0)} ${r2(y0)}A${R} ${R} 0 0 ${side > 0 ? 1 : 0} ${r2(x1)} ${r2(y1)}" fill="none" stroke="#6B7F5E" stroke-width="1.5" stroke-linecap="round"></path>`;
+    const n = 17;
+    for (let i = 0; i < n; i++) {
+      const t = i / (n - 1);
+      const a = a0 + (a1 - a0) * t;
+      const [x, y] = pt(a);
+      const tangent = a + side * 90;           // direction de la branche (vers la pointe)
+      const out = i % 2 ? 1 : -1;               // alternance extérieur / intérieur
+      const len = 21 - t * 9, wid = 7.2 - t * 2.8;
+      leaves += leaf(x, y, tangent + out * side * 42, len, wid, `url(#${id}-lf)`);
+      if (i % 5 === 3) { const [bx, by] = pt(a, R + out * 11); berries += `<circle cx="${r2(bx)}" cy="${r2(by)}" r="2.6" fill="${i % 2 ? "#F06292" : "#FFB085"}"></circle>`; }
     }
+    leaves += leaf(x1, y1, a1 + side * 90, 13, 4.5, `url(#${id}-lf)`);
   }
-  const stem = `<path d="M150 266A116 116 0 0 1 40 190" fill="none" stroke="#6B7F5E" stroke-width="1.6"></path><path d="M150 266A116 116 0 0 0 260 190" fill="none" stroke="#6B7F5E" stroke-width="1.6"></path>`;
-  const d = textPath(CORMORANT, "03 · 07 · 2027", 150, 214, 14, 2.6).d;
+  const d = textPath(CORMORANT, "03 · 07 · 2027", 150, 212, 14, 2.6).d;
   return {
     viewBox: "0 0 300 300",
-    svg: `<defs>${LEAF_GRAD(id)}${p.defs}${q.defs}</defs>${stem}${leaves}
-  <g transform="translate(178 262)">${q.g}</g><g transform="translate(146 266)">${p.g}</g>
-  ${placeMono(`${id}-m`, 150, 138, 150, ink)}<path d="${d}" fill="${sub}"></path>`,
+    svg: `<defs>${LEAF_GRAD(id)}${p.defs}${q.defs}</defs>${stems}${leaves}${berries}
+  <g transform="translate(176 258)">${q.g}</g><g transform="translate(144 262)">${p.g}</g>
+  ${placeMono(`${id}-m`, 150, 140, 148, ink)}<path d="${d}" fill="${sub}"></path>`,
   };
 }
 
@@ -213,6 +232,43 @@ if (process.argv[2] === "--pistes") {
   mkdirSync(dir, { recursive: true });
   const all = { arche: arche(), couronne: couronne(), sceau: sceau(), editorial: editorial() };
   for (const [k, m] of Object.entries(all)) writeFileSync(new URL(`${k}.svg`, dir), wrap(m));
+  // Versions pour fond sombre
+  const light = {
+    arche: arche({ id: "lad", ink: "#FFF9F2", accent: "#FFD9C7", sub: "#FFD9C7" }),
+    couronne: couronne({ id: "lcd", ink: "#FFF9F2", sub: "#FFD9C7" }),
+    sceau: sceau({ id: "lsd" }),
+    editorial: editorial({ id: "led", ink: "#FFF9F2", accent: "#FFD9C7", sub: "#FFD9C7" }),
+  };
+  for (const [k, m] of Object.entries(light)) writeFileSync(new URL(`${k}-clair.svg`, dir), wrap(m, "#FFF9F2"));
   writeFileSync(new URL("pistes.json", dir), JSON.stringify(all));
   console.log(Object.entries(all).map(([k, m]) => `${k}: ${(m.svg.length / 1024).toFixed(1)} Ko`).join(" · "));
+}
+
+/* ------------------------------------------------------------ Logo du site (piste A · L’Arche) */
+// Symboles SVG à insérer une fois par page, réutilisés via <use href="#logo-arche">.
+// Couleurs pilotées en CSS : lettres = currentColor, filets de l’arche = --mono-accent, date = --mono-sub.
+export function siteLogo() {
+  const a = arche({ id: "logo", date: false, ink: "currentColor", accent: "ACCENT" });
+  const mark = a.svg
+    .replace('stroke="ACCENT" stroke-width="1.8"', 'style="stroke: var(--mono-accent, #C2185B); stroke-width: var(--mono-sw, 1.8)"')
+    .replace('stroke="ACCENT" stroke-width=".8"', 'style="stroke: var(--mono-accent, #C2185B); stroke-width: var(--mono-sw2, .8)"');
+  const date = textPath(CORMORANT, "03 · 07 · 2027", 120, 272, 15, 2.8).d;
+  const symbols = `<svg class="logo-defs" width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute;overflow:hidden">
+    <symbol id="logo-arche" viewBox="0 0 240 300">${mark}</symbol>
+    <symbol id="logo-arche-date" viewBox="0 0 240 300"><use href="#logo-arche"></use><path d="${date}" style="fill: var(--mono-sub, #4E5E43)"></path></symbol>
+  </svg>`;
+  // Icône d’onglet : arche pleine fuchsia, monogramme ivoire (lisible dès 16 px)
+  const fav = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="14 20 212 276">
+  <defs><linearGradient id="fg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D23A73"></stop><stop offset="1" stop-color="#A3144D"></stop></linearGradient></defs>
+  <path d="M22 292V125a98 98 0 0 1 196 0v167Z" fill="url(#fg)"></path>
+  <path d="M34 280V125a86 86 0 0 1 172 0v155Z" fill="none" stroke="#FFD9C7" stroke-width="3" opacity=".55"></path>
+  ${placeMono("fav", 120, 190, 176, "#FFF9F2")}
+</svg>\n`;
+  return { symbols, fav };
+}
+
+if (process.argv[2] === "--site") {
+  const { fav } = siteLogo();
+  writeFileSync(new URL("../assets/img/favicon.svg", import.meta.url), fav);
+  console.log("assets/img/favicon.svg");
 }

@@ -338,11 +338,10 @@
       const tl = gsap.timeline({
         onComplete: () => { html.classList.remove("intro"); lenis && lenis.start(); resolve(); },
       });
-      const text = $(".intro-screen__mono text", screen);
-      tl.to(text, { strokeDashoffset: 0, duration: 1.2, ease: "power2.inOut" })
-        .to([text, $$(".intro-screen__mono tspan", screen)], { fillOpacity: 1, duration: 0.5 }, "-=0.45")
-        .to($(".intro-screen__date", screen), { opacity: 1, letterSpacing: "0.3em", duration: 0.6 }, "-=0.35")
-        .to(screen, { clipPath: "inset(0 0 100% 0)", duration: 0.85, ease: "expo.inOut" }, "+=0.1");
+      const mono = $(".intro-screen__mono", screen);
+      tl.fromTo(mono, { clipPath: "inset(100% 0% 0% 0%)", scale: 0.9, y: 20 }, { clipPath: "inset(0% 0% 0% 0%)", scale: 1, y: 0, duration: 1.5, ease: "power3.inOut" })
+        .to(mono, { scale: 1.04, duration: 0.5, ease: "sine.inOut" }, "+=0.05")
+        .to(screen, { clipPath: "inset(0 0 100% 0)", duration: 0.85, ease: "expo.inOut" }, "+=0.05");
       const skip = () => tl.progress(0.92);
       screen.addEventListener("click", skip, { once: true });
       document.addEventListener("keydown", skip, { once: true });
