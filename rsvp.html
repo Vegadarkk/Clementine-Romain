@@ -23,7 +23,7 @@
   <link rel="preload" href="assets/fonts/pinyon-script-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/cormorant-garamond-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/jost-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/style.css?v=dd49ffbe">
   <script>
     /* Active les animations si le visiteur ne les a pas désactivées ; filet de sécurité si le JS ne se charge pas */
     (function (d) {
@@ -61,7 +61,7 @@
           <li><a class="nav__link" data-nav="temoins" href="temoins.html">Témoins</a></li>
           <li><a class="nav__link" data-nav="environs" href="environs.html">Environs</a></li>
         </ul>
-        <a class="btn btn--sm" data-nav="rsvp" aria-current="page" href="rsvp.html" data-magnetic><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#i-mail"/></svg>Je réponds</a>
+        <a class="btn btn--sm" data-nav="rsvp" aria-current="page" href="rsvp.html" data-magnetic><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=fb18d30e#i-mail"/></svg>Je réponds</a>
       </nav>
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu-mobile"><span></span><span></span><span></span><b class="visually-hidden">Menu</b></button>
     </div>
@@ -77,7 +77,7 @@
       </ul>
     </nav>
     <div class="mobile-menu__foot">
-      <a class="btn" data-nav="rsvp" aria-current="page" href="rsvp.html"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#i-mail"/></svg>Répondre à l’invitation</a>
+      <a class="btn" data-nav="rsvp" aria-current="page" href="rsvp.html"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=fb18d30e#i-mail"/></svg>Répondre à l’invitation</a>
       <p class="mobile-menu__date">Samedi 3 juillet 2027</p>
     </div>
   </div>
@@ -111,7 +111,7 @@
           </div>
 
           <div class="rsvp-card" data-reveal>
-            <p class="rsvp-already" data-rsvp-already hidden><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#i-check"/></svg><span></span></p>
+            <p class="rsvp-already" data-rsvp-already hidden><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=fb18d30e#i-check"/></svg><span></span></p>
 
             <form class="rsvp-form" id="rsvp-form" action="https://formsubmit.co/clementine.leytier@hotmail.fr" method="POST"
                   data-endpoint="https://formsubmit.co/ajax/clementine.leytier@hotmail.fr"
@@ -131,10 +131,10 @@
                     <label class="visually-hidden" for="guest-1">Prénom et nom de la personne 1</label>
                     <input class="input" id="guest-1" name="Invité 1" type="text" autocomplete="name" placeholder="Prénom Nom" required aria-describedby="guests-hint guests-error">
                     <label class="guest__child"><input type="checkbox" name="Enfant 1" value="oui">Enfant</label>
-                    <button class="guest__remove" type="button" aria-label="Retirer la personne 1" hidden><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#i-x"/></svg></button>
+                    <button class="guest__remove" type="button" aria-label="Retirer la personne 1" hidden><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=fb18d30e#i-x"/></svg></button>
                   </li>
                 </ul>
-                <button class="btn btn--soft btn--sm guest-add" type="button" data-guest-add hidden><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#i-user-plus"/></svg>Ajouter une personne</button>
+                <button class="btn btn--soft btn--sm guest-add" type="button" data-guest-add hidden><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=fb18d30e#i-user-plus"/></svg>Ajouter une personne</button>
                 <p class="guest-count" data-guest-count aria-live="polite"></p>
                 <p class="field-error" id="guests-error" data-error="guests"></p>
               </fieldset>
@@ -144,11 +144,11 @@
                 <div class="choices" data-choices role="radiogroup" aria-labelledby="presence-legend" aria-describedby="presence-error" aria-required="true">
                   <div class="choice">
                     <input type="radio" id="presence-oui" name="Présence" value="Oui" required aria-describedby="presence-error">
-                    <label for="presence-oui"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#i-party-popper"/></svg><strong>Oui</strong><span>Avec grand plaisir&nbsp;!</span></label>
+                    <label for="presence-oui"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=fb18d30e#i-party-popper"/></svg><strong>Oui</strong><span>Avec grand plaisir&nbsp;!</span></label>
                   </div>
                   <div class="choice choice--no">
                     <input type="radio" id="presence-non" name="Présence" value="Non" aria-describedby="presence-error">
-                    <label for="presence-non"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#i-heart"/></svg><strong>Non</strong><span>Malheureusement, nous ne pourrons pas venir</span></label>
+                    <label for="presence-non"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=fb18d30e#i-heart"/></svg><strong>Non</strong><span>Malheureusement, nous ne pourrons pas venir</span></label>
                   </div>
                 </div>
                 <p class="field-error" id="presence-error" data-error="presence"></p>
@@ -176,13 +176,13 @@
 
               <div class="form-footer">
                 <p>Votre réponse est envoyée directement par e-mail à Clémentine &amp; Romain.</p>
-                <button class="btn" type="submit" data-submit data-magnetic><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#i-send"/></svg><span data-label>Envoyer ma réponse</span></button>
+                <button class="btn" type="submit" data-submit data-magnetic><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=fb18d30e#i-send"/></svg><span data-label>Envoyer ma réponse</span></button>
               </div>
               <div class="form-status" role="alert" data-status></div>
             </form>
 
             <div class="rsvp-success" data-success hidden tabindex="-1">
-              <div class="rsvp-success__icon"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#i-check"/></svg></div>
+              <div class="rsvp-success__icon"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=fb18d30e#i-check"/></svg></div>
               <p class="overline">Réponse envoyée</p>
               <h2 data-success-title>Merci&nbsp;!</h2>
               <p data-success-text></p>
@@ -214,7 +214,7 @@
             <li><a href="rsvp.html">Répondre</a></li>
           </ul>
         </nav>
-        <p class="site-footer__small">Réponse souhaitée avant le 15 mars 2027 · Fait avec <svg class="icon" aria-label="amour" role="img"><use href="assets/img/icons.svg#i-heart"/></svg> pour notre grand jour</p>
+        <p class="site-footer__small">Réponse souhaitée avant le 15 mars 2027 · Fait avec <svg class="icon" aria-label="amour" role="img"><use href="assets/img/icons.svg?v=fb18d30e#i-heart"/></svg> pour notre grand jour</p>
       </div>
     </div>
   </footer>
@@ -223,12 +223,12 @@
   <div class="grain" aria-hidden="true"></div>
   <!-- FOOTER:END -->
   <!-- SCRIPTS:START -->
-  <script src="assets/vendor/gsap.min.js" defer></script>
-  <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
-  <script src="assets/vendor/SplitText.min.js" defer></script>
-  <script src="assets/vendor/lenis.min.js" defer></script>
-  <script src="assets/js/main.js" defer></script>
+  <script src="assets/vendor/gsap.min.js?v=9396f256" defer></script>
+  <script src="assets/vendor/ScrollTrigger.min.js?v=05ca5ad8" defer></script>
+  <script src="assets/vendor/SplitText.min.js?v=6c4c7716" defer></script>
+  <script src="assets/vendor/lenis.min.js?v=b5cf15f0" defer></script>
+  <script src="assets/js/main.js?v=8beea2bb" defer></script>
   <!-- SCRIPTS:END -->
-  <script src="assets/js/rsvp.js" defer></script>
+  <script src="assets/js/rsvp.js?v=76289088" defer></script>
 </body>
 </html>

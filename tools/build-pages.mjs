@@ -3,6 +3,22 @@
 // Le site reste 100 % statique : ce script ne sert qu'à éviter les copier-coller.
 // Usage : cd tools && npm run pages
 import { readFileSync, writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+
+// Empreinte courte d’un fichier : ajoutée aux URL (?v=…) pour que chaque mise à jour
+// soit prise en compte immédiatement malgré le cache du navigateur.
+const fingerprint = (path) => {
+  try { return createHash("sha1").update(readFileSync(new URL(`../${path}`, import.meta.url))).digest("hex").slice(0, 8); }
+  catch { return null; }
+};
+function bustCache(html) {
+  return html
+    .replace(/(href|src)="(assets\/[^"?#]+\.(?:css|js))(?:\?v=[0-9a-f]+)?"/g, (m, attr, path) => {
+      const v = fingerprint(path);
+      return v ? `${attr}="${path}?v=${v}"` : m;
+    })
+    .replace(/assets\/img\/icons\.svg(?:\?v=[0-9a-f]+)?#/g, () => `assets/img/icons.svg?v=${fingerprint("assets/img/icons.svg")}#`);
+}
 
 const PAGES = ["index.html", "hebergements.html", "temoins.html", "environs.html", "rsvp.html", "404.html"];
 const SITE_URL = "https://vegadarkk.github.io/Clementine-Romain/";
@@ -178,6 +194,7 @@ for (const page of PAGES) {
     }
     html = html.replace(re, `$1\n  ${content}\n  $2`);
   }
+  html = bustCache(html);
   writeFileSync(url, html);
   console.log(`✓ ${page}`);
 }
