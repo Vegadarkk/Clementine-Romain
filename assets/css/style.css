@@ -441,7 +441,8 @@ html:not(.js) .countdown, html:not(.js) [data-ics] { display: none; }
 /* ---------- Pied de page ---------- */
 .site-footer { position: relative; margin-top: clamp(2rem, 6vw, 4rem); color: var(--paper); }
 .site-footer .landscape { margin-bottom: -2px; }
-.site-footer__body { background: var(--moss-deep); padding: clamp(2.5rem, 6vw, 4rem) 0 2rem; text-align: center; }
+.site-footer__body { background: var(--moss-deep); padding: clamp(2.5rem, 6vw, 4rem) 0 calc(2rem + env(safe-area-inset-bottom, 0px)); text-align: center; }
+@media (max-width: 760px) { .site-footer__body { padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px)); } }
 .site-footer__mark { --mono-accent: var(--blossom); --mono-sw: 3.6; --mono-sw2: 1.6; --mono-ink-sw: 1.4; display: block; width: auto; height: clamp(110px, 13vw, 140px); margin: 0 auto 1.2rem; color: var(--paper); }
 .site-footer__names { font: 400 clamp(2.6rem, 6vw, 3.6rem)/1 var(--f-script); margin: 0; color: var(--paper); }
 .site-footer__names span { color: var(--blossom); }
@@ -585,7 +586,7 @@ html:not(.js) .countdown, html:not(.js) [data-ics] { display: none; }
 .env-legend span { display: inline-flex; align-items: center; gap: .45rem; }
 .env-legend i { width: 12px; height: 12px; border-radius: 50%; display: inline-block; border: 2px solid var(--paper); box-shadow: 0 0 0 1px rgba(0, 0, 0, .12); }
 .leaflet-container { font-family: var(--f-body); background: #EEF1E8; }
-.leaflet-tile-pane { filter: sepia(.18) saturate(.85) hue-rotate(-6deg); }
+.leaflet-tile-pane { filter: sepia(.14) saturate(.8) brightness(1.03); }
 .leaflet-popup-content-wrapper { border-radius: 14px; box-shadow: var(--shadow-soft); }
 .leaflet-popup-content { margin: .9rem 1.1rem; font-size: .92rem; line-height: 1.45; color: var(--ink); }
 .leaflet-popup-content strong { display: block; font: 600 1.15rem/1.2 var(--f-display); margin-bottom: .15rem; }
@@ -665,7 +666,7 @@ html:not(.js) .countdown, html:not(.js) [data-ics] { display: none; }
 .field-error:empty { display: none; }
 .form-step--optional { transition: opacity .4s; }
 .form-footer { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between; padding-top: 1.6rem; border-top: 1px dashed var(--line); }
-.form-footer p { margin: 0; font-size: .88rem; color: var(--ink-soft); max-width: 380px; }
+.form-footer p { margin: 0; font-size: .88rem; color: var(--ink-soft); max-width: 62ch; text-wrap: pretty; }
 .hp { position: absolute !important; left: -9999px !important; width: 1px; height: 1px; overflow: hidden; }
 .form-status { margin-top: 1.2rem; padding: 1rem 1.2rem; border-radius: 14px; font-size: .97rem; }
 .form-status:empty { display: none; }
@@ -726,6 +727,33 @@ html:not(.js) .countdown, html:not(.js) [data-ics] { display: none; }
 .curtain-in .page-curtain__panel { transform: none; }
 
 /* ---------- Barre de progression ---------- */
+/* Retour en haut */
+.to-top {
+  position: fixed; right: max(1.1rem, env(safe-area-inset-right, 0px)); bottom: calc(1.1rem + env(safe-area-inset-bottom, 0px)); z-index: 95;
+  display: grid; place-items: center; width: 3.25rem; height: 3.25rem; padding: 0; border: 0; border-radius: 50%;
+  background: var(--paper); color: var(--fuchsia); box-shadow: 0 14px 34px -14px rgba(78, 94, 67, .55), 0 0 0 1px rgba(194, 24, 91, .08);
+  cursor: pointer; opacity: 0; visibility: hidden; transform: translateY(1.4rem) scale(.8);
+  transition: opacity .45s var(--ease), transform .7s var(--ease), visibility 0s linear .7s, background-color .35s, color .35s;
+}
+.to-top.is-shown { opacity: 1; visibility: visible; transform: none; transition: opacity .45s var(--ease), transform .7s var(--ease), visibility 0s, background-color .35s, color .35s; }
+.to-top:hover { background: var(--fuchsia); color: var(--paper); }
+.to-top:focus-visible { outline-offset: 4px; border-radius: 50%; }
+.to-top .icon { position: relative; width: 1.3rem; height: 1.3rem; transition: transform .5s var(--ease); }
+.to-top:hover .icon { transform: translateY(-3px); }
+.to-top__ring { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; transform: rotate(-90deg); pointer-events: none; }
+.to-top__ring circle { stroke: rgba(194, 24, 91, .14); stroke-width: 2; transition: stroke .35s; }
+.to-top__ring .to-top__progress { stroke: var(--fuchsia); stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
+.to-top:hover .to-top__ring circle { stroke: rgba(255, 249, 242, .25); }
+.to-top:hover .to-top__ring .to-top__progress { stroke: var(--paper); }
+.to-top__label {
+  position: absolute; right: calc(100% + .75rem); top: 50%; padding: .45rem .85rem; border-radius: 999px; white-space: nowrap;
+  background: var(--ink); color: var(--paper); font-size: .68rem; font-weight: 500; letter-spacing: .18em; text-transform: uppercase;
+  opacity: 0; transform: translate(.5rem, -50%); transition: opacity .3s, transform .45s var(--ease); pointer-events: none;
+}
+.to-top:hover .to-top__label, .to-top:focus-visible .to-top__label { opacity: 1; transform: translate(0, -50%); }
+body.menu-open .to-top { opacity: 0; visibility: hidden; }
+@media (hover: none) { .to-top__label { display: none; } }
+
 .scroll-progress { position: fixed; inset: 0 0 auto; z-index: 150; height: 2px; pointer-events: none; }
 .scroll-progress span { display: block; height: 100%; background: linear-gradient(90deg, var(--peach), var(--peony), var(--fuchsia)); transform-origin: left; transform: scaleX(0); }
 
@@ -891,7 +919,9 @@ html:not(.js) .countdown, html:not(.js) [data-ics] { display: none; }
 .radar__ring--2 { inset: 13%; border: 1px solid var(--line); background: radial-gradient(circle, var(--blossom-soft), rgba(255, 249, 242, .6)); }
 .radar__ring--3 { inset: 30%; border: 1px dashed rgba(107, 127, 94, .35); }
 /* Faisceau : bord lumineux en tête (sens horaire), traînée qui s’estompe derrière */
-.radar__sweep { position: absolute; inset: 13%; border-radius: 50%; background: conic-gradient(from 0deg, transparent 0 72%, rgba(240, 98, 146, .06) 80%, rgba(240, 98, 146, .32) 99.4%, rgba(194, 24, 91, .75) 99.4% 100%); animation: spin 6s linear infinite; }
+.radar__sweep { position: absolute; inset: 13%; border-radius: 50%; background: conic-gradient(from 0deg, transparent 0 72%, rgba(240, 98, 146, .06) 80%, rgba(240, 98, 146, .3) 100%); animation: spin 6s linear infinite; will-change: transform; }
+/* Faisceau : un vrai trait fin (le bord net d’un dégradé conique sort crénelé) */
+.radar__sweep::after { content: ""; position: absolute; left: 50%; top: 0; width: 1.5px; height: 50%; margin-left: -.75px; border-radius: 1px; background: linear-gradient(to top, rgba(194, 24, 91, .95), rgba(194, 24, 91, .55)); box-shadow: 0 0 5px rgba(194, 24, 91, .45); }
 /* Chaque point « s’allume » au passage du faisceau puis s’estompe (délai = angle du point, voir hebergements.html) */
 .radar__dot { position: absolute; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; background: var(--moss); animation: ping 6s linear var(--d, 0s) infinite; }
 .radar__dot:nth-child(odd) { background: var(--peony); }

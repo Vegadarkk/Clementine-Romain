@@ -96,11 +96,19 @@
     mapEl.innerHTML = "";
     const touch = window.matchMedia("(pointer: coarse)").matches;
     map = L.map(mapEl, { scrollWheelZoom: false, dragging: !touch, tap: false, zoomSnap: 0.5 });
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+    // Fond Esri « World Topo » (relief doux, sans clé API) ; repli sur OpenStreetMap
+    // si ses tuiles ne répondent pas.
+    const OSM = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+    const topo = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}", {
       maxZoom: 18,
-      subdomains: "abcd",
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      attribution: `Fond &copy; <a href="https://www.esri.com/">Esri</a>, HERE, Garmin, USGS · ${OSM}`,
     }).addTo(map);
+    let failed = 0;
+    topo.on("tileerror", () => {
+      if (++failed !== 4) return;
+      map.removeLayer(topo);
+      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18, attribution: OSM }).addTo(map);
+    });
 
     const wedding = [
       { key: "hery", lat: 45.79708, lng: 6.01379, name: "Mairie & église d’Héry-sur-Alby", sub: "Cérémonies · 14h30 et 15h30" },

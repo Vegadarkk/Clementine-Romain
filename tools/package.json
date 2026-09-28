@@ -9,7 +9,8 @@
     "flowers": "node build-flowers.mjs",
     "map": "node build-map.mjs",
     "pages": "node build-pages.mjs",
-    "logo": "node build-logo.mjs --site"
+    "logo": "node build-logo.mjs --site",
+    "logos": "node build-logo.mjs --pistes"
   },
   "devDependencies": {
     "@fontsource/cormorant-garamond": "^5.3.0",

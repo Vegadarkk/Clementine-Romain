@@ -241,6 +241,11 @@ if (process.argv[2] === "--pistes") {
   };
   for (const [k, m] of Object.entries(light)) writeFileSync(new URL(`${k}-clair.svg`, dir), wrap(m, "#FFF9F2"));
   writeFileSync(new URL("pistes.json", dir), JSON.stringify(all));
+  // Copie pour la page de choix logos.html
+  const pub = new URL("../assets/img/logos/", import.meta.url);
+  mkdirSync(pub, { recursive: true });
+  for (const [k, m] of Object.entries(all)) writeFileSync(new URL(`${k}.svg`, pub), wrap(m));
+  for (const [k, m] of Object.entries(light)) writeFileSync(new URL(`${k}-clair.svg`, pub), wrap(m, "#FFF9F2"));
   console.log(Object.entries(all).map(([k, m]) => `${k}: ${(m.svg.length / 1024).toFixed(1)} Ko`).join(" · "));
 }
 

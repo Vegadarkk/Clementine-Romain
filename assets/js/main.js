@@ -93,11 +93,39 @@
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
 
+  /* ------------------------------------------------------- Retour en haut */
+  const toTop = $("[data-to-top]");
+  if (toTop) {
+    const ring = $(".to-top__progress", toTop);
+    let shown = false;
+    const update = () => {
+      const y = window.scrollY, vh = window.innerHeight;
+      const max = document.documentElement.scrollHeight - vh;
+      if (ring) ring.style.strokeDashoffset = String(1 - (max > 0 ? Math.min(1, y / max) : 0));
+      // Visible une fois arrivé dans le dernier tiers de la page (appel à répondre, pied de page…)
+      const show = y > vh * 0.9 && max - y < Math.max(vh * 1.6, max * 0.3);
+      if (show !== shown) {
+        shown = show;
+        toTop.classList.toggle("is-shown", show);
+        toTop.tabIndex = show ? 0 : -1;
+      }
+    };
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update, { passive: true });
+    update();
+    toTop.addEventListener("click", () => {
+      const brand = $(".brand");
+      const done = () => brand && brand.focus({ preventScroll: true });
+      if (lenis) lenis.scrollTo(0, { duration: 1.6, easing: (t) => 1 - Math.pow(1 - t, 4), force: true, onComplete: done });
+      else { window.scrollTo({ top: 0, behavior: motion ? "smooth" : "auto" }); done(); }
+    });
+  }
+
   /* ------------------------------------------------------------ Menu mobile */
   const toggle = $(".nav-toggle");
   const menu = $("#menu-mobile");
   if (toggle && menu) {
-    const outside = [$(".skip-link"), $(".brand"), $("main"), $(".site-footer")].filter(Boolean);
+    const outside = [$(".skip-link"), $(".brand"), $("main"), $(".site-footer"), $("[data-to-top]")].filter(Boolean);
     const setMenu = (open) => {
       outside.forEach((el) => el.toggleAttribute("inert", open));
       toggle.setAttribute("aria-expanded", String(open));

@@ -8,7 +8,7 @@ const LUCIDE = [
   "heart", "mail", "copy", "check", "footprints", "bike", "binoculars", "castle", "sun", "leaf", "clock", "gift",
   "plus", "minus", "x", "menu", "chevron-down", "external-link", "train-front", "plane", "compass", "sparkles",
   "tree-pine", "droplets", "car", "chef-hat", "baby", "user", "send", "arrow-right", "arrow-down",
-  "map", "flower-2", "hotel", "search", "ship", "sailboat", "camera", "info", "circle-alert", "rotate-ccw", "phone", "globe", "trash-2", "user-plus", "party-popper",
+  "map", "flower-2", "hotel", "search", "ship", "sailboat", "camera", "info", "circle-alert", "rotate-ccw", "phone", "globe", "trash-2", "user-plus", "party-popper", "arrow-up", "car-taxi-front", "zoom-in", "route",
 ];
 
 const CUSTOM = {

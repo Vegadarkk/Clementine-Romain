@@ -23,7 +23,7 @@ function bustCache(html) {
     .replace(/assets\/img\/icons\.svg(?:\?v=[0-9a-f]+)?#/g, () => `assets/img/icons.svg?v=${fingerprint("assets/img/icons.svg")}#`);
 }
 
-const PAGES = ["index.html", "hebergements.html", "temoins.html", "environs.html", "rsvp.html", "404.html"];
+const PAGES = ["index.html", "hebergements.html", "temoins.html", "environs.html", "rsvp.html", "404.html", "logos.html"];
 const SITE_URL = "https://vegadarkk.github.io/Clementine-Romain/";
 
 /* ----------------------------------------------------- Paysage de montagnes */
@@ -173,6 +173,11 @@ ${[...NAV, ["rsvp", "rsvp.html", "Répondre"]].map(([, href, label]) => `       
       </div>
     </div>
   </footer>
+  <button class="to-top" type="button" data-to-top aria-label="Revenir en haut de la page" tabindex="-1">
+    <svg class="to-top__ring" viewBox="0 0 52 52" aria-hidden="true" focusable="false"><circle cx="26" cy="26" r="24"/><circle class="to-top__progress" cx="26" cy="26" r="24" pathLength="1"/></svg>
+    <svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#i-arrow-up"/></svg>
+    <span class="to-top__label" aria-hidden="true">Haut de page</span>
+  </button>
   <div class="toast" role="status" aria-live="polite" data-toast></div>
   <div class="cursor is-out" aria-hidden="true"><div class="cursor__ring"><span class="cursor__label"></span></div><div class="cursor__dot"></div></div>
   <div class="grain" aria-hidden="true"></div>`;
