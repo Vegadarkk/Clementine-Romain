@@ -111,7 +111,7 @@ const svg = (vb, defs, body, extra = "") =>
 // Fleurs seules
 {
   const p = peony();
-  writeFileSync(OUT("fleur-pivoine.svg"), svg("-100 -100 200 200", p.defs, p.body));
+  writeFileSync(OUT("fleur-pivoine.svg"), svg("-104 -104 208 208", p.defs, p.body));
   const s = rose();
   writeFileSync(OUT("fleur-rose.svg"), svg("-100 -100 200 200", s.defs, s.body));
 }
@@ -119,7 +119,7 @@ const svg = (vb, defs, body, extra = "") =>
 // Feuillage (branche seule)
 writeFileSync(
   OUT("feuillage.svg"),
-  svg("0 0 260 200", LEAF_DEFS, sprig({ x0: 20, y0: 190, cx: 60, cy: 40, x1: 240, y1: 20, leaves: 9, size: 1.25 })),
+  svg("0 -10 280 210", LEAF_DEFS, sprig({ x0: 20, y0: 190, cx: 60, cy: 40, x1: 240, y1: 20, leaves: 9, size: 1.25 })),
 );
 
 // Bouquet d'angle : feuillage + pivoine + rose + boutons
@@ -137,7 +137,7 @@ writeFileSync(
     bud(60, 250, -100, 1, "#E91E63") +
     `<g transform="translate(285 205) scale(.85) rotate(18)">${s.body}</g>` +
     `<g transform="translate(180 200) scale(.95)">${p.body}</g>`;
-  writeFileSync(OUT("bouquet.svg"), svg("0 0 400 340", LEAF_DEFS + p.defs + s.defs, body));
+  writeFileSync(OUT("bouquet.svg"), svg("-10 0 420 340", LEAF_DEFS + p.defs + s.defs, body));
 }
 
 // Ornement de titre (branches symétriques + petite pivoine)
@@ -146,7 +146,7 @@ writeFileSync(
   const left = sprig({ x0: 118, y0: 24, cx: 70, cy: 34, x1: 6, y1: 22, leaves: 6, size: 0.55 });
   const right = `<g transform="translate(260 0) scale(-1 1)">${sprig({ x0: 118, y0: 24, cx: 70, cy: 34, x1: 6, y1: 22, leaves: 6, size: 0.55 })}</g>`;
   const body = left + right + `<g transform="translate(130 24) scale(.2)">${p.body}</g>`;
-  writeFileSync(OUT("ornement.svg"), svg("0 0 260 48", LEAF_DEFS + p.defs, body));
+  writeFileSync(OUT("ornement.svg"), svg("-12 0 284 48", LEAF_DEFS + p.defs, body));
 }
 
 console.log("Fleurs générées : fleur-pivoine, fleur-rose, feuillage, bouquet, ornement");
