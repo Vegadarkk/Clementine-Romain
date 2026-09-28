@@ -43,7 +43,9 @@ Les textes se modifient directement dans les fichiers `.html` :
 
 - **Horaires** : `index.html` (cartes des lieux, section `programme`) et `assets/js/main.js` (fichier agenda `.ics`, fonction « Agenda .ics »).
 - **Témoins** : `temoins.html` (photos dans `assets/img/temoins/`).
-- **Hébergements** : `hebergements.html`, liste `<ul class="stays">` — un modèle de fiche est fourni en commentaire juste au-dessus.
+- **Hébergements** : `hebergements.html`, listes `<ul class="stays">` (adresses recommandées par le château) — un modèle de fiche est fourni en commentaire juste au-dessus.
+- **Plan du domaine** : `index.html`, section `domaine` (position des numéros sur le plan : `style="left:…%;top:…%"`).
+- **Choix du logo** : `logos.html` présente les 4 pistes de monogramme (à partager avec Clémentine) ; les fichiers sont régénérés par `npm run logos`.
 - **Idées de sorties** : `environs.html` (chaque idée a ses coordonnées GPS `data-lat` / `data-lng` pour la carte).
 
 En-tête, menu et pied de page sont communs à toutes les pages : les modifier dans `tools/build-pages.mjs`, puis :
@@ -67,8 +69,10 @@ puis ouvrir <http://localhost:8080>.
 
 ## Détails techniques
 
-- Animations : [GSAP](https://gsap.com) (ScrollTrigger, SplitText, Flip) et défilement fluide [Lenis](https://lenis.darkroom.engineering), fichiers inclus dans `assets/vendor/`.
+- Animations : [GSAP](https://gsap.com) (ScrollTrigger, SplitText) et défilement fluide [Lenis](https://lenis.darkroom.engineering), fichiers inclus dans `assets/vendor/`.
 - Accessibilité : navigation clavier, lien d’évitement, contrastes AA, respect du réglage « réduire les animations » du téléphone/ordinateur, contenu entièrement lisible sans JavaScript.
-- Carte des environs : [Leaflet](https://leafletjs.com) avec fonds © OpenStreetMap / © CARTO.
+- Carte des environs : [Leaflet](https://leafletjs.com), fond topographique © Esri (repli automatique sur © OpenStreetMap).
+- Musique d’ambiance (bouton en bas à gauche, jamais en lecture automatique) : J.-S. Bach, *Aria* des Variations Goldberg, par Shelley Katz — enregistrement [Musopen](https://musopen.org) versé au domaine public (`assets/audio/`).
+- Plan, photos des espaces et des hébergements, contacts : © [Château de Saint-Offenge](https://chateaudesaintoffenge.fr/mariage-chateau-saint-offenge/), crédités sur les pages concernées.
 - Cartes illustrées générées depuis des données géographiques réelles (`tools/build-map.mjs`, sources dans `tools/data/README.md`).
 - Polices auto-hébergées (Cormorant Garamond, Jost, Pinyon Script — licence SIL OFL), icônes [Lucide](https://lucide.dev) (ISC).

@@ -21,35 +21,41 @@
   /* ------------------------------------------------------------ Filtres */
   const filters = $("[data-filters]");
   const status = $("[data-filter-status]");
+  const grid = $("[data-places]");
   if (filters) {
     filters.hidden = false;
     const chips = $$("[data-filter]", filters);
+    let filterTl = null;
     chips.forEach((chip) => {
       chip.addEventListener("click", () => {
         if (chip.getAttribute("aria-pressed") === "true") return;
         const cat = chip.dataset.filter;
         chips.forEach((c) => c.setAttribute("aria-pressed", String(c === chip)));
-        const apply = () => places.forEach((p) => { p.hidden = cat !== "all" && p.dataset.cat !== cat; });
-        if (motion && window.Flip) {
+        const shown = places.filter((p) => cat === "all" || p.dataset.cat === cat);
+        const apply = () => places.forEach((p) => { p.hidden = !shown.includes(p); });
+        // Si la grille a défilé hors de l’écran, on remonte en douceur jusqu’aux filtres
+        const bringBack = () => {
+          if (!grid || grid.getBoundingClientRect().top >= 0) return;
+          // La page vient de raccourcir : on part de la position réelle (le navigateur a pu la ramener)
+          const top = Math.max(0, grid.getBoundingClientRect().top + window.scrollY - filters.offsetHeight - 110);
+          if (window.__lenis) { window.__lenis.resize(); window.__lenis.scrollTo(top, { duration: 0.9, force: true }); }
+          else window.scrollTo({ top, behavior: motion ? "smooth" : "auto" });
+        };
+        if (motion) {
+          // Fondu sortant des cartes visibles, puis entrée en cascade des cartes retenues.
+          // Pas de positionnement absolu : la grille garde toujours sa mise en page normale.
+          if (filterTl) filterTl.progress(1).kill();
           revealAllPlaces();
-          gsap.killTweensOf(places);
-          gsap.set(places, { opacity: 1, scale: 1, y: 0 });
-          const state = window.Flip.getState(places);
-          apply();
-          window.Flip.from(state, {
-            duration: 0.7, ease: "power3.inOut", stagger: 0.03, absolute: true, nested: true,
-            onEnter: (els) => gsap.fromTo(els, { opacity: 0, scale: 0.9, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.6, delay: 0.15 }),
-            onLeave: (els) => gsap.to(els, { opacity: 0, scale: 0.9, duration: 0.35 }),
-            onComplete: () => {
-              gsap.set(places.filter((p) => !p.hidden), { opacity: 1, scale: 1, y: 0 });
-              window.ScrollTrigger && window.ScrollTrigger.refresh();
-            },
-          });
+          const visible = places.filter((p) => !p.hidden);
+          filterTl = gsap.timeline({ onComplete: () => { filterTl = null; window.ScrollTrigger && window.ScrollTrigger.refresh(); } })
+            .to(visible, { opacity: 0, y: 14, duration: 0.22, stagger: 0.012, ease: "power2.in", overwrite: true })
+            .add(() => { apply(); bringBack(); })
+            .fromTo(shown, { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.6, stagger: 0.05, ease: "power3.out", overwrite: true });
         } else {
           apply();
+          bringBack();
         }
-        const count = places.filter((p) => !p.hidden).length;
-        if (status) status.textContent = `${count} idée${count > 1 ? "s" : ""} affichée${count > 1 ? "s" : ""}`;
+        if (status) status.textContent = `${shown.length} idée${shown.length > 1 ? "s" : ""} affichée${shown.length > 1 ? "s" : ""}`;
       });
     });
   }

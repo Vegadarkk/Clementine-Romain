@@ -93,6 +93,92 @@
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
 
+  /* ------------------------------------------------ Musique d’ambiance */
+  // Jamais de lecture automatique : la musique ne démarre que sur demande, puis
+  // reprend de page en page (au premier geste du visiteur si le navigateur l’exige).
+  const musicBtn = $("[data-music]");
+  if (musicBtn) {
+    const KEY = "cr-music";
+    const store = (() => { try { return window.sessionStorage; } catch (e) { return null; } })();
+    const read = () => { try { return JSON.parse(store.getItem(KEY)) || {}; } catch (e) { return {}; } };
+    const write = (v) => { try { store.setItem(KEY, JSON.stringify(v)); } catch (e) { /* stockage indisponible */ } };
+    const stateEl = $("[data-music-state]", musicBtn);
+    const VOL = 0.32;
+    let audio = null, fadeId = 0, wanted = false;
+    const ensure = () => {
+      if (audio) return audio;
+      audio = new Audio(musicBtn.dataset.src);
+      audio.loop = true;
+      audio.preload = "auto";
+      audio.volume = 0;
+      return audio;
+    };
+    const fade = (to, ms, done) => {
+      const id = ++fadeId, from = audio.volume, t0 = performance.now();
+      const step = (now) => {
+        if (id !== fadeId) return;
+        const k = Math.min(1, (now - t0) / ms);
+        try { audio.volume = from + (to - from) * k; } catch (e) { /* iOS : volume fixe */ }
+        if (k < 1) requestAnimationFrame(step); else if (done) done();
+      };
+      requestAnimationFrame(step);
+    };
+    const render = (playing) => {
+      musicBtn.setAttribute("aria-pressed", String(playing));
+      musicBtn.classList.toggle("is-playing", playing);
+      if (stateEl) stateEl.textContent = playing ? "Couper la musique" : "Mettre la musique";
+    };
+    const save = () => write({ ...read(), on: wanted, t: audio ? audio.currentTime : read().t || 0 });
+    const play = () => {
+      const a = ensure();
+      const saved = read();
+      if (saved.t && !a.currentTime) { try { a.currentTime = saved.t; } catch (e) { /* pas encore chargé */ } }
+      return a.play().then(() => { render(true); fade(VOL, 2200); musicBtn.classList.remove("is-waiting"); });
+    };
+    const stop = () => {
+      render(false);
+      if (!audio) return;
+      fade(0, 700, () => { if (!wanted) audio.pause(); });
+    };
+    musicBtn.addEventListener("click", () => {
+      wanted = !(musicBtn.getAttribute("aria-pressed") === "true" || musicBtn.classList.contains("is-waiting"));
+      musicBtn.classList.remove("is-waiting");
+      if (wanted) play().catch(() => { wanted = false; render(false); });
+      else stop();
+      save();
+    });
+    // Page suivante : on mémorise la position pour reprendre au même endroit
+    window.addEventListener("pagehide", save);
+    document.addEventListener("click", (e) => { if (e.target.closest("a[href]")) save(); }, true);
+    if (read().on) {
+      wanted = true;
+      play().catch(() => {
+        // Lecture bloquée par le navigateur : on attend le premier geste du visiteur
+        musicBtn.classList.add("is-waiting");
+        const resume = (e) => {
+          if (e.target.closest && e.target.closest("[data-music]")) return;
+          window.removeEventListener("pointerdown", resume, true);
+          window.removeEventListener("keydown", resume, true);
+          if (wanted) play().catch(() => {});
+        };
+        window.addEventListener("pointerdown", resume, true);
+        window.addEventListener("keydown", resume, true);
+      });
+    } else {
+      render(false);
+      if (stateEl) stateEl.textContent = "Un peu de musique\u00a0?";
+      // Une seule suggestion discrète par visite
+      if (!read().hinted) {
+        write({ ...read(), hinted: true });
+        setTimeout(() => {
+          if (wanted) return;
+          musicBtn.classList.add("is-hinting");
+          setTimeout(() => musicBtn.classList.remove("is-hinting"), 4200);
+        }, 5000);
+      }
+    }
+  }
+
   /* ------------------------------------------------------- Retour en haut */
   const toTop = $("[data-to-top]");
   if (toTop) {
@@ -103,7 +189,7 @@
       const max = document.documentElement.scrollHeight - vh;
       if (ring) ring.style.strokeDashoffset = String(1 - (max > 0 ? Math.min(1, y / max) : 0));
       // Visible une fois arrivé dans le dernier tiers de la page (appel à répondre, pied de page…)
-      const show = y > vh * 0.9 && max - y < Math.max(vh * 1.6, max * 0.3);
+      const show = y > vh * 0.9 && max - y < Math.max(vh * 1.8, max * 0.2);
       if (show !== shown) {
         shown = show;
         toTop.classList.toggle("is-shown", show);
@@ -158,7 +244,7 @@
   const toggle = $(".nav-toggle");
   const menu = $("#menu-mobile");
   if (toggle && menu) {
-    const outside = [$(".skip-link"), $(".brand"), $("main"), $(".site-footer"), $("[data-to-top]")].filter(Boolean);
+    const outside = [$(".skip-link"), $(".brand"), $("main"), $(".site-footer"), $("[data-to-top]"), $("[data-music]")].filter(Boolean);
     const setMenu = (open) => {
       outside.forEach((el) => el.toggleAttribute("inert", open));
       toggle.setAttribute("aria-expanded", String(open));
@@ -314,15 +400,74 @@
       const label = $(".cursor__label", cursor);
       const xTo = gsap.quickTo(cursor, "x", { duration: 0.35, ease: "power3" });
       const yTo = gsap.quickTo(cursor, "y", { duration: 0.35, ease: "power3" });
-      window.addEventListener("pointermove", (e) => { xTo(e.clientX); yTo(e.clientY); cursor.classList.remove("is-out"); }, { passive: true });
+      window.addEventListener("pointermove", (e) => { xTo(e.clientX); yTo(e.clientY); cursor.classList.remove("is-out"); heartMove(e); }, { passive: true });
       document.addEventListener("pointerleave", () => cursor.classList.add("is-out"));
       document.addEventListener("pointerover", (e) => {
         const labelled = e.target.closest("[data-cursor]");
         const link = e.target.closest("a, button, label, input, textarea, select, [role=button]");
-        cursor.classList.toggle("has-label", !!labelled);
-        cursor.classList.toggle("is-link", !!link && !labelled);
+        hearty = e.target.closest("[data-cursor-heart]");
+        cursor.classList.toggle("is-heart", !!hearty);
+        cursor.classList.toggle("has-label", !!labelled && !hearty);
+        cursor.classList.toggle("is-link", !!link && !labelled && !hearty);
         if (labelled && label) label.textContent = labelled.getAttribute("data-cursor");
       });
+
+      // Cœur vivant : il bat de plus en plus vite à mesure qu’on s’approche du baiser
+      const ring = $(".cursor__ring", cursor);
+      const heartSvg = $(".cursor__heart", cursor);
+      let hearty = null, closeness = 0, target = 0, phase = 0, lastBeat = 0, px = 0, py = 0;
+      const focusPoint = (el) => {
+        const img = $("img", el);
+        const r = el.getBoundingClientRect();
+        const [fx, fy] = (el.dataset.heartFocus || "0.5 0.5").split(" ").map(Number);
+        if (!img || !img.naturalWidth) return { x: r.left + r.width * fx, y: r.top + r.height * fy, r };
+        // Position réelle du point dans l’image recadrée (object-fit: cover)
+        const k = Math.max(r.width / img.naturalWidth, r.height / img.naturalHeight);
+        const w = img.naturalWidth * k, h = img.naturalHeight * k;
+        const [ox, oy] = getComputedStyle(img).objectPosition.split(" ").map((v) => parseFloat(v) / 100);
+        return { x: r.left + (r.width - w) * ox + w * fx, y: r.top + (r.height - h) * oy + h * fy, r };
+      };
+      function heartMove(e) {
+        px = e.clientX; py = e.clientY;
+        if (!hearty) { target = 0; return; }
+        const f = focusPoint(hearty);
+        const d = Math.hypot(px - f.x, py - f.y);
+        target = gsap.utils.clamp(0, 1, 1 - d / (Math.max(f.r.width, f.r.height) * 0.55));
+      }
+      function floatHeart(x, y, big) {
+        const h = document.createElement("span");
+        h.className = "heart-float";
+        h.innerHTML = `<svg viewBox="0 0 24 24">${heartSvg.innerHTML}</svg>`;
+        document.body.appendChild(h);
+        const s = (big ? 0.9 : 0.5) + Math.random() * 0.5;
+        gsap.fromTo(h, { x, y, scale: 0.2, opacity: 0, rotation: gsap.utils.random(-25, 25) }, {
+          x: x + gsap.utils.random(-60, 60), y: y - gsap.utils.random(70, 150), scale: s, rotation: gsap.utils.random(-30, 30),
+          keyframes: { opacity: [0, 1, 1, 0] }, duration: gsap.utils.random(1.1, 1.7), ease: "power2.out", onComplete: () => h.remove(),
+        });
+      }
+      gsap.ticker.add((time, dt) => {
+        closeness += ((hearty ? target : 0) - closeness) * 0.08;
+        cursor.style.setProperty("--close", closeness.toFixed(3));
+        if (!hearty) { phase = 0; return; }
+        // 50 → 140 battements par minute
+        phase += (dt / 1000) * (0.85 + closeness * 1.5);
+        const t = phase % 1;
+        const bump = (c, w) => Math.max(0, 1 - Math.abs(t - c) / w);
+        const beat = 1 + 0.26 * bump(0.08, 0.1) + 0.16 * bump(0.3, 0.1);
+        gsap.set(heartSvg, { scale: beat * (1 + closeness * 0.25) });
+        if (Math.floor(phase) !== lastBeat) {
+          lastBeat = Math.floor(phase);
+          const wave = document.createElement("i");
+          wave.className = "cursor__wave";
+          ring.appendChild(wave);
+          gsap.fromTo(wave, { scale: 1, opacity: 0.55 + closeness * 0.3 }, { scale: 1.7 + closeness * 0.6, opacity: 0, duration: 1, ease: "power2.out", onComplete: () => wave.remove() });
+          if (closeness > 0.72 && document.querySelectorAll(".heart-float").length < 14) floatHeart(px, py - 20, false);
+        }
+      });
+      // Un clic sur la photo : une gerbe de petits cœurs
+      $$("[data-cursor-heart]").forEach((el) => el.addEventListener("click", (e) => {
+        for (let n = 0; n < 9; n++) setTimeout(() => floatHeart(e.clientX, e.clientY - 10, true), n * 45);
+      }));
     }
 
     $$("[data-magnetic]").forEach((el) => {
@@ -478,8 +623,27 @@
         .fromTo(img,
           { scale: 1.25, x: () => { const f = focus(); return f.w / 2 - f.x; }, y: () => { const f = focus(); return f.h * 0.46 - f.y; }, transformOrigin: origin },
           { scale: 1, x: 0, y: 0, transformOrigin: origin, ease: "power2.inOut", duration: 1 }, 0)
-        .to($(".reveal-photo__text", sec), { opacity: 1, y: 0, startAt: { y: 50 }, duration: 0.35 }, 0.7);
+        .to($(".reveal-photo__scrim", sec), { opacity: 1, ease: "none", duration: 0.45 }, 0.55);
       img.addEventListener("load", () => ST.refresh(), { once: true });
+
+      // Texte : écrit à l’encre une fois la photo presque déployée, effacé en remontant
+      const text = $("[data-rp-text]", sec);
+      if (!text) return;
+      gsap.set(text, { opacity: 1 });
+      const words = $$(".rp-w > span", text);
+      const t = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } })
+        .fromTo($(".rp-over", text), { opacity: 0, letterSpacing: "1em" }, { opacity: 1, letterSpacing: "0.42em", duration: 1.5 }, 0)
+        .fromTo($(".rp-script", text), { "--ink": "-10%", y: 24, filter: "blur(5px)" }, { "--ink": "112%", y: 0, filter: "blur(0px)", duration: 2.1, ease: "power2.inOut" }, 0.15)
+        .fromTo($(".rp-line", text), { scaleX: 0 }, { scaleX: 1, duration: 1.2, ease: "expo.inOut" }, 1.05)
+        .fromTo(words, { yPercent: 115 }, { yPercent: 0, duration: 1.1, stagger: 0.09, ease: "expo.out" }, 1.25)
+        .fromTo($(".rp-place", text), { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 1 }, 1.6);
+      const st = ST.create({
+        trigger: sec, invalidateOnRefresh: true,
+        start: () => `top+=${Math.round((sec.offsetHeight - window.innerHeight) * 0.62)} top`,
+        onEnter: () => t.timeScale(1).play(),
+        onLeaveBack: () => t.timeScale(2).reverse(),
+      });
+      if (window.scrollY > st.start) t.progress(1); // arrivée directe plus bas (ancre, retour arrière)
     });
   }
 
@@ -584,25 +748,50 @@
     if (!sec) return;
     const track = $(".programme__track", sec);
     const sun = $(".programme__sun", sec);
+    // Du plein jour à la nuit étoilée : le soleil se couche derrière les montagnes,
+    // le ciel passe au bleu nuit, la lune se lève et les étoiles s’allument.
     const skyStops = [
       { p: 0, top: "#FFF3E6", bot: "#FFE6D6", sun: "#FFE1B0" },
       { p: 0.45, top: "#FFE6D4", bot: "#FFC9A6", sun: "#FFC48F" },
-      { p: 0.75, top: "#FDBFA3", bot: "#F68BAF", sun: "#FFA77F" },
-      { p: 1, top: "#5E2A4C", bot: "#C9457A", sun: "#F06292" },
+      { p: 0.66, top: "#FDBFA3", bot: "#F68BAF", sun: "#FFA77F" },
+      { p: 0.78, top: "#6E3C70", bot: "#E07A8E", sun: "#F4845F" },
+      { p: 0.9, top: "#18204A", bot: "#3F3468", sun: "#E0705A" },
+      { p: 1, top: "#0E1433", bot: "#262857", sun: "#E0705A" },
     ];
+    const stars = $(".programme__stars", sec);
+    if (stars && !stars.childElementCount) {
+      const frag = document.createDocumentFragment();
+      for (let n = 0; n < 90; n++) {
+        const st = document.createElement("i");
+        const big = Math.random() < 0.12;
+        st.style.cssText = `left:${(Math.random() * 100).toFixed(2)}%;top:${(Math.pow(Math.random(), 1.4) * 100).toFixed(2)}%;--s:${big ? 2.6 : 1 + Math.random() * 1.2}px;--t:${(2.5 + Math.random() * 4).toFixed(2)}s;--d:${(-Math.random() * 6).toFixed(2)}s`;
+        frag.appendChild(st);
+      }
+      stars.appendChild(frag);
+    }
     const mix = (a, b, t) => gsap.utils.interpolate(a, b, t);
+    const clamp01 = gsap.utils.clamp(0, 1);
     function sky(p) {
       let i = 0;
       while (i < skyStops.length - 2 && p > skyStops[i + 1].p) i++;
       const a = skyStops[i], b = skyStops[i + 1];
-      const t = gsap.utils.clamp(0, 1, (p - a.p) / (b.p - a.p));
+      const t = clamp01((p - a.p) / (b.p - a.p));
       sec.style.setProperty("--sky-top", mix(a.top, b.top, t));
       sec.style.setProperty("--sky-bot", mix(a.bot, b.bot, t));
       sec.style.setProperty("--sun", mix(a.sun, b.sun, t));
-      const dusk = gsap.utils.clamp(0, 1, (p - 0.78) / 0.22);
+      const dusk = clamp01((p - 0.7) / 0.2);
+      const night = clamp01((p - 0.8) / 0.14);
       sec.style.setProperty("--dusk", dusk.toFixed(3));
-      sec.classList.toggle("is-dusk", p > 0.9);
-      if (sun) { sun.style.left = `${10 + p * 78}%`; sun.style.top = `${12 + Math.pow(p, 1.6) * 62}%`; }
+      sec.style.setProperty("--night", night.toFixed(3));
+      sec.classList.toggle("is-dusk", p > 0.8);
+      sec.classList.toggle("is-night", night > 0.6);
+      if (sun) {
+        // Arc : montée douce, puis descente franche sous la ligne des montagnes
+        const top = p < 0.5 ? 14 + (p / 0.5) * 14 : 28 + Math.pow((p - 0.5) / 0.34, 1.6) * 92;
+        sun.style.left = `${10 + p * 72}%`;
+        sun.style.top = `${Math.min(top, 130)}%`;
+        sun.style.opacity = String(1 - clamp01((p - 0.8) / 0.08));
+      }
     }
     sky(0);
 
@@ -630,7 +819,7 @@
         else window.scrollTo(0, y);
       };
       sec.addEventListener("focusin", onFocus);
-      return () => { sec.removeEventListener("focusin", onFocus); sec.classList.remove("is-horizontal", "is-dusk"); gsap.set(track, { clearProps: "transform" }); };
+      return () => { sec.removeEventListener("focusin", onFocus); sec.classList.remove("is-horizontal", "is-dusk", "is-night"); gsap.set(track, { clearProps: "transform" }); };
     });
     mm.add("(max-width: 1023px), (max-height: 619px)", () => {
       gsap.to($$(".programme__intro > *", sec), { opacity: 1, y: 0, startAt: { y: 30 }, duration: 1, stagger: 0.1, scrollTrigger: { trigger: sec, start: "top 80%" } });

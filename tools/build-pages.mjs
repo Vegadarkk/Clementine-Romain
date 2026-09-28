@@ -173,13 +173,17 @@ ${[...NAV, ["rsvp", "rsvp.html", "Répondre"]].map(([, href, label]) => `       
       </div>
     </div>
   </footer>
+  <button class="music" type="button" data-music aria-pressed="false" aria-label="Musique d’ambiance" data-src="assets/audio/aria-goldberg.mp3">
+    <span class="music__bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+    <span class="music__label" aria-hidden="true"><b data-music-state>Un peu de musique&nbsp;?</b><small>Bach · Aria des Variations Goldberg</small></span>
+  </button>
   <button class="to-top" type="button" data-to-top aria-label="Revenir en haut de la page" tabindex="-1">
     <svg class="to-top__ring" viewBox="0 0 52 52" aria-hidden="true" focusable="false"><circle cx="26" cy="26" r="24"/><circle class="to-top__progress" cx="26" cy="26" r="24" pathLength="1"/></svg>
     <svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#i-arrow-up"/></svg>
     <span class="to-top__label" aria-hidden="true">Haut de page</span>
   </button>
   <div class="toast" role="status" aria-live="polite" data-toast></div>
-  <div class="cursor is-out" aria-hidden="true"><div class="cursor__ring"><span class="cursor__label"></span></div><div class="cursor__dot"></div></div>
+  <div class="cursor is-out" aria-hidden="true"><div class="cursor__ring"><span class="cursor__label"></span><svg class="cursor__heart" viewBox="0 0 24 24"><path d="M12 20.7l-1.3-1.2C6 15.2 3 12.5 3 9.2 3 6.5 5.1 4.4 7.8 4.4c1.5 0 3 .7 4.2 1.9 1.2-1.2 2.7-1.9 4.2-1.9 2.7 0 4.8 2.1 4.8 4.8 0 3.3-3 6-7.7 10.3L12 20.7z"/></svg></div><div class="cursor__dot"></div></div>
   <div class="grain" aria-hidden="true"></div>`;
 
 const SCRIPTS = `<script src="assets/vendor/gsap.min.js" defer></script>
