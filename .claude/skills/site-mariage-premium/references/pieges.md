@@ -41,7 +41,7 @@ réintroduis pas en réécrivant du code.
 |---|---|---|
 | Radar « à l'envers » : traînée et réactions des points avant le faisceau | sens du dégradé conique et délais des points | traînée derrière le faisceau, délai négatif calculé depuis l'angle de chaque point |
 | Faisceau du radar « en escalier » | bord net d'un `conic-gradient` non anti-aliasé | trait fin en pseudo-élément (1,5 px + légère lueur) tournant avec le balayage |
-| Montagnes en bande plate, sommets invisibles sur écran de 2000 px | paysage de 1440 en `slice` + faible hauteur : le haut (les sommets) est rogné | paysage dédié plus large (`landscape(cls, { W: 2400 })`) et hauteur `min(15vw, 32vh)` |
+| Montagnes en bande plate, sommets invisibles sur écran de 2000 px | paysage de 1440 en `slice` + faible hauteur : le haut (les sommets) est rogné | paysage dédié plus large (`landscape(cls, { W: 2400, align: "xMidYMin" })`) : calé en haut, c'est le pied des montagnes qui est rogné quand la hauteur manque, jamais les cimes ; tester aussi des écrans larges mais peu hauts (2000×700) |
 | Soleil qui « plonge d'un coup » | trajectoire en deux morceaux (palier puis chute) | une seule courbe : x linéaire, y = 12 + 92·t^1,9 ; relever 20 positions et tracer la courbe pour vérifier |
 | Soleil encore visible et ciel violet à la fin du programme | derniers paliers du ciel trop clairs, soleil jamais caché | paliers jusqu'au bleu nuit, soleil sous les montagnes puis opacité 0, lune + étoiles + étoile filante |
 | Texte « Rendez-vous » trop discret | petit, sans contraste, simple fondu | plus grand, voile sombre, animation en plusieurs temps ; jamais sur les visages |

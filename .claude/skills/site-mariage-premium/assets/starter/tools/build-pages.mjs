@@ -62,7 +62,7 @@ function snowCaps(pts, threshold) {
 }
 // W : largeur du viewBox. Un paysage plus large (ex. 2400) garde ses sommets visibles sur les très
 // grands écrans, là où « slice » rognerait le haut d'un paysage de 1440.
-function landscape(cls = "", { W = 1440, sun = true } = {}) {
+function landscape(cls = "", { W = 1440, sun = true, align = "xMidYMax" } = {}) {
   const H = 360;
   const layers = [
     { c: "l-1", base: 150, amp: 95, s: [90, 170], depth: 0.5, snow: 88 },
@@ -77,7 +77,7 @@ function landscape(cls = "", { W = 1440, sun = true } = {}) {
     const d = `M-60 ${H + 10}L${pts.map(([x, y]) => `${r1(x)} ${r1(y)}`).join("L")}L${W + 60} ${H + 10}Z`;
     body += `<g class="l-layer" data-depth="${l.depth}"><path class="${l.c}" d="${d}"/>${l.snow ? `<g class="l-snow">${snowCaps(pts, l.snow)}</g>` : ""}</g>`;
   }
-  return `<svg class="landscape ${cls}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false">${body}</svg>`;
+  return `<svg class="landscape ${cls}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="${align} slice" aria-hidden="true" focusable="false">${body}</svg>`;
 }
 
 /* ------------------------------------------------------------------ Blocs */
@@ -197,8 +197,9 @@ const SCRIPTS = `<script src="assets/vendor/gsap.min.js" defer></script>
 const BLOCKS = {
   HEAD, HEADER, FOOTER, SCRIPTS,
   PAYSAGE: landscape("landscape--hero"),
-  // Programme : paysage large, sans soleil dessiné (le vrai soleil se couche derrière)
-  PAYSAGE_SOIR: landscape("landscape--soir", { W: 2400, sun: false }),
+  // Programme : paysage large, sans soleil dessiné (le vrai soleil se couche derrière).
+  // Calé en haut (YMin) : si la hauteur manque, c'est le pied des montagnes qui est rogné, jamais les cimes.
+  PAYSAGE_SOIR: landscape("landscape--soir", { W: 2400, sun: false, align: "xMidYMin" }),
 };
 
 for (const page of PAGES) {
