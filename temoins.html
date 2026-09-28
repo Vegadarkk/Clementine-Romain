@@ -93,54 +93,85 @@
       </div>
     </section>
 
-    <section class="section" aria-label="Présentation des témoins">
-      <div class="container witness-sides witness-sides--duo">
-        <div class="witness-side">
-          <h2 class="witness-side__title" data-reveal>Côté <span class="script">Romain</span></h2>
-          <div class="witness-grid" data-reveal-group>
-            <figure class="witness" data-tilt>
-              <div class="witness__photo">
-                <div class="arch"><img src="assets/img/temoins/florent-400.webp" srcset="assets/img/temoins/florent-400.webp 400w, assets/img/temoins/florent-800.webp 800w" sizes="(max-width: 480px) 45vw, 260px" width="400" height="500" loading="lazy" decoding="async" alt="Portrait de Florent, souriant, attablé en terrasse"></div>
+    <section class="section witnesses" aria-labelledby="temoins-liste">
+      <h2 class="visually-hidden" id="temoins-liste">Nos quatre témoins</h2>
+      <img class="witnesses__leaf witnesses__leaf--l" src="assets/img/feuillage.svg" alt="" width="260" height="200" data-parallax="-14">
+      <img class="witnesses__leaf witnesses__leaf--r" src="assets/img/feuillage.svg" alt="" width="260" height="200" data-parallax="12">
+      <div class="container">
+        <ul class="witness-row" data-witnesses>
+        <li class="witness2 witness2--1">
+          <figure>
+            <div class="witness2__blob" data-tilt>
+              <span class="witness2__shape" aria-hidden="true"></span>
+              <span class="witness2__ring" aria-hidden="true"></span>
+              <div class="witness2__photo">
+                <img src="assets/img/temoins/florent-400.webp" srcset="assets/img/temoins/florent-400.webp 400w, assets/img/temoins/florent-800.webp 800w" sizes="(max-width: 700px) 42vw, 270px" width="400" height="500" loading="lazy" decoding="async" alt="Portrait de Florent, souriant, attablé en terrasse">
               </div>
-              <figcaption>
-                <p class="witness__name">Florent</p>
-                <span class="witness__role"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#i-heart"/></svg>Ami de Romain</span>
-              </figcaption>
-            </figure>
-            <figure class="witness" data-tilt>
-              <div class="witness__photo">
-                <div class="arch"><img src="assets/img/temoins/pauline-400.webp" srcset="assets/img/temoins/pauline-400.webp 400w, assets/img/temoins/pauline-800.webp 800w" sizes="(max-width: 480px) 45vw, 260px" width="400" height="500" loading="lazy" decoding="async" alt="Portrait de Pauline au coucher du soleil, face à la mer"></div>
+              <img class="witness2__flower" src="assets/img/fleur-rose.svg" alt="" width="200" height="200">
+            </div>
+            <figcaption>
+              <h3 class="witness2__name">Florent</h3>
+              <svg class="witness2__swash" viewBox="0 0 180 24" aria-hidden="true" focusable="false"><path pathLength="1" d="M6 15C38 5 70 21 104 12s48-8 70 2"/></svg>
+              <p class="witness2__role">Ami de Romain</p>
+              <!-- Petit texte de présentation (facultatif) : <p class="witness2__bio">…</p> -->
+            </figcaption>
+          </figure>
+        </li>
+        <li class="witness2 witness2--2">
+          <figure>
+            <div class="witness2__blob" data-tilt>
+              <span class="witness2__shape" aria-hidden="true"></span>
+              <span class="witness2__ring" aria-hidden="true"></span>
+              <div class="witness2__photo">
+                <img src="assets/img/temoins/pauline-400.webp" srcset="assets/img/temoins/pauline-400.webp 400w, assets/img/temoins/pauline-800.webp 800w" sizes="(max-width: 700px) 42vw, 270px" width="400" height="500" loading="lazy" decoding="async" alt="Portrait de Pauline au coucher du soleil, face à la mer">
               </div>
-              <figcaption>
-                <p class="witness__name">Pauline</p>
-                <span class="witness__role"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#i-heart"/></svg>Sœur de Romain</span>
-              </figcaption>
-            </figure>
-          </div>
-        </div>
-        <div class="witness-side">
-          <h2 class="witness-side__title" data-reveal>Côté <span class="script">Clémentine</span></h2>
-          <div class="witness-grid" data-reveal-group>
-            <figure class="witness" data-tilt>
-              <div class="witness__photo">
-                <div class="arch"><img src="assets/img/temoins/anne-cecile-400.webp" srcset="assets/img/temoins/anne-cecile-400.webp 400w, assets/img/temoins/anne-cecile-800.webp 800w" sizes="(max-width: 480px) 45vw, 260px" width="400" height="500" loading="lazy" decoding="async" alt="Portrait d’Anne-Cécile, souriante"></div>
+              <img class="witness2__flower" src="assets/img/fleur-pivoine.svg" alt="" width="200" height="200">
+            </div>
+            <figcaption>
+              <h3 class="witness2__name">Pauline</h3>
+              <svg class="witness2__swash" viewBox="0 0 180 24" aria-hidden="true" focusable="false"><path pathLength="1" d="M6 15C38 5 70 21 104 12s48-8 70 2"/></svg>
+              <p class="witness2__role">Sœur de Romain</p>
+              <!-- Petit texte de présentation (facultatif) : <p class="witness2__bio">…</p> -->
+            </figcaption>
+          </figure>
+        </li>
+        <li class="witness2 witness2--3">
+          <figure>
+            <div class="witness2__blob" data-tilt>
+              <span class="witness2__shape" aria-hidden="true"></span>
+              <span class="witness2__ring" aria-hidden="true"></span>
+              <div class="witness2__photo">
+                <img src="assets/img/temoins/anne-cecile-400.webp" srcset="assets/img/temoins/anne-cecile-400.webp 400w, assets/img/temoins/anne-cecile-800.webp 800w" sizes="(max-width: 700px) 42vw, 270px" width="400" height="500" loading="lazy" decoding="async" alt="Portrait d’Anne-Cécile, souriante">
               </div>
-              <figcaption>
-                <p class="witness__name">Anne-Cécile</p>
-                <span class="witness__role"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#i-heart"/></svg>Sœur de Clémentine</span>
-              </figcaption>
-            </figure>
-            <figure class="witness" data-tilt>
-              <div class="witness__photo">
-                <div class="arch"><img src="assets/img/temoins/amandine-400.webp" srcset="assets/img/temoins/amandine-400.webp 400w, assets/img/temoins/amandine-800.webp 800w" sizes="(max-width: 480px) 45vw, 260px" width="400" height="500" loading="lazy" decoding="async" alt="Portrait d’Amandine dans un jardin"></div>
+              <img class="witness2__flower" src="assets/img/fleur-rose.svg" alt="" width="200" height="200">
+            </div>
+            <figcaption>
+              <h3 class="witness2__name">Anne-Cécile</h3>
+              <svg class="witness2__swash" viewBox="0 0 180 24" aria-hidden="true" focusable="false"><path pathLength="1" d="M6 15C38 5 70 21 104 12s48-8 70 2"/></svg>
+              <p class="witness2__role">Sœur de Clémentine</p>
+              <!-- Petit texte de présentation (facultatif) : <p class="witness2__bio">…</p> -->
+            </figcaption>
+          </figure>
+        </li>
+        <li class="witness2 witness2--4">
+          <figure>
+            <div class="witness2__blob" data-tilt>
+              <span class="witness2__shape" aria-hidden="true"></span>
+              <span class="witness2__ring" aria-hidden="true"></span>
+              <div class="witness2__photo">
+                <img src="assets/img/temoins/amandine-400.webp" srcset="assets/img/temoins/amandine-400.webp 400w, assets/img/temoins/amandine-800.webp 800w" sizes="(max-width: 700px) 42vw, 270px" width="400" height="500" loading="lazy" decoding="async" alt="Portrait d’Amandine dans un jardin">
               </div>
-              <figcaption>
-                <p class="witness__name">Amandine</p>
-                <span class="witness__role"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#i-heart"/></svg>Sœur de Clémentine</span>
-              </figcaption>
-            </figure>
-          </div>
-        </div>
+              <img class="witness2__flower" src="assets/img/fleur-pivoine.svg" alt="" width="200" height="200">
+            </div>
+            <figcaption>
+              <h3 class="witness2__name">Amandine</h3>
+              <svg class="witness2__swash" viewBox="0 0 180 24" aria-hidden="true" focusable="false"><path pathLength="1" d="M6 15C38 5 70 21 104 12s48-8 70 2"/></svg>
+              <p class="witness2__role">Sœur de Clémentine</p>
+              <!-- Petit texte de présentation (facultatif) : <p class="witness2__bio">…</p> -->
+            </figcaption>
+          </figure>
+        </li>
+        </ul>
       </div>
     </section>
 

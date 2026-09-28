@@ -442,21 +442,51 @@ html:not(.js) .countdown, html:not(.js) [data-ics] { display: none; }
 .arch img { width: 100%; height: 100%; object-fit: cover; }
 
 /* ---------- Témoins ---------- */
-.witness-sides { display: grid; gap: clamp(3rem, 7vw, 5rem); }
-.witness-side__title { display: flex; align-items: center; gap: 1rem; margin-bottom: clamp(1.5rem, 4vw, 2.5rem); font: italic 500 clamp(1.7rem, 3vw, 2.2rem)/1.2 var(--f-display); color: var(--moss-deep); }
-.witness-side__title::after { content: ""; flex: 1; height: 1px; background: var(--line); }
-.witness-side__title .script { font-style: normal; font-size: 1.35em; color: var(--fuchsia); }
-.witness-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(1.5rem, 4vw, 3rem); }
-.witness { margin: 0; text-align: center; }
-.witness__photo { position: relative; width: min(100%, 330px); margin: 0 auto; }
-.witness__photo .arch { aspect-ratio: 4 / 5; box-shadow: var(--shadow-soft); }
-.witness__photo .arch img { transition: transform 1.2s var(--ease); }
-.witness:hover .arch img { transform: scale(1.05); }
-.witness__photo::before { content: ""; position: absolute; inset: -12px -12px 12px 12px; border: 1px solid var(--peony); border-radius: var(--arch); opacity: .5; z-index: -1; transition: transform .6s var(--ease); }
-.witness:hover .witness__photo::before { transform: translate(-6px, 6px); }
-.witness__name { margin: 1.4rem 0 .2rem; font: 500 clamp(1.8rem, 3.4vw, 2.3rem)/1.1 var(--f-display); }
-.witness__role { display: inline-flex; align-items: center; gap: .5rem; padding: .45rem 1rem; border-radius: 999px; background: var(--blossom-soft); color: var(--fuchsia-deep); font: 500 .72rem/1.2 var(--f-body); letter-spacing: .18em; text-transform: uppercase; }
-.witness__role .icon { width: 1em; height: 1em; fill: currentColor; stroke: none; }
+.witnesses { overflow: hidden; padding-bottom: calc(var(--section-y) + 2rem); }
+.witnesses__leaf { position: absolute; width: clamp(140px, 17vw, 250px); opacity: .45; pointer-events: none; }
+.witnesses__leaf--l { left: -3vw; top: 6%; transform: rotate(-28deg); }
+.witnesses__leaf--r { right: -3vw; bottom: 4%; transform: scaleX(-1) rotate(-18deg); }
+.witness-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(1.5rem, 3vw, 3rem); align-items: start; margin: 0; padding: 0; list-style: none; }
+.witness2 { --r-a: 58% 42% 55% 45% / 52% 44% 56% 48%; --shape: var(--blossom); --tilt: -4deg; --dur: 12s; --delay: 0s; }
+.witness2:nth-child(even) { margin-top: clamp(3rem, 8vw, 7rem); }
+.witness2--1 { --shape: var(--blossom); --tilt: -6deg; --dur: 11s; --delay: -2s; --ratio: 1 / 1.12; }
+.witness2--2 { --shape: var(--sage-soft); --tilt: 5deg; --dur: 13s; --delay: -6s; --ratio: 1.06 / 1; }
+.witness2--3 { --shape: #FFE3CF; --tilt: -3deg; --dur: 12s; --delay: -4s; --ratio: 1 / 1.16; }
+.witness2--4 { --shape: #F9D3DF; --tilt: 7deg; --dur: 14s; --delay: -8s; --ratio: 1.02 / 1; }
+.witness2 figure { margin: 0; text-align: center; }
+.witness2__blob { position: relative; width: min(100%, 270px); aspect-ratio: var(--ratio, 1 / 1.08); margin: 0 auto; }
+.witness2__shape { position: absolute; inset: -8% -10% -6% -8%; background: var(--shape); border-radius: 36% 64% 58% 42% / 56% 40% 60% 44%; transform: rotate(var(--tilt)); animation: morph calc(var(--dur) * 1.3) ease-in-out var(--delay) infinite alternate-reverse; }
+.witness2__ring { position: absolute; inset: -3% -2% -4% -4%; border: 1.5px solid var(--peony); opacity: .45; border-radius: 60% 40% 45% 55% / 45% 55% 45% 55%; transform: rotate(calc(var(--tilt) * -1.5)); animation: morph calc(var(--dur) * .9) ease-in-out var(--delay) infinite alternate; pointer-events: none; }
+.witness2__photo { position: absolute; inset: 0; overflow: hidden; border-radius: 62% 38% 46% 54% / 60% 44% 56% 40%; box-shadow: 0 26px 50px -26px rgba(78, 94, 67, .55); animation: morph var(--dur) ease-in-out var(--delay) infinite alternate; isolation: isolate; background: var(--sage-soft); }
+.witness2__photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 32%; transition: transform 1.2s var(--ease); }
+.witness2__flower { position: absolute; width: 30%; top: -7%; right: -9%; filter: drop-shadow(0 8px 14px rgba(163, 20, 77, .2)); animation: floaty 9s ease-in-out var(--delay) infinite; pointer-events: none; }
+.witness2:nth-child(even) .witness2__flower { right: auto; left: -9%; top: auto; bottom: 2%; }
+.witness2__blob:hover .witness2__photo img { transform: scale(1.07); }
+.witness2__blob:hover .witness2__shape { transform: rotate(calc(var(--tilt) * -1)) scale(1.05); transition: transform .8s var(--ease); }
+.witness2__name { display: inline-block; margin: 1.5rem 0 0; padding: .08em .3em .2em; white-space: nowrap; font: 400 clamp(2.2rem, 3.3vw, 3.3rem)/1 var(--f-script); color: var(--ink); letter-spacing: 0; }
+.witness2__swash { display: block; width: min(150px, 70%); height: auto; margin: -.35rem auto .7rem; overflow: visible; }
+.witness2__swash path { fill: none; stroke: var(--peony); stroke-width: 2.2; stroke-linecap: round; }
+.witness2__role { display: inline-block; margin: 0; padding: .45rem 1rem; border-radius: 999px; background: rgba(255, 249, 242, .85); border: 1px solid rgba(194, 24, 91, .18); color: var(--fuchsia-deep); font: 500 .7rem/1.3 var(--f-body); letter-spacing: .18em; text-transform: uppercase; }
+.witness2__bio { max-width: 280px; margin: 1rem auto 0; color: var(--ink-soft); font-size: .98rem; line-height: 1.65; }
+@keyframes morph {
+  0% { border-radius: 62% 38% 46% 54% / 60% 44% 56% 40%; }
+  25% { border-radius: 40% 60% 68% 32% / 42% 62% 38% 58%; }
+  50% { border-radius: 70% 30% 36% 64% / 52% 36% 64% 48%; }
+  75% { border-radius: 34% 66% 58% 42% / 64% 52% 48% 36%; }
+  100% { border-radius: 56% 44% 30% 70% / 38% 58% 42% 62%; }
+}
+@media (max-width: 900px) {
+  .witness-row { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 3.5rem; }
+}
+@media (max-width: 480px) {
+  .witness-row { column-gap: 1.1rem; }
+  .witness2:nth-child(even) { margin-top: 3.5rem; }
+  .witness2__name { font-size: 1.95rem; margin-top: 1.2rem; }
+  .witness2__role { font-size: .58rem; letter-spacing: .1em; padding: .4rem .7rem; }
+}
+.motion [data-witnesses] .witness2__shape, .motion [data-witnesses] .witness2__ring, .motion [data-witnesses] .witness2__photo, .motion [data-witnesses] .witness2__flower, .motion [data-witnesses] .witness2__role { opacity: 0; }
+.motion [data-witnesses] .witness2__name { clip-path: inset(0 100% 0 0); }
+.motion [data-witnesses] .witness2__swash path { stroke-dasharray: 1; stroke-dashoffset: 1; }
 .contact-card { display: grid; grid-template-columns: auto 1fr; gap: clamp(1.2rem, 3vw, 2.4rem); align-items: center; padding: clamp(1.8rem, 4vw, 3rem); border-radius: var(--radius-lg); background: var(--paper); border: 1px solid var(--line); box-shadow: var(--shadow-soft); }
 .contact-card__icon { display: grid; place-items: center; width: 84px; height: 84px; border-radius: 50%; background: linear-gradient(135deg, var(--blossom), var(--peach)); color: var(--fuchsia-deep); }
 .contact-card__icon .icon { width: 2.2rem; height: 2.2rem; stroke-width: 1.3; }
@@ -863,9 +893,6 @@ html:not(.js) .countdown, html:not(.js) [data-ics] { display: none; }
 .stays-empty { display: grid; justify-items: center; gap: .6rem; padding: 2.4rem 1.5rem; border-radius: var(--radius-lg); border: 1.5px dashed var(--line); text-align: center; color: var(--ink-soft); }
 
 /* Témoins : deux familles côte à côte */
-.witness-sides--duo { grid-template-columns: 1fr 1fr; column-gap: clamp(2rem, 5vw, 4.5rem); }
-@media (max-width: 900px) { .witness-sides--duo { grid-template-columns: 1fr; } }
-@media (max-width: 480px) { .witness-grid { gap: 1rem; } .witness__name { font-size: 1.5rem; } .witness__role { font-size: .6rem; letter-spacing: .12em; padding: .4rem .7rem; } }
 
 /* Idées empilées */
 .ideas--stack { display: block; }

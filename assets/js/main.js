@@ -547,6 +547,30 @@
     });
   }
 
+  /* ---------- Témoins : apparitions en cascade ---------- */
+  function witnesses() {
+    const row = $("[data-witnesses]");
+    if (!row) return;
+    const reveal = (item) => {
+      const q = (sel) => $(sel, item);
+      return gsap.timeline()
+        .fromTo(q(".witness2__shape"), { opacity: 0, scale: 0, rotation: -60 }, { opacity: 1, scale: 1, rotation: 0, duration: 1.3, ease: "elastic.out(1, 0.55)" }, 0)
+        .fromTo(q(".witness2__photo"), { opacity: 0, scale: 0.25, rotation: -18 }, { opacity: 1, scale: 1, rotation: 0, duration: 1.2, ease: "back.out(1.7)" }, 0.12)
+        .fromTo(q(".witness2__photo img"), { scale: 1.6 }, { scale: 1, duration: 1.8, ease: "expo.out", clearProps: "transform" }, 0.12)
+        .fromTo(q(".witness2__ring"), { opacity: 0, scale: 1.25 }, { opacity: 0.45, scale: 1, duration: 1, ease: "power3.out" }, 0.45)
+        .fromTo(q(".witness2__flower"), { opacity: 0, scale: 0, rotation: -120 }, { opacity: 1, scale: 1, rotation: 0, duration: 1.1, ease: "back.out(2.2)" }, 0.7)
+        .fromTo(q(".witness2__name"), { clipPath: "inset(0% 100% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.1, ease: "power2.inOut" }, 0.55)
+        .to(q(".witness2__swash path"), { strokeDashoffset: 0, duration: 0.8, ease: "power2.out" }, 1.3)
+        .fromTo(q(".witness2__role"), { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.6 }, 1.45);
+    };
+    // Les témoins qui entrent ensemble dans l’écran apparaissent l’un après l’autre
+    ST.batch($$(".witness2", row), {
+      start: "top 85%",
+      once: true,
+      onEnter: (batch) => batch.forEach((item, i) => reveal(item).delay(i * 0.42)),
+    });
+  }
+
   /* ---------- Paysages (pied de page & en-têtes) ---------- */
   function landscapes() {
     $$(".landscape").forEach((svg) => {
@@ -587,6 +611,7 @@
     marquee();
     mapStory();
     programme();
+    witnesses();
     landscapes();
     progressBar();
     document.dispatchEvent(new CustomEvent("cr:animations"));
