@@ -395,12 +395,31 @@
   function revealPhoto() {
     $$("[data-reveal-photo]").forEach((sec) => {
       const frame = $(".reveal-photo__frame", sec);
-      const small = window.matchMedia("(max-width: 700px)").matches;
-      const start = small ? "inset(18% 14% 18% 14% round 36vw 36vw 22px 22px)" : "inset(15% 33% 15% 33% round 17vw 17vw 22px 22px)";
-      const tl = gsap.timeline({ scrollTrigger: { trigger: sec, start: "top top", end: "bottom bottom", scrub: 0.8 } });
-      tl.fromTo(frame, { clipPath: start }, { clipPath: "inset(0% 0% 0% 0% round 0vw 0vw 0px 0px)", ease: "power2.inOut", duration: 1 })
-        .fromTo($("img", frame), { scale: 1.3 }, { scale: 1, ease: "none", duration: 1 }, 0)
+      const img = $("img", frame);
+      // Arche toujours verticale, quelle que soit la forme de l’écran
+      const arch = () => {
+        const w = frame.clientWidth, h = frame.clientHeight;
+        const ah = h * (w < 700 ? 0.64 : 0.7);
+        const aw = Math.min(ah * 0.8, w * 0.8);
+        const x = (w - aw) / 2, y = (h - ah) / 2, r = aw / 2;
+        return `inset(${y}px ${x}px ${y}px ${x}px round ${r}px ${r}px 22px 22px)`;
+      };
+      // Position du couple dans l’image affichée (object-fit: cover, object-position: 50% 38%)
+      const focus = () => {
+        const w = frame.clientWidth, h = frame.clientHeight;
+        const iw = img.naturalWidth || 1446, ih = img.naturalHeight || 1087;
+        const k = Math.max(w / iw, h / ih);
+        const rw = iw * k, rh = ih * k;
+        return { x: (w - rw) * 0.5 + 0.445 * rw, y: (h - rh) * 0.38 + 0.4 * rh, w, h };
+      };
+      const origin = () => { const f = focus(); return `${f.x}px ${f.y}px`; };
+      const tl = gsap.timeline({ scrollTrigger: { trigger: sec, start: "top top", end: "bottom bottom", scrub: 0.8, invalidateOnRefresh: true } });
+      tl.fromTo(frame, { clipPath: arch }, { clipPath: "inset(0px 0px 0px 0px round 0px 0px 0px 0px)", ease: "power2.inOut", duration: 1 })
+        .fromTo(img,
+          { scale: 1.25, x: () => { const f = focus(); return f.w / 2 - f.x; }, y: () => { const f = focus(); return f.h * 0.46 - f.y; }, transformOrigin: origin },
+          { scale: 1, x: 0, y: 0, transformOrigin: origin, ease: "power2.inOut", duration: 1 }, 0)
         .to($(".reveal-photo__text", sec), { opacity: 1, y: 0, startAt: { y: 50 }, duration: 0.35 }, 0.7);
+      img.addEventListener("load", () => ST.refresh(), { once: true });
     });
   }
 

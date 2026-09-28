@@ -50,7 +50,7 @@
   --shadow-soft: 0 24px 60px -30px rgba(78, 94, 67, .45);
   --shadow-card: 0 1px 0 rgba(255, 255, 255, .8) inset, 0 18px 40px -28px rgba(78, 94, 67, .5);
   --ease: cubic-bezier(.22, .8, .24, 1);
-  color-scheme: light;
+  color-scheme: only light; /* palette du mariage : pas d’assombrissement automatique par le navigateur */
 }
 
 @media (max-width: 760px) { :root { --header-h: 64px; } }
