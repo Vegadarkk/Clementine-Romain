@@ -71,6 +71,7 @@ réintroduis pas en réécrivant du code.
 | Écouteurs, tickers ou intervalles qui s'additionnent à chaque page visitée | écouteur global posé directement (`window.addEventListener`, `gsap.ticker.add`, `setInterval`) | `listen()`, `onTick()`, `onLeave()` dans `main.js` ; `__crNav.onLeave()` dans les autres scripts ; vérifier en comptant les écouteurs de window/document avant/après |
 | Le rideau ne se ferme pas visiblement au premier clic (il n'apparaît qu'une fois fermé) | `fromTo({ yPercent: 100 })` sur un panneau déjà décalé par le CSS (`translateY(100%)`) : GSAP additionne les deux, le rideau s'arrête sous l'écran | `fromTo(panels, { y: 0, yPercent: 100 }, { y: 0, yPercent: 0 })` |
 | Précédent pendant la fermeture du rideau : on arrive quand même sur la page cliquée | navigation en cours prioritaire | un `popstate` pendant la transition l'emporte : on affiche la page de l'historique, rideau déjà fermé |
+| Étoile filante « à l'envers » (la traînée passe devant) | dégradé transparent → blanc alors que le trait se déplace vers son bout transparent | tête brillante au bout qui avance : trait orienté par `rotation`, déplacement calculé le long de cet axe (`x = -cos a · d`, `y = -sin a · d`), traînée qui s'allonge derrière ; étoiles créées au hasard (JS) seulement quand la nuit est affichée et la section visible |
 | Le bouton « haut de page » apparaît trop tôt | seuil de 30 % de la page | apparition dans les derniers ~20 % / 1,8 écran |
 
 ## 4. Cartes

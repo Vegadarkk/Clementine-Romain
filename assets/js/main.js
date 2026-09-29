@@ -1023,6 +1023,37 @@
       }
       stars.appendChild(frag);
     }
+    // Étoiles filantes, au hasard une fois la nuit tombée : tête brillante devant, traînée qui s'allonge
+    // derrière elle ; directions, longueurs et vitesses variées, parfois deux presque ensemble
+    const meteors = $(".programme__shooting", sec);
+    if (meteors) {
+      const R = gsap.utils.random;
+      const meteor = (delay) => {
+        const s = document.createElement("i");
+        const toRight = Math.random() < 0.45;
+        const tilt = R(16, 36) * Math.PI / 180;
+        const a = toRight ? Math.PI + tilt : -tilt; // la tête (bout gauche du trait) va vers le bas
+        const len = R(90, 190), dist = R(0.16, 0.26) * Math.max(meteors.clientWidth, 700), dur = R(0.75, 1.15);
+        s.style.left = `${toRight ? R(5, 60) : R(40, 95)}%`;
+        s.style.top = `${R(4, 40)}%`;
+        meteors.appendChild(s);
+        gsap.timeline({ delay, onComplete: () => s.remove() })
+          .set(s, { rotation: a * 180 / Math.PI, transformOrigin: "0% 50%", width: len * 0.15 })
+          .to(s, { x: -Math.cos(a) * dist, y: -Math.sin(a) * dist, duration: dur, ease: "power1.in" }, 0)
+          .to(s, { width: len, duration: dur * 0.45, ease: "power2.out" }, 0)
+          .to(s, { opacity: 1, duration: 0.12, ease: "none" }, 0)
+          .to(s, { opacity: 0, duration: dur * 0.4, ease: "power1.in" }, dur * 0.6);
+      };
+      let meteorTimer = 0;
+      const shower = () => {
+        meteorTimer = setTimeout(shower, R(1800, 4200));
+        if (!sec.classList.contains("is-night") || document.hidden || !ST.isInViewport(sec)) return;
+        meteor(0);
+        if (Math.random() < 0.3) meteor(R(0.3, 0.8));
+      };
+      meteorTimer = setTimeout(shower, 1200);
+      onLeave(() => clearTimeout(meteorTimer));
+    }
     const mix = (a, b, t) => gsap.utils.interpolate(a, b, t);
     const clamp01 = gsap.utils.clamp(0, 1);
     function sky(p) {

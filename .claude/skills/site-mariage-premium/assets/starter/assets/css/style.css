@@ -1196,9 +1196,11 @@ html:not(.motion) .reveal-photo__deco { display: none; }
 /* Programme vertical (mobile, tablette) : la nuit arrive tout en bas, la lune et les étoiles aussi */
 .programme:not(.is-horizontal) .programme__moon { top: auto; bottom: 72vh; }
 .programme:not(.is-horizontal) .programme__stars { inset: auto 0 0; height: 130vh; }
-.programme__shooting { position: absolute; left: 30%; top: 10%; width: 120px; height: 1.5px; border-radius: 1px; background: linear-gradient(90deg, rgba(255, 248, 236, 0), #FFF8EC); opacity: 0; transform: rotate(-24deg); }
-.programme.is-night .programme__shooting { animation: shooting 9s ease-in 2s infinite; }
-@keyframes shooting { 0% { opacity: 0; transform: translate(0, 0) rotate(-24deg) scaleX(.3); } 3% { opacity: 1; } 9% { opacity: 0; transform: translate(-260px, 120px) rotate(-24deg) scaleX(1); } 100% { opacity: 0; transform: translate(-260px, 120px) rotate(-24deg); } }
+/* Étoiles filantes (créées au hasard par main.js une fois la nuit tombée) : tête brillante devant, traînée derrière */
+.programme__shooting { position: absolute; inset: 0 0 30%; overflow: hidden; opacity: var(--night, 0); }
+.programme:not(.is-horizontal) .programme__shooting { inset: auto 0 0; height: 130vh; }
+.programme__shooting i { position: absolute; height: 2px; border-radius: 2px; opacity: 0; transform-origin: 0 50%; background: linear-gradient(90deg, #FFFFFF 0, #FFF8EC 6%, rgba(255, 248, 236, .5) 30%, rgba(255, 248, 236, 0) 100%); filter: drop-shadow(0 0 3px rgba(255, 248, 236, .85)); will-change: transform, opacity; }
+.programme__shooting i::before { content: ""; position: absolute; left: -2px; top: 50%; width: 4px; height: 4px; margin-top: -2px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 0 6px 2px rgba(255, 248, 236, .9); }
 .programme__viewport { position: relative; z-index: 1; overflow: clip; }
 .programme__track { position: relative; display: grid; gap: 1.2rem; max-width: 760px; margin: 0 auto; padding: 0 var(--gutter); list-style: none; }
 .programme__track::before { content: ""; position: absolute; left: calc(var(--gutter) + 1.3rem + 31px); top: 12rem; bottom: 11rem; width: 2px; background: repeating-linear-gradient(180deg, rgba(194, 24, 91, .45) 0 6px, transparent 6px 12px); }
