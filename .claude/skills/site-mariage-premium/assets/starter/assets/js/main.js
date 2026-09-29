@@ -720,16 +720,17 @@
         .fromTo(img,
           { scale: 1.25, x: () => { const f = focus(); return f.w / 2 - f.x; }, y: () => { const f = focus(); return f.h * 0.46 - f.y; }, transformOrigin: origin },
           { scale: 1, x: 0, y: 0, transformOrigin: origin, ease: "power2.inOut", duration: 1 }, 0)
-        .to($(".reveal-photo__scrim", sec), { opacity: 1, ease: "none", duration: 0.45 }, 0.55);
-      // Le bloc de texte suit le défilement, comme l'arche et le voile : il ne peut jamais rester visible
-      // sur le fond crème quand on remonte vite (l'écriture elle-même se joue dans la chronologie `t`).
-      const textBox = $("[data-rp-text]", sec);
-      if (textBox) tl.fromTo(textBox, { opacity: 0 }, { opacity: 1, ease: "none", duration: 0.1 }, 0.52);
+        .to($(".reveal-photo__scrim", sec), { opacity: 1, ease: "none", duration: 0.45 }, 0.55)
+        // Pause, photo pleinement ouverte, le temps de lire le texte
+        .to({}, { duration: 0.35 }, 1);
       img.addEventListener("load", () => ST.refresh(), { once: true });
 
-      // Texte : écrit à l’encre une fois la photo presque déployée, effacé en remontant
+      // Texte : écrit à l’encre une fois la photo ouverte, effacé en remontant.
+      // Tout est piloté par l’état VISIBLE de l’arche (chronologie lissée `tl`), jamais par la position brute
+      // de la page : en défilant vite, l’arche suit avec un léger retard et le texte ne doit pas la devancer.
       const text = $("[data-rp-text]", sec);
       if (!text) return;
+      tl.fromTo(text, { opacity: 0 }, { opacity: 1, ease: "none", duration: 0.06 }, 0.93);
       const words = $$(".rp-w > span", text);
       const t = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } })
         .fromTo($(".rp-over", text), { opacity: 0, letterSpacing: "1em" }, { opacity: 1, letterSpacing: "0.42em", duration: 1.5 }, 0)
@@ -737,13 +738,14 @@
         .fromTo($(".rp-line", text), { scaleX: 0 }, { scaleX: 1, duration: 1.2, ease: "expo.inOut" }, 1.05)
         .fromTo(words, { yPercent: 115 }, { yPercent: 0, duration: 1.1, stagger: 0.09, ease: "expo.out" }, 1.25)
         .fromTo($(".rp-place", text), { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 1 }, 1.6);
-      const st = ST.create({
-        trigger: sec, invalidateOnRefresh: true,
-        start: () => `top+=${Math.round((sec.offsetHeight - window.innerHeight) * 0.62)} top`,
-        onEnter: () => t.timeScale(1).play(),
-        onLeaveBack: () => t.timeScale(3).reverse(),
+      // Écriture à 97 % d’ouverture ; effacement sous 90 %, quand le bloc est déjà invisible (écart = pas de
+      // va-et-vient si l’on s’arrête pile sur le seuil)
+      let written = false;
+      tl.eventCallback("onUpdate", () => {
+        const time = tl.time();
+        if (!written && time >= 0.97) { written = true; t.timeScale(1).play(); }
+        else if (written && time < 0.9) { written = false; t.timeScale(3).reverse(); }
       });
-      if (window.scrollY > st.start) t.progress(1); // arrivée directe plus bas (ancre, retour arrière)
     });
   }
 

@@ -1087,7 +1087,7 @@ body.menu-open .to-top { opacity: 0; visibility: hidden; }
 
 
 
-.motion .reveal-photo { height: 230vh; }
+.motion .reveal-photo { height: 270vh; } /* ouverture de l’arche puis courte pause, photo ouverte */
 .motion .reveal-photo__sticky { position: sticky; top: 0; height: 100vh; height: 100svh; }
 .motion .reveal-photo__frame { clip-path: inset(15% 33% 15% 33% round 17vw 17vw 22px 22px); }
 .motion .reveal-photo__text, .motion .reveal-photo__scrim { opacity: 0; }
