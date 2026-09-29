@@ -147,7 +147,7 @@ ${NAV.map(([k, href, label]) => `          <li><a class="nav__link" data-nav="${
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu-mobile"><span></span><span></span><span></span><b class="visually-hidden">Menu</b></button>
     </div>
   </header>
-  <div class="mobile-menu" id="menu-mobile" inert>
+  <div class="mobile-menu" id="menu-mobile" inert data-lenis-prevent>
     <nav aria-label="Menu mobile">
       <ul>
 ${NAV.map(([k, href, label]) => `        <li><a data-nav="${k}" href="${href}">${k === "environs" ? "Que faire aux alentours" : label}</a></li>`).join("\n")}
@@ -168,7 +168,7 @@ const FOOTER = `<footer class="site-footer">
           <span class="site-footer__names">Clémentine <span>&amp;</span> Romain</span>
           <b class="visually-hidden"> · retour à l’accueil</b>
         </a>
-        <p class="site-footer__date">Samedi 3 juillet 2027 · Héry-sur-Alby · Saint-Offenge</p>
+        <p class="site-footer__date">Samedi 3&nbsp;juillet&nbsp;2027 · <span class="nowrap">Héry-sur-Alby</span> · <span class="nowrap">Saint-Offenge</span></p>
         <nav aria-label="Pied de page">
           <ul>
 ${[...NAV, ["rsvp", "rsvp.html", "Répondre"]].map(([, href, label]) => `            <li><a href="${href}">${label}</a></li>`).join("\n")}

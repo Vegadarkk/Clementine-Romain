@@ -41,7 +41,7 @@
   --f-script: "Pinyon Script", "Snell Roundhand", cursive;
 
   --container: 1180px;
-  --gutter: clamp(1rem, 4vw, 2.5rem);
+  --gutter: max(clamp(1rem, 4vw, 2.5rem), env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px));
   --section-y: clamp(4.5rem, 10vw, 8.5rem);
   --radius: 18px;
   --radius-lg: 28px;
@@ -202,7 +202,7 @@ body.menu-open .site-header .brand__date { color: var(--moss-deep); }
 .nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
 
 .mobile-menu {
-  position: fixed; inset: 0; z-index: 110; display: flex; flex-direction: column; justify-content: center;
+  position: fixed; inset: 0; z-index: 110; display: flex; flex-direction: column; justify-content: center; justify-content: safe center; overflow-y: auto; overscroll-behavior: contain;
   padding: calc(var(--header-h) + 1rem) var(--gutter) 2rem;
   background: radial-gradient(120% 60% at 100% 0%, var(--blossom) 0%, transparent 60%), radial-gradient(90% 60% at 0% 100%, var(--sage-soft) 0%, transparent 60%), var(--paper);
   visibility: hidden; opacity: 0; clip-path: circle(0% at calc(100% - 2.6rem) 2rem);
@@ -217,6 +217,8 @@ body.menu-open .site-header .brand__date { color: var(--moss-deep); }
 .mobile-menu li:nth-child(4) a { transition-delay: .15s; } .mobile-menu li:nth-child(5) a { transition-delay: .2s; }
 .mobile-menu a[aria-current="page"] { color: var(--fuchsia); font-style: italic; }
 .mobile-menu__foot { margin-top: 2.2rem; display: grid; gap: 1.2rem; justify-items: start; }
+@media (max-height: 500px) { .mobile-menu a:not(.btn) { font-size: clamp(1.5rem, 8vh, 2rem); padding: .15rem 0; } .mobile-menu__foot { margin-top: 1rem; gap: .6rem; } }
+.nowrap { white-space: nowrap; }
 .mobile-menu__date { font: 500 .78rem/1.4 var(--f-body); letter-spacing: .24em; text-transform: uppercase; color: var(--moss-deep); }
 
 @media (max-width: 960px) {
@@ -428,6 +430,8 @@ html:not(.js) .countdown, html:not(.js) [data-ics] { display: none; }
 .domaine__map { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: inherit; mix-blend-mode: multiply; }
 .domaine__spots { position: absolute; inset: 0; }
 .spot { position: absolute; width: 2.3rem; height: 2.3rem; margin: -1.15rem 0 0 -1.15rem; padding: 0; border: 0; background: none; color: inherit; cursor: pointer; }
+.spot::after { content: ""; position: absolute; inset: -6px; border-radius: 50%; } /* cible tactile de 44 px */
+@media (hover: none) { .spot[aria-pressed="true"] .spot__label { opacity: 0; } }
 .spot__dot { position: relative; display: grid; place-items: center; width: 100%; height: 100%; border-radius: 50%; background: var(--paper); color: var(--fuchsia); border: 1.5px solid var(--fuchsia); font: 600 .82rem/1 var(--f-body); box-shadow: 0 8px 18px -8px rgba(194, 24, 91, .6); transition: transform .45s var(--ease), background-color .3s, color .3s; }
 .spot__dot::before { content: ""; position: absolute; inset: -7px; border-radius: 50%; border: 1.5px solid rgba(194, 24, 91, .4); animation: spot-pulse 2.6s var(--ease) infinite; }
 .spot:nth-child(2n) .spot__dot::before { animation-delay: -1.3s; }
@@ -951,6 +955,7 @@ body.menu-open .to-top { opacity: 0; visibility: hidden; }
 
 /* ---------- Héros : blobs, tampon tournant, fleurs ---------- */
 .blob { position: absolute; border-radius: 50%; filter: blur(40px); opacity: .7; animation: blob 18s ease-in-out infinite alternate; }
+@media (max-width: 900px) { .blob { animation: none; } }
 .blob--1 { width: 42vw; height: 42vw; left: -12vw; top: -8vw; background: rgba(255, 217, 199, .95); }
 .blob--2 { width: 34vw; height: 34vw; right: -10vw; bottom: -6vw; background: rgba(168, 191, 166, .6); animation-duration: 22s; animation-delay: -6s; }
 .blob--3 { width: 22vw; height: 22vw; left: 44%; top: 6%; background: rgba(240, 98, 146, .18); animation-duration: 16s; animation-delay: -3s; }
@@ -987,6 +992,8 @@ body.menu-open .to-top { opacity: 0; visibility: hidden; }
 .reveal-photo__sticky { position: relative; height: 100%; overflow: hidden; display: grid; place-items: end center; }
 .reveal-photo__frame { position: absolute; inset: 0; overflow: hidden; }
 .reveal-photo__frame img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 38%; }
+@media (max-width: 700px) and (orientation: portrait) { .reveal-photo__frame img { object-position: 36% 38%; } }
+@media (max-height: 500px) { .rp-script { font-size: clamp(3rem, 16vh, 4.2rem); } }
 
 .reveal-photo__scrim { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(0deg, rgba(28, 20, 24, .82) 0%, rgba(28, 20, 24, .5) 32%, rgba(28, 20, 24, 0) 62%); }
 .reveal-photo__text { position: relative; z-index: 1; margin: 0 0 clamp(2.2rem, 8vh, 5rem); padding: 0 var(--gutter); text-align: center; color: var(--paper); }
@@ -1050,6 +1057,9 @@ body.menu-open .to-top { opacity: 0; visibility: hidden; }
 .programme__stars i { position: absolute; width: var(--s); height: var(--s); border-radius: 50%; background: #FFF8EC; box-shadow: 0 0 calc(var(--s) * 2.5) rgba(255, 248, 236, .8); animation: twinkle var(--t) ease-in-out var(--d) infinite; }
 @keyframes twinkle { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .25; transform: scale(.6); } }
 .programme__moon { position: absolute; right: 9%; top: 12%; width: clamp(46px, 5vw, 72px); aspect-ratio: 1; border-radius: 50%; box-shadow: inset calc(clamp(46px, 5vw, 72px) * -.26) calc(clamp(46px, 5vw, 72px) * -.08) 0 0 #FFF1CF; filter: drop-shadow(0 0 18px rgba(255, 236, 190, .55)); opacity: var(--night, 0); transform: translateY(calc((1 - var(--night, 0)) * 40px)) rotate(30deg); }
+/* Programme vertical (mobile, tablette) : la nuit arrive tout en bas, la lune et les étoiles aussi */
+.programme:not(.is-horizontal) .programme__moon { top: auto; bottom: 72vh; }
+.programme:not(.is-horizontal) .programme__stars { inset: auto 0 0; height: 130vh; }
 .programme__shooting { position: absolute; left: 30%; top: 10%; width: 120px; height: 1.5px; border-radius: 1px; background: linear-gradient(90deg, rgba(255, 248, 236, 0), #FFF8EC); opacity: 0; transform: rotate(-24deg); }
 .programme.is-night .programme__shooting { animation: shooting 9s ease-in 2s infinite; }
 @keyframes shooting { 0% { opacity: 0; transform: translate(0, 0) rotate(-24deg) scaleX(.3); } 3% { opacity: 1; } 9% { opacity: 0; transform: translate(-260px, 120px) rotate(-24deg) scaleX(1); } 100% { opacity: 0; transform: translate(-260px, 120px) rotate(-24deg); } }

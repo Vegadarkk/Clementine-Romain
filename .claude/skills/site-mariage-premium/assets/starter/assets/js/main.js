@@ -76,6 +76,41 @@
   };
   window.crScrollTo = scrollToEl;
 
+  // Rotation d'une tablette / changement de format : on reste sur la même section.
+  // Les épinglages (programme, carte) sont créés ou retirés selon la taille d'écran et la position
+  // retombe à 0 avant même les événements « resize ». On retient donc en continu la section affichée,
+  // puis on reprend celle d'avant le changement une fois les recalculs terminés.
+  let keepEl = null;
+  const seen = [];
+  const sectionInView = () => {
+    if (window.scrollY <= 0) return null;
+    const el = document.elementFromPoint(window.innerWidth / 2, window.innerHeight / 3);
+    const sec = el && el.closest("main > *, .site-footer");
+    // Section épinglée : on retient la section elle-même (l'enveloppe de GSAP disparaît au changement)
+    return sec && sec.classList.contains("pin-spacer") ? sec.firstElementChild : sec;
+  };
+  let seenTick = 0;
+  window.addEventListener("scroll", () => {
+    if (seenTick) return;
+    seenTick = requestAnimationFrame(() => {
+      seenTick = 0;
+      seen.push({ t: performance.now(), el: sectionInView() });
+      if (seen.length > 30) seen.shift();
+    });
+  }, { passive: true });
+  const docW = () => document.documentElement.clientWidth;
+  let lastW = docW();
+  const onFormatChange = () => {
+    if (keepEl) return;
+    const before = performance.now() - 250;
+    for (let i = seen.length - 1; i >= 0; i--) if (seen[i].t < before) { keepEl = seen[i].el; break; }
+  };
+  window.addEventListener("resize", () => { if (docW() !== lastW) { lastW = docW(); onFormatChange(); } }, { passive: true });
+  ["(min-width: 1024px) and (min-height: 620px)", "(min-width: 900px) and (min-height: 640px)"].forEach((q) => {
+    const mq = window.matchMedia(q);
+    if (mq.addEventListener) mq.addEventListener("change", onFormatChange); else mq.addListener(onFormatChange);
+  });
+
   /* ---------------------------------------------------------------- En-tête */
   const header = $("[data-header]");
   const hero = $(".hero, .page-hero");
@@ -659,7 +694,8 @@
         const iw = img.naturalWidth || 1446, ih = img.naturalHeight || 1087;
         const k = Math.max(w / iw, h / ih);
         const rw = iw * k, rh = ih * k;
-        return { x: (w - rw) * 0.5 + 0.445 * rw, y: (h - rh) * 0.38 + 0.4 * rh, w, h };
+        const [ox, oy] = getComputedStyle(img).objectPosition.split(" ").map((v) => parseFloat(v) / 100);
+        return { x: (w - rw) * ox + 0.445 * rw, y: (h - rh) * oy + 0.4 * rh, w, h };
       };
       const origin = () => { const f = focus(); return `${f.x}px ${f.y}px`; };
       const tl = gsap.timeline({ scrollTrigger: { trigger: sec, start: "top top", end: "bottom bottom", scrub: 0.8, invalidateOnRefresh: true } });
@@ -969,4 +1005,11 @@
     }
   });
   window.addEventListener("load", () => ST.refresh());
+  // Plusieurs recalculs s'enchaînent après un changement de format : on se replace une fois qu'ils sont finis
+  let restoreTimer = 0;
+  ST.addEventListener("refresh", () => {
+    if (!keepEl) return;
+    clearTimeout(restoreTimer);
+    restoreTimer = setTimeout(() => { const el = keepEl; keepEl = null; if (el) scrollToEl(el, true); }, 180);
+  });
 })();

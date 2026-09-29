@@ -23,7 +23,7 @@
   <link rel="preload" href="assets/fonts/pinyon-script-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/cormorant-garamond-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/jost-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css?v=2dec2476">
+  <link rel="stylesheet" href="assets/css/style.css?v=30a0c57f">
   <script>
     /* Active les animations si le visiteur ne les a pas désactivées ; filet de sécurité si le JS ne se charge pas */
     (function (d) {
@@ -38,7 +38,7 @@
     })(document);
   </script>
   <!-- HEAD:END -->
-  <link rel="preload" as="image" href="assets/img/photos/couple-arche-1024.webp" imagesrcset="assets/img/photos/couple-arche-640.webp 640w, assets/img/photos/couple-arche-1024.webp 1024w, assets/img/photos/couple-arche-1448.webp 1448w" imagesizes="(max-width: 900px) 86vw, 470px">
+  <link rel="preload" as="image" href="assets/img/photos/couple-arche-1024.webp" imagesrcset="assets/img/photos/couple-arche-640.webp 640w, assets/img/photos/couple-arche-1024.webp 1024w, assets/img/photos/couple-arche-1448.webp 1448w" imagesizes="(max-width: 900px) 140vw, 700px">
 </head>
 <body data-page="accueil">
   <!-- HEADER:START -->
@@ -88,7 +88,7 @@
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu-mobile"><span></span><span></span><span></span><b class="visually-hidden">Menu</b></button>
     </div>
   </header>
-  <div class="mobile-menu" id="menu-mobile" inert>
+  <div class="mobile-menu" id="menu-mobile" inert data-lenis-prevent>
     <nav aria-label="Menu mobile">
       <ul>
         <li><a data-nav="accueil" aria-current="page" href="index.html">Accueil</a></li>
@@ -119,7 +119,7 @@
             <span class="line">Romain</span>
           </h1>
           <p class="hero__date" data-hero>Samedi 3 juillet 2027</p>
-          <p class="hero__place" data-hero>Héry-sur-Alby · Château de Saint-Offenge</p>
+          <p class="hero__place" data-hero><span class="nowrap">Héry-sur-Alby</span> · Château de <span class="nowrap">Saint-Offenge</span></p>
           <ul class="countdown" data-countdown="2027-07-03T14:00:00+02:00" data-hero aria-label="Temps restant avant le mariage">
             <li><span class="countdown__num" data-unit="days">–</span><span class="countdown__label">Jours</span></li>
             <li><span class="countdown__num" data-unit="hours">–</span><span class="countdown__label">Heures</span></li>
@@ -137,7 +137,7 @@
           <div class="hero__arch" data-cursor-heart data-heart-focus="0.466 0.585">
             <img src="assets/img/photos/couple-arche-1024.webp"
                  srcset="assets/img/photos/couple-arche-640.webp 640w, assets/img/photos/couple-arche-1024.webp 1024w, assets/img/photos/couple-arche-1448.webp 1448w"
-                 sizes="(max-width: 900px) 86vw, 470px" width="1024" height="768" fetchpriority="high"
+                 sizes="(max-width: 900px) 140vw, 700px" width="1024" height="768" fetchpriority="high"
                  alt="Clémentine et Romain s’embrassant sous une arche de verdure, dans un jardin avec vue sur les montagnes">
           </div>
           <img class="hero__flower" src="assets/img/bouquet.svg" alt="" width="420" height="340" data-depth="1.4">
@@ -207,7 +207,7 @@
             <span class="rp-line" aria-hidden="true"></span>
             <p class="rp-date"><span class="rp-w"><span>le&nbsp;samedi</span></span> <span class="rp-w"><span>3&nbsp;juillet</span></span> <span class="rp-w"><span>2027</span></span></p>
           </div>
-          <p class="rp-place">Héry-sur-Alby · Château de Saint-Offenge</p>
+          <p class="rp-place"><span class="nowrap">Héry-sur-Alby</span> · Château de <span class="nowrap">Saint-Offenge</span></p>
         </div>
       </div>
     </section>
@@ -289,7 +289,7 @@
                 <li><strong>17h00</strong>Vin d’honneur</li>
                 <li><strong>20h30</strong>Dîner</li>
               </ul>
-              <p class="venue__note">À environ 10 km (15 min de route) d’Héry-sur-Alby, aux portes du massif des Bauges.</p>
+              <p class="venue__note">À environ 10&nbsp;km (15&nbsp;min de route) d’<span class="nowrap">Héry-sur-Alby</span>, aux portes du massif des Bauges.</p>
               <div class="btn-row">
                 <a class="btn btn--sm" href="https://www.google.com/maps/dir/?api=1&amp;destination=Ch%C3%A2teau%20de%20Saint-Offenge%2C%2050%20Route%20Sainte-Euph%C3%A9mie%2C%2073100%20Saint-Offenge" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=1ce5df6c#i-navigation"/></svg>Itinéraire<span class="visually-hidden"> (nouvel onglet)</span></a>
                 <a class="btn btn--sm btn--soft" href="https://waze.com/ul?ll=45.73480%2C6.00330&amp;navigate=yes" target="_blank" rel="noopener">Waze<span class="visually-hidden"> (nouvel onglet)</span></a>
@@ -438,21 +438,21 @@
             <span class="moment__time">14h00</span>
             <span class="moment__icon"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=1ce5df6c#i-users"/></svg></span>
             <h3>Arrivée des invités</h3>
-            <p class="moment__place"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=1ce5df6c#i-map-pin"/></svg>Héry-sur-Alby</p>
+            <p class="moment__place"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=1ce5df6c#i-map-pin"/></svg><span class="nowrap">Héry-sur-Alby</span></p>
             <p>Nous vous accueillons au cœur du village, devant la mairie.</p>
           </li>
           <li class="moment">
             <span class="moment__time">14h30</span>
             <span class="moment__icon"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=1ce5df6c#i-landmark"/></svg></span>
             <h3>Cérémonie civile</h3>
-            <p class="moment__place"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=1ce5df6c#i-map-pin"/></svg>Mairie d’Héry-sur-Alby</p>
+            <p class="moment__place"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=1ce5df6c#i-map-pin"/></svg>Mairie d’<span class="nowrap">Héry-sur-Alby</span></p>
             <p>Le « oui » officiel, entourés de nos familles et de nos amis.</p>
           </li>
           <li class="moment">
             <span class="moment__time">15h30</span>
             <span class="moment__icon"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=1ce5df6c#i-church"/></svg></span>
             <h3>Cérémonie religieuse</h3>
-            <p class="moment__place"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=1ce5df6c#i-map-pin"/></svg>Église d’Héry-sur-Alby</p>
+            <p class="moment__place"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=1ce5df6c#i-map-pin"/></svg>Église d’<span class="nowrap">Héry-sur-Alby</span></p>
             <p>Direction l’église du village, juste à côté de la mairie.</p>
           </li>
           <li class="moment moment--travel">
@@ -463,14 +463,14 @@
             <span class="moment__time">17h00</span>
             <span class="moment__icon"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=1ce5df6c#i-wine"/></svg></span>
             <h3>Vin d’honneur</h3>
-            <p class="moment__place"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=1ce5df6c#i-map-pin"/></svg>Château de Saint-Offenge</p>
+            <p class="moment__place"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=1ce5df6c#i-map-pin"/></svg>Château de <span class="nowrap">Saint-Offenge</span></p>
             <p>Trinquons ensemble dans le cadre magnifique du château.</p>
           </li>
           <li class="moment">
             <span class="moment__time">20h30</span>
             <span class="moment__icon"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=1ce5df6c#i-utensils-crossed"/></svg></span>
             <h3>Dîner</h3>
-            <p class="moment__place"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=1ce5df6c#i-map-pin"/></svg>Château de Saint-Offenge</p>
+            <p class="moment__place"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=1ce5df6c#i-map-pin"/></svg>Château de <span class="nowrap">Saint-Offenge</span></p>
             <p>Place au dîner… et à la fête jusqu’au bout de la nuit&nbsp;!</p>
           </li>
           <li class="programme__outro">
@@ -645,7 +645,7 @@
           <span class="site-footer__names">Clémentine <span>&amp;</span> Romain</span>
           <b class="visually-hidden"> · retour à l’accueil</b>
         </a>
-        <p class="site-footer__date">Samedi 3 juillet 2027 · Héry-sur-Alby · Saint-Offenge</p>
+        <p class="site-footer__date">Samedi 3&nbsp;juillet&nbsp;2027 · <span class="nowrap">Héry-sur-Alby</span> · <span class="nowrap">Saint-Offenge</span></p>
         <nav aria-label="Pied de page">
           <ul>
             <li><a href="index.html">Accueil</a></li>
@@ -678,7 +678,7 @@
   <script src="assets/vendor/ScrollTrigger.min.js?v=05ca5ad8" defer></script>
   <script src="assets/vendor/SplitText.min.js?v=6c4c7716" defer></script>
   <script src="assets/vendor/lenis.min.js?v=b5cf15f0" defer></script>
-  <script src="assets/js/main.js?v=b916c896" defer></script>
+  <script src="assets/js/main.js?v=39f2d982" defer></script>
   <!-- SCRIPTS:END -->
 </body>
 </html>
