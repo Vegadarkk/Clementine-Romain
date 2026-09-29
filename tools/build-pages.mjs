@@ -92,7 +92,9 @@ function landscape(cls = "", { W = 1440, sun = true, align = "xMidYMax" } = {}) 
 const REDIRECT = OLD_SITES.length
   ? `<script>(function () { var old = ${JSON.stringify(OLD_SITES.map((u) => { const x = new URL(u); return [x.hostname, x.pathname]; }))};
     for (var i = 0; i < old.length; i++) if (location.hostname === old[i][0] && location.pathname.indexOf(old[i][1]) === 0) {
-      location.replace(${JSON.stringify(SITE_URL)} + location.pathname.slice(old[i][1].length) + location.search + location.hash); return; } })();</script>
+      var rest = location.pathname.slice(old[i][1].length);
+      if (rest.slice(-10) === "index.html") rest = rest.slice(0, -10); else if (rest.slice(-5) === ".html") rest = rest.slice(0, -5);
+      location.replace(${JSON.stringify(SITE_URL)} + rest + location.search + location.hash); return; } })();</script>
   `
   : "";
 const HEAD = `${REDIRECT}<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -250,7 +252,8 @@ for (const page of PAGES) {
     if (name === "HEADER" && current) {
       content = content.replace(new RegExp(`data-nav="${current}"`, "g"), `data-nav="${current}" aria-current="page"`);
     }
-    html = html.replace(re, `$1\n  ${content}\n  $2`);
+    // Fonction de remplacement : un « $ » dans un bloc ne doit pas être interprété
+    html = html.replace(re, (m, start, end) => `${start}\n  ${content}\n  ${end}`);
   }
   html = bustCache(html);
   writeFileSync(url, html);

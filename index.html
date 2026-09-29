@@ -7,7 +7,9 @@
   <!-- HEAD:START -->
   <script>(function () { var old = [["vegadarkk.github.io","/Clementine-Romain/"]];
     for (var i = 0; i < old.length; i++) if (location.hostname === old[i][0] && location.pathname.indexOf(old[i][1]) === 0) {
-      location.replace("https://clementine-et-romain.pages.dev/" + location.pathname.slice(old[i][1].length) + location.search + location.hash); return; } })();</script>
+      var rest = location.pathname.slice(old[i][1].length);
+      if (rest.slice(-10) === "index.html") rest = rest.slice(0, -10); else if (rest.slice(-5) === ".html") rest = rest.slice(0, -5);
+      location.replace("https://clementine-et-romain.pages.dev/" + rest + location.search + location.hash); return; } })();</script>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <link rel="canonical" href="https://clementine-et-romain.pages.dev/">
