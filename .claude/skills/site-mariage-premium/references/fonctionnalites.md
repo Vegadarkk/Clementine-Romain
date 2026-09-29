@@ -66,7 +66,8 @@ l'adapter. Les fonctions JS citées sont dans `assets/js/main.js`, sauf mention 
   presque la taille du disque tout près (échelle 0,56 → 3,4, battement adouci quand il est grand). Le rythme passe de 50 à 140 battements par minute
   quand on approche du point focal, avec une onde à chaque battement, une lueur, et de petits cœurs qui
   s'envolent tout près. Un clic lance une gerbe. Le point focal tient compte de `object-fit: cover`.
-  Pour une autre photo, repère le point sur l'image et mets à jour `data-heart-focus`.
+  Pour une autre photo, repère le point sur l'image et mets à jour `data-heart-focus`. Le couple veut ce
+  cœur sur **toutes** ses photos : héros, photo plein écran et arche de la page RSVP (`.rsvp-aside .arch`).
   Même effet sur la photo plein écran (`.reveal-photo__frame`, point entre les visages, portée réduite
   `data-heart-reach="0.4"`) : le point est recalculé à chaque image depuis le cadre réel de `img`
   (zoom GSAP compris), et le texte posé dessus est en `pointer-events: none` pour ne pas couper le cœur.
@@ -132,7 +133,9 @@ calligraphié qui se dessine, puis le statut. Les témoins qui entrent ensemble 
   grand. CARTO exige désormais une clé API : ne pas l'utiliser.
 - **Cartes retournables** : un clic (ou un toucher) sur une fiche la fait pivoter en 3D (GSAP `rotationY`
   + `z` en aller-retour : la carte se soulève en tournant) et montre au dos la photo du lieu, son nom,
-  le crédit (auteur + licence, liens vers Commons) et deux boutons « Agrandir » / « Retourner ». Le dos
+  le crédit (auteur + licence, liens vers Commons) et un bouton « Agrandir ». Un clic n'importe où
+  ailleurs sur le dos la retourne à nouveau (pas de bouton « Retourner » : jugé superflu ; au clavier, la
+  photo est un bouton « Retourner la carte »). Le dos
   est construit en JS à partir des attributs `data-photo`, `data-photo-alt`, `data-photo-credit`,
   `data-photo-license`, `data-photo-license-url`, `data-photo-source` de chaque `<article class="place">` :
   sans JS, les fiches restent lisibles comme avant. La photo n'est téléchargée qu'au premier survol ou
@@ -179,8 +182,13 @@ calligraphié qui se dessine, puis le statut. Les témoins qui entrent ensemble 
 ## 9. Musique d'ambiance
 
 - Bouton rond en bas à gauche (`data-music`), barres d'égaliseur animées pendant la lecture, info-bulle
-  qui indique le morceau. **Aucune lecture automatique.** Une suggestion discrète s'affiche une seule
-  fois par visite, au bout de 5 s.
+  qui indique le morceau. **Lecture automatique** dès l'arrivée (demande du premier couple). Les
+  navigateurs bloquent le son sans geste du visiteur : le bouton pulse et la musique démarre au premier
+  clic, toucher ou touche (`pointerdown`, `pointerup`, `touchend`, `keydown`, `click` ; le défilement ne
+  compte pas). Un clic sur le bouton pendant cette attente **lance** la musique (rien n'est encore
+  audible). Si le visiteur la coupe, le refus est mémorisé dans `localStorage` (`cr-music-off`) et
+  respecté aux visites suivantes ; il n'y a alors plus de lecture automatique, seulement la suggestion
+  discrète. Pour revenir à « aucune lecture automatique », il suffit de démarrer dans la branche « refus ».
 - Fondu d'entrée de 2,2 s jusqu'au volume 0,32, fondu de sortie de 0,7 s. État et position mémorisés dans
   `sessionStorage`. Sur la page suivante, reprise au même endroit. Si le navigateur bloque la lecture,
   elle reprend au premier geste du visiteur (le bouton pulse).

@@ -151,14 +151,13 @@
       const back = document.createElement("div");
       back.className = "place__face place__back";
       back.innerHTML = `
-        <button class="place__photo" type="button" data-cursor="Agrandir" aria-label="Agrandir la photo : ${esc(name)}"><img alt="${esc(d.photoAlt)}" width="800" height="533" decoding="async"></button>
+        <button class="place__photo" type="button" data-cursor="Retourner" aria-label="Retourner la carte : ${esc(name)}"><img alt="${esc(d.photoAlt)}" width="800" height="533" decoding="async"></button>
         <div class="place__caption">
           <span class="place__cat">${esc(CATS[d.cat])}</span>
           <p class="place__name">${esc(name)}</p>
           <p class="place__credit">${credit(d)}</p>
           <div class="place__back-actions">
             <button type="button" class="place__btn place__btn--main" data-zoom>${ic("maximize-2")}Agrandir</button>
-            <button type="button" class="place__btn" data-unflip>${ic("rotate-ccw")}Retourner</button>
           </div>
         </div>`;
       back.inert = true;
@@ -176,9 +175,10 @@
         if (sel && front.contains(window.getSelection().anchorNode)) return; // on laisse sélectionner le texte
         flip(p, true);
       });
+      // Au dos : « Agrandir » ouvre la visionneuse, un clic n’importe où ailleurs sur la photo retourne la carte
       back.addEventListener("click", (e) => {
-        if (e.target.closest("[data-unflip]")) flip(p, false);
-        else if (e.target.closest("[data-zoom], .place__photo")) openLightbox(p);
+        if (e.target.closest("[data-zoom]")) openLightbox(p);
+        else if (!e.target.closest("a")) flip(p, false);
       });
       p.addEventListener("pointerenter", () => loadPhoto(p), { once: true });
       front.addEventListener("focusin", () => loadPhoto(p), { once: true });

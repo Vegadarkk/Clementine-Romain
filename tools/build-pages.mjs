@@ -2,7 +2,7 @@
 // entre les marqueurs <!-- NOM:START --> et <!-- NOM:END -->.
 // Le site reste 100 % statique : ce script ne sert qu'à éviter les copier-coller.
 // Usage : cd tools && npm run pages
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync, unlinkSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { siteLogo } from "./build-logo.mjs";
 
@@ -24,7 +24,15 @@ function bustCache(html) {
 }
 
 const PAGES = ["index.html", "hebergements.html", "temoins.html", "environs.html", "rsvp.html", "404.html", "logos.html"];
+// Adresse publique du site (avec la barre finale). Pour changer d'hébergeur : modifier ici, puis `npm run pages`.
 const SITE_URL = "https://vegadarkk.github.io/Clementine-Romain/";
+// Référencement : true = le site peut apparaître sur Google ; false = caché (noindex + robots.txt fermé).
+const INDEXABLE = false;
+// Anciennes adresses redirigées automatiquement vers SITE_URL (ex. l'adresse GitHub Pages après un déménagement).
+const OLD_SITES = [];
+// Pages jamais référencées (page d'erreur, comparatif des logos réservé aux mariés).
+const PRIVATE_PAGES = ["404.html", "logos.html"];
+const pageUrl = (page) => SITE_URL + (page === "index.html" ? "" : page.replace(/\.html$/, ""));
 
 /* ----------------------------------------------------- Paysage de montagnes */
 let seed = 11;
@@ -81,8 +89,14 @@ function landscape(cls = "", { W = 1440, sun = true, align = "xMidYMax" } = {}) 
 }
 
 /* ------------------------------------------------------------------ Blocs */
-const HEAD = `<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="robots" content="noindex, nofollow">
+const REDIRECT = OLD_SITES.length
+  ? `<script>(function () { var old = ${JSON.stringify(OLD_SITES.map((u) => { const x = new URL(u); return [x.hostname, x.pathname]; }))};
+    for (var i = 0; i < old.length; i++) if (location.hostname === old[i][0] && location.pathname.indexOf(old[i][1]) === 0) {
+      location.replace(${JSON.stringify(SITE_URL)} + location.pathname.slice(old[i][1].length) + location.search + location.hash); return; } })();</script>
+  `
+  : "";
+const HEAD = `${REDIRECT}<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="__ROBOTS__">__CANONICAL__
   <meta name="theme-color" content="#FFF3E6">
   <meta name="color-scheme" content="only light">
   <meta name="darkreader-lock">
@@ -220,6 +234,12 @@ for (const page of PAGES) {
   for (const [name, block] of Object.entries(BLOCKS)) {
     const re = new RegExp(`(<!-- ${name}:START -->)[\\s\\S]*?(<!-- ${name}:END -->)`, "g");
     let content = block;
+    if (name === "HEAD") {
+      const open = INDEXABLE && !PRIVATE_PAGES.includes(page);
+      content = content.replace("__ROBOTS__", open ? "index, follow, max-image-preview:large" : "noindex, nofollow").replace("__CANONICAL__",
+        PRIVATE_PAGES.includes(page) ? "" : `\n  <link rel="canonical" href="${pageUrl(page)}">\n  <meta property="og:url" content="${pageUrl(page)}">` +
+          (open && page === "index.html" ? `\n  <script type="application/ld+json">${JSON.stringify({ "@context": "https://schema.org", "@type": "WebSite", name: "Clémentine & Romain", alternateName: "Mariage de Clémentine et Romain", url: SITE_URL })}</script>` : ""));
+    }
     if (name === "HEADER" && current) {
       content = content.replace(new RegExp(`data-nav="${current}"`, "g"), `data-nav="${current}" aria-current="page"`);
     }
@@ -228,4 +248,20 @@ for (const page of PAGES) {
   html = bustCache(html);
   writeFileSync(url, html);
   console.log(`✓ ${page}`);
+}
+
+/* ------------------------------------------- Moteurs de recherche : robots.txt et sitemap.xml */
+const publicPages = PAGES.filter((p) => !PRIVATE_PAGES.includes(p));
+writeFileSync(new URL("../robots.txt", import.meta.url), INDEXABLE
+  ? `User-agent: *\nDisallow: /logos\nDisallow: /logos.html\n\nSitemap: ${SITE_URL}sitemap.xml\n`
+  : "User-agent: *\nDisallow: /\n");
+const today = new Date().toISOString().slice(0, 10);
+const sitemapUrl = new URL("../sitemap.xml", import.meta.url);
+if (INDEXABLE) {
+  writeFileSync(sitemapUrl, `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${publicPages
+    .map((p) => `  <url><loc>${pageUrl(p)}</loc><lastmod>${today}</lastmod><priority>${p === "index.html" ? "1.0" : "0.8"}</priority></url>`).join("\n")}\n</urlset>\n`);
+  console.log("✓ robots.txt, sitemap.xml (site référencé)");
+} else {
+  try { unlinkSync(sitemapUrl); } catch { /* absent */ }
+  console.log("✓ robots.txt (site caché des moteurs de recherche)");
 }

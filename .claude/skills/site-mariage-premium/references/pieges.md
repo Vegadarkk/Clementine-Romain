@@ -101,3 +101,5 @@ réintroduis pas en réécrivant du code.
 | Wikimedia répond 429 | limite de requêtes par IP partagée | une seule requête API groupée (`titles=A\|B\|…`), User-Agent explicite, pauses (`scripts/photos_commons.py`) ; pour l'audio : Internet Archive (filtrer sur `licenseurl`), Musopen |
 | Chromium refuse un site en TLS | proxy de l'environnement | `curl` pour lire la page, jamais d'option qui désactive la vérification |
 | Pas de ffmpeg | environnement minimal | `pip install imageio-ffmpeg` (binaire statique) |
+| Test Playwright bloqué sur `networkidle` | la musique joue et télécharge en continu | `waitUntil: "load"` ; tester l'autoplay avec `--autoplay-policy=document-user-activation-required` (réel) et `no-user-gesture-required` |
+| Musique automatique muette à l'arrivée | règle des navigateurs : pas de son sans geste du visiteur (le défilement ne compte pas) | normal : le bouton pulse, lecture au premier clic/toucher/touche ; ne jamais promettre un son dès l'ouverture |

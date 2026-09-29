@@ -17,7 +17,7 @@ Pour tout retrouver : `grep -rn -i "clémentine\|clementine\|romain\|2027\|héry
   et `npm run logos` (pistes pour `logos.html`).
 
 ## Textes et données du couple
-- `tools/build-pages.mjs` : `SITE_URL`, balises Open Graph (titre, description), marque de l'en-tête
+- `tools/build-pages.mjs` : `SITE_URL`, `INDEXABLE` (Google), `OLD_SITES` (redirections), balises Open Graph (titre, description), marque de l'en-tête
   (prénoms, date), menu (`NAV`), date du menu mobile, pied de page (prénoms, date, lieux, date limite).
 - `index.html` : héros (prénoms, date, compte à rebours `data-countdown="2027-07-03T14:00:00+02:00"`), ruban défilant, mot de bienvenue, photo
   plein écran (`data-rp-text`), lieux (adresses, horaires, itinéraires), carte racontée (textes des

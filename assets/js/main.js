@@ -129,14 +129,19 @@
   onScroll();
 
   /* ------------------------------------------------ Musique d’ambiance */
-  // Jamais de lecture automatique : la musique ne démarre que sur demande, puis
-  // reprend de page en page (au premier geste du visiteur si le navigateur l’exige).
+  // Lecture automatique dès l’arrivée. Les navigateurs bloquent le son tant que le visiteur n’a pas
+  // interagi : la musique démarre alors au premier clic, toucher ou touche du clavier.
+  // Si le visiteur la coupe, ce choix est mémorisé et respecté lors de ses prochaines visites.
   const musicBtn = $("[data-music]");
   if (musicBtn) {
     const KEY = "cr-music";
     const store = (() => { try { return window.sessionStorage; } catch (e) { return null; } })();
     const read = () => { try { return JSON.parse(store.getItem(KEY)) || {}; } catch (e) { return {}; } };
     const write = (v) => { try { store.setItem(KEY, JSON.stringify(v)); } catch (e) { /* stockage indisponible */ } };
+    const OFF = "cr-music-off";
+    const local = (() => { try { return window.localStorage; } catch (e) { return null; } })();
+    const refused = () => { try { return local.getItem(OFF) === "1"; } catch (e) { return false; } };
+    const remember = (off) => { try { if (off) local.setItem(OFF, "1"); else local.removeItem(OFF); } catch (e) { /* stockage indisponible */ } };
     const stateEl = $("[data-music-state]", musicBtn);
     const VOL = 0.32;
     let audio = null, fadeId = 0, wanted = false;
@@ -176,8 +181,11 @@
       fade(0, 700, () => { if (!wanted) audio.pause(); });
     };
     musicBtn.addEventListener("click", () => {
-      wanted = !(musicBtn.getAttribute("aria-pressed") === "true" || musicBtn.classList.contains("is-waiting"));
+      // En attente du premier geste, rien n’est encore audible : un clic sur le bouton lance la musique
+      wanted = musicBtn.getAttribute("aria-pressed") !== "true";
       musicBtn.classList.remove("is-waiting");
+      stopWaiting();
+      remember(!wanted);
       if (wanted) play().catch(() => { wanted = false; render(false); });
       else stop();
       save();
@@ -185,19 +193,22 @@
     // Page suivante : on mémorise la position pour reprendre au même endroit
     window.addEventListener("pagehide", save);
     document.addEventListener("click", (e) => { if (e.target.closest("a[href]")) save(); }, true);
-    if (read().on) {
+    // Premier geste du visiteur (clic, toucher, touche) : on relance la lecture bloquée
+    const GESTURES = ["pointerdown", "pointerup", "touchend", "keydown", "click"];
+    const resume = (e) => {
+      if (e.target && e.target.closest && e.target.closest("[data-music]")) return;
+      if (!wanted) { stopWaiting(); return; }
+      play().then(() => { stopWaiting(); save(); }).catch(() => { /* pas encore un geste valable : on réessaie au suivant */ });
+    };
+    function stopWaiting() { GESTURES.forEach((g) => window.removeEventListener(g, resume, true)); }
+    const saved = read();
+    // Démarrage automatique, sauf si le visiteur a coupé la musique (dans cette visite ou une précédente)
+    if (saved.on !== false && !refused()) {
       wanted = true;
-      play().catch(() => {
-        // Lecture bloquée par le navigateur : on attend le premier geste du visiteur
+      play().then(save).catch(() => {
         musicBtn.classList.add("is-waiting");
-        const resume = (e) => {
-          if (e.target.closest && e.target.closest("[data-music]")) return;
-          window.removeEventListener("pointerdown", resume, true);
-          window.removeEventListener("keydown", resume, true);
-          if (wanted) play().catch(() => {});
-        };
-        window.addEventListener("pointerdown", resume, true);
-        window.addEventListener("keydown", resume, true);
+        if (stateEl) stateEl.textContent = "Un peu de musique\u00a0?";
+        GESTURES.forEach((g) => window.addEventListener(g, resume, true));
       });
     } else {
       render(false);
@@ -418,7 +429,7 @@
     if (!href || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:")) return false;
     const url = new URL(a.href, location.href);
     if (url.origin !== location.origin) return false;
-    const norm = (path) => path.replace(/\/index\.html$/, "/");
+    const norm = (path) => path.replace(/\/index\.html$/, "/").replace(/\.html$/, ""); // « /environs » = « /environs.html »
     if (norm(url.pathname) === norm(location.pathname) && url.hash) return false;
     return /(\.html|\/)$/.test(url.pathname);
   }
@@ -427,10 +438,10 @@
     const a = e.target.closest("a[href]");
     if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.target === "_blank") return;
     const url = new URL(a.href, location.href);
-    const norm = (path) => path.replace(/\/index\.html$/, "/");
+    const norm = (path) => path.replace(/\/index\.html$/, "/").replace(/\.html$/, ""); // « /environs » = « /environs.html »
     if (url.origin !== location.origin || norm(url.pathname) !== norm(location.pathname) || /^(mailto|tel):/.test(a.getAttribute("href"))) return;
     if (url.hash) {
-      // Même page mais adresse écrite autrement (« / » et « /index.html ») : on défile au lieu de recharger.
+      // Même page mais adresse écrite autrement (« / » et « /index.html », « /environs » et « /environs.html ») : on défile au lieu de recharger.
       // Si l'adresse est identique, Lenis (option anchors) ou le navigateur s'en chargent déjà.
       if (url.pathname === location.pathname) return;
       let id = url.hash.slice(1);

@@ -731,7 +731,7 @@ html:not(.motion) .place.is-flipped .place__inner { transform: rotateY(180deg); 
 .place__back { position: relative; display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; isolation: isolate; transform: rotateY(180deg); background: linear-gradient(120deg, #3a4436, #5c6b52 45%, #3a4436); background-size: 220% 100%; color: var(--paper); box-shadow: var(--shadow-soft); }
 .place.is-flipped .place__back:not(.is-ready) { animation: place-shimmer 1.4s linear infinite; }
 @keyframes place-shimmer { to { background-position: -220% 0; } }
-.place__photo { position: absolute; inset: 0; z-index: -1; display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
+.place__photo { position: absolute; inset: 0; z-index: -1; display: block; width: 100%; padding: 0; border: 0; background: none; cursor: pointer; }
 .place__photo img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.08); transition: opacity .7s var(--ease), transform 1.4s var(--ease); }
 .place__back.is-ready .place__photo img { opacity: 1; transform: scale(1); }
 .place__back.is-ready .place__photo:hover img { transform: scale(1.04); }
@@ -1006,7 +1006,7 @@ body.menu-open .to-top { opacity: 0; visibility: hidden; }
 .cursor__dot { display: none; }
 .cursor.is-link .cursor__ring { width: 58px; height: 58px; margin: -29px 0 0 -29px; background: rgba(240, 98, 146, .12); border-color: transparent; }
 .cursor.has-label .cursor__ring { width: 78px; height: 78px; margin: -39px 0 0 -39px; background: var(--fuchsia); border-color: transparent; }
-.cursor__label { font: 500 1.1rem/1 var(--f-display); color: var(--paper); opacity: 0; transition: opacity .3s; }
+.cursor__label { font: 500 .98rem/1 var(--f-display); color: var(--paper); opacity: 0; transition: opacity .3s; }
 .cursor.has-label .cursor__label { opacity: 1; }
 .cursor.is-out .cursor__ring { opacity: 0; }
 .cursor__heart { position: absolute; width: 26px; height: 26px; fill: var(--paper); opacity: 0; transform-origin: 50% 55%; }

@@ -1,0 +1,11 @@
+# En-têtes HTTP (Cloudflare Pages / Netlify ; ignoré par GitHub Pages)
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+# Polices et bibliothèques : ne changent jamais
+/assets/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+/assets/vendor/*
+  Cache-Control: public, max-age=31536000, immutable
