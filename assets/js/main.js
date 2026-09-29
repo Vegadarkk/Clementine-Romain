@@ -901,6 +901,7 @@
     const steps = $$(".map-steps li", sec);
     const setStep = (i) => steps.forEach((s, k) => s.classList.toggle("is-active", k === i));
 
+    let pulse = null;
     const franceIn = (tl, at = 0) => tl
       .to($(".map-land", fr), { strokeDashoffset: 0, duration: 1.4, ease: "power2.inOut" }, at)
       .to($(".map-land", fr), { fillOpacity: 1, duration: 0.8 }, at + 0.8)
@@ -908,7 +909,7 @@
       .to($$(".map-peak", fr), { opacity: 1, scaleY: 1, startAt: { scaleY: 0, transformOrigin: "50% 100%" }, duration: 0.6, stagger: 0.02, ease: "back.out(2)" }, at + 1)
       .to($$(".map-label", fr), { opacity: 1, duration: 0.5, stagger: 0.1 }, at + 1.3)
       .to($(".map-pin", fr), { opacity: 1, y: 0, startAt: { y: -60 }, duration: 0.7, ease: "bounce.out" }, at + 1.6)
-      .to($(".map-pulse", fr), { opacity: 0.25, duration: 0.3 }, at + 2.1);
+      .add(() => pulse.play(), at + 2.1);
     const baugesIn = (tl, at = 0) => tl
       .to($$(".map-peak", bg), { opacity: 1, scaleY: 1, startAt: { scaleY: 0, transformOrigin: "50% 100%" }, duration: 0.6, stagger: 0.025, ease: "back.out(2)" }, at)
       .to($$(".map-label:not(.map-venue)", bg), { opacity: 1, duration: 0.5, stagger: 0.06 }, at + 0.4)
@@ -917,7 +918,10 @@
       .to($(".pin-chateau", bg), { opacity: 1, y: 0, startAt: { y: -50 }, duration: 0.7, ease: "bounce.out" }, at + 2.2)
       .to($$(".map-venue", bg), { opacity: 1, x: 0, startAt: { x: -12 }, duration: 0.6, stagger: 0.3 }, at + 1.2);
 
-    gsap.to($(".map-pulse", fr), { scale: 2.6, transformOrigin: "50% 50%", opacity: 0, duration: 1.8, repeat: -1, ease: "power1.out", delay: 3 });
+    // Halo autour de l’épingle : on agrandit son rayon (attribut r) plutôt que de le mettre à l’échelle.
+    // Une transformation sur un élément SVG qui a déjà transform-origin en CSS voit son origine appliquée
+    // deux fois : le halo glissait en diagonale vers Paris au lieu de grossir sur place.
+    pulse = gsap.fromTo($(".map-pulse", fr), { attr: { r: 10 }, opacity: 0.32 }, { attr: { r: 26 }, opacity: 0, duration: 1.8, repeat: -1, repeatDelay: 0.4, ease: "power1.out", paused: true });
 
     const mm = gsap.matchMedia();
     mm.add("(min-width: 900px) and (min-height: 640px)", () => {

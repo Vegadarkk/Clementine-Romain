@@ -381,7 +381,7 @@ html:not(.js) .countdown, html:not(.js) [data-ics] { display: none; }
 .map-bauges .map-city-t { font-size: 17px; }
 .pin-b { fill: var(--fuchsia); stroke: var(--paper); stroke-width: 1.6; }
 .pin-c { fill: var(--paper); }
-.map-pulse { fill: var(--rose); opacity: .25; transform-box: fill-box; transform-origin: center; }
+.map-pulse { fill: var(--rose); opacity: .25; }
 .map-paper { fill: #FBF4EA; }
 .map-d74 { fill: #E2EBDA; } .map-d73 { fill: #FFE6D8; }
 .map-border { fill: none; stroke: var(--moss); stroke-width: 1.4; stroke-dasharray: 2 6; stroke-linecap: round; }
