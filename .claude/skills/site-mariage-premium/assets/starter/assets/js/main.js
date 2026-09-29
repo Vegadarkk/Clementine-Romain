@@ -1024,17 +1024,16 @@
       stars.appendChild(frag);
     }
     // Étoiles filantes, au hasard une fois la nuit tombée : tête brillante devant, traînée qui s'allonge
-    // derrière elle ; directions, longueurs et vitesses variées, parfois deux presque ensemble
+    // derrière elle. Toutes tombent dans le même sens (d'en haut à droite vers le bas à gauche), avec une
+    // inclinaison presque identique, comme une vraie pluie d'étoiles filantes ; longueurs et vitesses varient
     const meteors = $(".programme__shooting", sec);
     if (meteors) {
       const R = gsap.utils.random;
       const meteor = (delay) => {
         const s = document.createElement("i");
-        const toRight = Math.random() < 0.45;
-        const tilt = R(16, 36) * Math.PI / 180;
-        const a = toRight ? Math.PI + tilt : -tilt; // la tête (bout gauche du trait) va vers le bas
+        const a = -R(24, 31) * Math.PI / 180; // la tête (bout gauche du trait) descend vers la gauche
         const len = R(90, 190), dist = R(0.16, 0.26) * Math.max(meteors.clientWidth, 700), dur = R(0.75, 1.15);
-        s.style.left = `${toRight ? R(5, 60) : R(40, 95)}%`;
+        s.style.left = `${R(40, 95)}%`;
         s.style.top = `${R(4, 40)}%`;
         meteors.appendChild(s);
         gsap.timeline({ delay, onComplete: () => s.remove() })

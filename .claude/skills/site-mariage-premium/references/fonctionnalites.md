@@ -102,7 +102,7 @@ l'adapter. Les fonctions JS citées sont dans `assets/js/main.js`, sauf mention 
   en liste verticale sur mobile. Le ciel suit la journée (`sky(p)`) : crème → pêche → coucher rose →
   violet → **nuit bleue**. Le soleil suit une seule courbe continue puis **se couche derrière les
   montagnes** (paysage large dédié `PAYSAGE_SOIR`, sommets toujours visibles) et disparaît,
-  la lune se lève, 90 étoiles scintillent, des étoiles filantes passent au hasard toutes les 2 à 4 s, tête devant (classe `is-night`, section visible). Le paysage
+  la lune se lève, 90 étoiles scintillent, des étoiles filantes passent au hasard toutes les 2 à 4 s, tête devant, toujours dans le même sens (haut droite → bas gauche, demande du couple) (classe `is-night`, section visible). Le paysage
   s'assombrit. Termine par « Et la fête continue… » + ajout à l'agenda (.ics généré, Google Agenda).
 - **Plan interactif du domaine** (`data-domaine`) : plan du lieu (fourni par le lieu) avec des numéros
   pulsants, posés **à côté** des libellés du plan et pas dessus. Au clic : photo + description en fondu,
