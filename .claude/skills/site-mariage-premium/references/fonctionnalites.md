@@ -130,6 +130,24 @@ calligraphié qui se dessine, puis le statut. Les témoins qui entrent ensemble 
 - **Carte Leaflet** chargée à l'approche : fond Esri World Topo (relief, sans clé), bascule automatique
   sur OpenStreetMap après 4 erreurs de tuiles, marqueurs colorés par catégorie, lieux du mariage en plus
   grand. CARTO exige désormais une clé API : ne pas l'utiliser.
+- **Cartes retournables** : un clic (ou un toucher) sur une fiche la fait pivoter en 3D (GSAP `rotationY`
+  + `z` en aller-retour : la carte se soulève en tournant) et montre au dos la photo du lieu, son nom,
+  le crédit (auteur + licence, liens vers Commons) et deux boutons « Agrandir » / « Retourner ». Le dos
+  est construit en JS à partir des attributs `data-photo`, `data-photo-alt`, `data-photo-credit`,
+  `data-photo-license`, `data-photo-license-url`, `data-photo-source` de chaque `<article class="place">` :
+  sans JS, les fiches restent lisibles comme avant. La photo n'est téléchargée qu'au premier survol ou
+  au retournement (reflet animé en attendant). Bouton rond « photo » en haut à droite de chaque fiche
+  (accès clavier), phrase d'aide au-dessus de la grille, étiquette « Photo » / « Agrandir » sur le
+  curseur. La face cachée est `inert`, et le focus passe d'une face à l'autre au clavier.
+  Photos : Wikimedia Commons, choisies **en regardant chaque image** (`scripts/photos_commons.py`).
+- **Visionneuse plein écran** (même fichier) : fond sombre flouté, photo 1600 px (800 px affichée
+  d'abord, depuis le cache), catégorie, nom, description (le texte alternatif), crédit, compteur
+  « 2 / 15 », flèches, clavier (←, →, Échap), balayage sur mobile, clic sur le fond pour fermer. Elle ne
+  parcourt que les fiches visibles avec le filtre actif. Pendant l'ouverture : reste de la page `inert`,
+  Lenis arrêté (il bloque la molette), `overflow: hidden` seulement sur écran tactile ou sans Lenis (sinon
+  la barre de défilement disparaît et la page saute). Focus rendu au bouton d'origine à la fermeture.
+  C'est une `div` en `z-index: 380` et pas un `<dialog>` : la couche supérieure du `<dialog>` passerait
+  au-dessus du curseur personnalisé.
 - Idées bonus empilées (cartes qui rétrécissent quand la suivante arrive).
 
 ## 7. RSVP (`assets/js/rsvp.js`, `rsvp.html`)

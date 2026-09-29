@@ -56,6 +56,9 @@ réintroduis pas en réécrivant du code.
 | Performance mobile faible (TBT 770 ms) | SplitText sur tous les titres au chargement | découpe à la demande, intro raccourcie |
 | Transform de l'épingle écrasé par GSAP | positionnement et animation sur le même groupe SVG | groupe extérieur positionné + groupe intérieur animé |
 | Interpolation `clip-path` absurde | valeurs de départ et d'arrivée de structures différentes | `fromTo` avec la même structure et les mêmes unités |
+| Icônes vides dans les boutons créés en JS | identifiant sans le préfixe du sprite (`#image` au lieu de `#i-image`) | `#i-${nom}` ; vérifier chaque icône ajoutée dans `tools/build-icons.mjs` (`npm run icons`) |
+| Carte retournée qui ne tourne pas (GSAP) | GSAP relisait une rotation posée par une classe CSS (matrice ambiguë) | en mode animé, seul GSAP pilote la rotation (`gsap.set(inner, { rotationY: 0 })` au départ) ; la règle CSS `rotateY(180deg)` est réservée à `html:not(.motion)` |
+| Échap sans effet dans la visionneuse après un clic dans le vide | écouteur `keydown` posé sur la visionneuse, le focus était reparti sur `body` | écouteur sur `document`, actif seulement quand la visionneuse est ouverte |
 | Le bouton « haut de page » apparaît trop tôt | seuil de 30 % de la page | apparition dans les derniers ~20 % / 1,8 écran |
 
 ## 4. Cartes
@@ -95,6 +98,6 @@ réintroduis pas en réécrivant du code.
 |---|---|---|
 | Captures d'écran commitées par erreur (`shots/`) | script lancé avec le dépôt comme dossier courant | chemins de sortie absolus vers le dossier de travail ; `git status` avant chaque commit |
 | Échec de création de PR (« base invalid ») | le dépôt n'a pas de branche `main` | le dire à l'utilisateur ; ne pas créer de branche sans son accord |
-| Wikimedia répond 429 | limite de requêtes par IP partagée | Internet Archive (filtrer sur `licenseurl`), Musopen |
+| Wikimedia répond 429 | limite de requêtes par IP partagée | une seule requête API groupée (`titles=A\|B\|…`), User-Agent explicite, pauses (`scripts/photos_commons.py`) ; pour l'audio : Internet Archive (filtrer sur `licenseurl`), Musopen |
 | Chromium refuse un site en TLS | proxy de l'environnement | `curl` pour lire la page, jamais d'option qui désactive la vérification |
 | Pas de ffmpeg | environnement minimal | `pip install imageio-ffmpeg` (binaire statique) |

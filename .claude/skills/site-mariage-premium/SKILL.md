@@ -55,7 +55,9 @@ reproduis-le à la même taille d'écran avant de corriger.
 3. Crée la liste de tâches (une par page ou fonctionnalité majeure, plus les audits et le déploiement).
 
 ### 1. Préparer les ressources
-- Photos converties en WebP en plusieurs tailles (`scripts/build-images.py`), recadrées sur les visages.
+- Photos converties en WebP en plusieurs tailles (`scripts/images_webp.py`), recadrées sur les visages.
+- Photos des lieux (page Environs) : Wikimedia Commons, licences libres, avec `scripts/photos_commons.py`.
+  Regarde chaque image avant de la retenir : les homonymes de lieux sont fréquents.
   Le couple ne doit **jamais** être coupé, que ce soit dans une arche, un plein écran ou sur un écran large.
 - Polices auto-hébergées (woff2, licence OFL), icônes Lucide en sprite SVG (`tools/build-icons.mjs`).
 - Illustrations florales, cartes et monogramme générés par script (`tools/build-*.mjs`). Laisse une marge
@@ -170,4 +172,5 @@ sont celles du projet d'origine : garde leur structure et leurs attributs `data-
   une animation, la carte, les filtres ou le formulaire.
 - `references/audit.md` : protocole d'audit et utilisation des scripts.
 - `references/deploiement.md` : GitHub Pages, cache, FormSubmit, vérification en ligne, README.
-- `scripts/` : `audit_axe.cjs`, `audit_console.cjs`, `captures.cjs`, `verif_en_ligne.sh`, `build-images.py`.
+- `scripts/` : `audit_axe.cjs`, `audit_console.cjs`, `captures.cjs`, `verif_en_ligne.sh`, `images_webp.py`,
+  `photos_commons.py` (photos libres des lieux, avec crédits).

@@ -482,8 +482,10 @@
       window.addEventListener("pointermove", (e) => { xTo(e.clientX); yTo(e.clientY); cursor.classList.remove("is-out"); heartMove(e); }, { passive: true });
       document.addEventListener("pointerleave", () => cursor.classList.add("is-out"));
       document.addEventListener("pointerover", (e) => {
-        const labelled = e.target.closest("[data-cursor]");
         const link = e.target.closest("a, button, label, input, textarea, select, [role=button]");
+        // Un lien placé dans une zone étiquetée garde son propre curseur
+        let labelled = e.target.closest("[data-cursor]");
+        if (labelled && link && link !== labelled && labelled.contains(link)) labelled = null;
         hearty = e.target.closest("[data-cursor-heart]");
         cursor.classList.toggle("is-heart", !!hearty);
         cursor.classList.toggle("has-label", !!labelled && !hearty);

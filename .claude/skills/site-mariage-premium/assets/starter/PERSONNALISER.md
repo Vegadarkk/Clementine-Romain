@@ -29,7 +29,10 @@ Pour tout retrouver : `grep -rn -i "clémentine\|clementine\|romain\|2027\|héry
   (`.stay`), taxis, liens de recherche (dates dans les URL Booking/Airbnb), crédit.
 - `temoins.html` : texte d'intro, prénoms, statuts, photos, e-mail de contact (`temoins@example.com`).
 - `environs.html` : fiches d'idées (texte, catégorie `data-cat`, coordonnées `data-lat`/`data-lng`),
-  idées bonus.
+  photo au dos (`data-photo` + `data-photo-alt/credit/license/license-url/source`, fichiers
+  `assets/img/environs/<nom>-800.webp` et `-1600.webp` via `scripts/photos_commons.py`), idées bonus.
+  Ces attributs sont retirés du kit (photos propres à chaque lieu) : sans `data-photo`, une fiche reste
+  une fiche simple, non retournable. Exemple complet : `references/fonctionnalites.md` § 6.
 - `assets/js/environs.js` : les deux lieux du mariage sur la carte Leaflet (`wedding`, avec coordonnées et horaires).
 - `rsvp.html` : adresse FormSubmit (`mariage@example.com` dans `action`, `data-endpoint`, `data-mailto`),
   date limite, textes.
