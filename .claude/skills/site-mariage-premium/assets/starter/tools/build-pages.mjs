@@ -90,7 +90,7 @@ const HEAD = `<meta name="viewport" content="width=device-width, initial-scale=1
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Clémentine &amp; Romain">
   <meta property="og:title" content="Clémentine &amp; Romain · 3 juillet 2027">
-  <meta property="og:description" content="Nous nous marions ! Programme, lieux, hébergements et réponse à l’invitation.">
+  <meta property="og:description" content="Nous nous marions&nbsp;! Programme, lieux, hébergements et réponse à l’invitation.">
   <meta property="og:image" content="${SITE_URL}assets/img/og-image.jpg">
   <meta property="og:locale" content="fr_FR">
   <meta name="twitter:card" content="summary_large_image">

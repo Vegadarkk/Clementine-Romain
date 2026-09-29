@@ -234,7 +234,8 @@
       nav.hidden = false;
       $$("[data-step]", nav).forEach((b) => b.addEventListener("click", () => show(current + Number(b.dataset.step))));
     }
-    show(0, false);
+    const fromHash = slides.findIndex((sl) => location.hash === `#${sl.id}`);
+    show(fromHash > -1 ? fromHash : 0, false);
     if (motion) document.addEventListener("cr:animations", () => {
       gsap.from(spots, { scale: 0, duration: 0.7, ease: "back.out(2)", stagger: 0.07, scrollTrigger: { trigger: domaine, start: "top 70%" } });
     });
@@ -846,10 +847,12 @@
   function witnesses() {
     const row = $("[data-witnesses]");
     if (!row) return;
+    const tilt = (item) => parseFloat(getComputedStyle($(".witness2__shape", item)).getPropertyValue("--tilt")) || 0;
     const reveal = (item) => {
       const q = (sel) => $(sel, item);
       return gsap.timeline()
-        .fromTo(q(".witness2__shape"), { opacity: 0, scale: 0, rotation: -60 }, { opacity: 1, scale: 1, rotation: 0, duration: 1.3, ease: "elastic.out(1, 0.55)" }, 0)
+        // L'inclinaison propre à chaque forme (--tilt) est rendue au CSS à la fin (survol compris)
+        .fromTo(q(".witness2__shape"), { opacity: 0, scale: 0, rotation: tilt(item) - 60 }, { opacity: 1, scale: 1, rotation: tilt(item), duration: 1.3, ease: "elastic.out(1, 0.55)", clearProps: "transform" }, 0)
         .fromTo(q(".witness2__photo"), { opacity: 0, scale: 0.25, rotation: -18 }, { opacity: 1, scale: 1, rotation: 0, duration: 1.2, ease: "back.out(1.7)" }, 0.12)
         .fromTo(q(".witness2__photo img"), { scale: 1.6 }, { scale: 1, duration: 1.8, ease: "expo.out", clearProps: "transform" }, 0.12)
         .fromTo(q(".witness2__ring"), { opacity: 0, scale: 1.25 }, { opacity: 0.45, scale: 1, duration: 1, ease: "power3.out" }, 0.45)
