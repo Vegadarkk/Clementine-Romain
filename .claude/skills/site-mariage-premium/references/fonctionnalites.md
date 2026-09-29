@@ -66,6 +66,9 @@ l'adapter. Les fonctions JS citées sont dans `assets/js/main.js`, sauf mention 
   quand on approche du point focal, avec une onde à chaque battement, une lueur, et de petits cœurs qui
   s'envolent tout près. Un clic lance une gerbe. Le point focal tient compte de `object-fit: cover`.
   Pour une autre photo, repère le point sur l'image et mets à jour `data-heart-focus`.
+  Même effet sur la photo plein écran (`.reveal-photo__frame`, point entre les visages, portée réduite
+  `data-heart-reach="0.4"`) : le point est recalculé à chaque image depuis le cadre réel de `img`
+  (zoom GSAP compris), et le texte posé dessus est en `pointer-events: none` pour ne pas couper le cœur.
 - **Ruban défilant** (`fillMarquee()` / `marquee()`) : le groupe est dupliqué autant que nécessaire pour
   couvrir l'écran, et le décalage vaut exactement la largeur d'un groupe (`--marquee-shift`). Il
   accélère et s'incline selon la vitesse de défilement.
