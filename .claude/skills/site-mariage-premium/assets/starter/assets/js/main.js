@@ -730,7 +730,8 @@
       // de la page : en défilant vite, l’arche suit avec un léger retard et le texte ne doit pas la devancer.
       const text = $("[data-rp-text]", sec);
       if (!text) return;
-      tl.fromTo(text, { opacity: 0 }, { opacity: 1, ease: "none", duration: 0.06 }, 0.93);
+      // Garde-fou lié au défilement : le texte s'éteint avec l'arche si l'on remonte vite
+      tl.fromTo(text, { "--rp-safe": 0 }, { "--rp-safe": 1, ease: "none", duration: 0.1 }, 0.75);
       const words = $$(".rp-w > span", text);
       const t = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } })
         .fromTo($(".rp-over", text), { opacity: 0, letterSpacing: "1em" }, { opacity: 1, letterSpacing: "0.42em", duration: 1.5 }, 0)
@@ -738,13 +739,23 @@
         .fromTo($(".rp-line", text), { scaleX: 0 }, { scaleX: 1, duration: 1.2, ease: "expo.inOut" }, 1.05)
         .fromTo(words, { yPercent: 115 }, { yPercent: 0, duration: 1.1, stagger: 0.09, ease: "expo.out" }, 1.25)
         .fromTo($(".rp-place", text), { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 1 }, 1.6);
-      // Écriture à 97 % d’ouverture ; effacement sous 90 %, quand le bloc est déjà invisible (écart = pas de
-      // va-et-vient si l’on s’arrête pile sur le seuil)
+      // Photo ouverte (97 %) : le bloc s'allume et le texte s'écrit depuis le début. Dès que l'arche
+      // recommence à se fermer (sous 95 %) : fondu rapide, puis remise à zéro, pour que le texte ne
+      // réapparaisse jamais déjà écrit. L'écart 95/97 évite tout va-et-vient sur le seuil.
       let written = false;
+      gsap.set(text, { "--rp-show": 0 });
       tl.eventCallback("onUpdate", () => {
         const time = tl.time();
-        if (!written && time >= 0.97) { written = true; t.timeScale(1).play(); }
-        else if (written && time < 0.9) { written = false; t.timeScale(3).reverse(); }
+        if (!written && time >= 0.97) {
+          written = true;
+          gsap.killTweensOf(text, "--rp-show");
+          gsap.set(text, { "--rp-show": 1 });
+          t.timeScale(1).restart();
+        } else if (written && time < 0.95) {
+          written = false;
+          gsap.killTweensOf(text, "--rp-show"); // uniquement cette propriété : le garde-fou de `tl` reste intact
+          gsap.to(text, { "--rp-show": 0, duration: 0.3, ease: "power2.out", onComplete: () => t.pause(0) });
+        }
       });
     });
   }

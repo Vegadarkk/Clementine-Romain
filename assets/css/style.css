@@ -1090,7 +1090,10 @@ body.menu-open .to-top { opacity: 0; visibility: hidden; }
 .motion .reveal-photo { height: 270vh; } /* ouverture de l’arche puis courte pause, photo ouverte */
 .motion .reveal-photo__sticky { position: sticky; top: 0; height: 100vh; height: 100svh; }
 .motion .reveal-photo__frame { clip-path: inset(15% 33% 15% 33% round 17vw 17vw 22px 22px); }
-.motion .reveal-photo__text, .motion .reveal-photo__scrim { opacity: 0; }
+.motion .reveal-photo__scrim { opacity: 0; }
+/* Texte : visible seulement si l'arche est ouverte (--rp-safe, lié au défilement) ET si l'écriture a été
+   lancée (--rp-show, piloté en JS) : il n'apparaît jamais « déjà écrit ». */
+.motion .reveal-photo__text { opacity: calc(var(--rp-safe, 0) * var(--rp-show, 0)); }
 @media (max-width: 700px) { .motion .reveal-photo__frame { clip-path: inset(18% 14% 18% 14% round 36vw 36vw 22px 22px); } }
 
 /* ---------- Illustration du village ---------- */
