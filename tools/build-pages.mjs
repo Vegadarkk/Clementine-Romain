@@ -122,14 +122,18 @@ const HEAD = `${REDIRECT}<meta name="viewport" content="width=device-width, init
   <script>
     /* Active les animations si le visiteur ne les a pas désactivées ; filet de sécurité si le JS ne se charge pas */
     (function (d) {
-      var h = d.documentElement, s = null;
+      var h = d.documentElement, s = null, l = null;
       h.classList.add("js");
+      try { s = window.sessionStorage; } catch (e) {}
+      try { l = window.localStorage; } catch (e) {}
+      // Écran « Ouvrir l'invitation » à la première page de la visite : son clic autorise la musique
+      // (sauf si le visiteur l'a déjà refusée, et jamais pour les robots d'indexation)
+      if (s && !s.getItem("cr-gate") && !(l && l.getItem("cr-music-off") === "1") && !/bot|crawl|spider|lighthouse|slurp/i.test(navigator.userAgent)) h.classList.add("gate");
+      setTimeout(function () { if (!window.__crReady) h.classList.remove("motion", "intro", "curtain-in", "gate"); }, 5000);
       if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       h.classList.add("motion");
-      try { s = window.sessionStorage; } catch (e) {}
       if (s && s.getItem("cr-curtain")) { h.classList.add("curtain-in"); s.removeItem("cr-curtain"); }
-      else if (s && h.hasAttribute("data-intro") && !s.getItem("cr-intro")) h.classList.add("intro");
-      setTimeout(function () { if (!window.__crReady) h.classList.remove("motion", "intro", "curtain-in"); }, 5000);
+      else if (!h.classList.contains("gate") && s && h.hasAttribute("data-intro") && !s.getItem("cr-intro")) h.classList.add("intro");
     })(document);
   </script>`;
 
@@ -143,6 +147,19 @@ const NAV = [
 
 const HEADER = `${LOGO.symbols}
   <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <div class="gate-screen" data-gate role="dialog" aria-modal="true" aria-labelledby="gate-title" aria-describedby="gate-desc">
+    <img class="gate-screen__flower gate-screen__flower--1" src="assets/img/bouquet.svg" alt="" width="420" height="340">
+    <img class="gate-screen__flower gate-screen__flower--2" src="assets/img/fleur-pivoine.svg" alt="" width="200" height="200">
+    <div class="gate-screen__inner">
+      <svg class="gate-screen__mono" viewBox="0 0 240 300" aria-hidden="true" focusable="false"><use href="#logo-arche-date"></use></svg>
+      <p class="gate-screen__over">Bienvenue</p>
+      <p class="gate-screen__names script" id="gate-title">Clémentine <span>&amp;</span>&nbsp;Romain</p>
+      <p class="gate-screen__date" id="gate-desc">Samedi 3&nbsp;juillet&nbsp;2027 · Héry-sur-Alby</p>
+      <button class="btn gate-screen__open" type="button" data-gate-open><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#i-heart"/></svg>Ouvrir l’invitation</button>
+      <p class="gate-screen__note">La musique démarre à l’ouverture</p>
+      <button class="gate-screen__silent" type="button" data-gate-silent>Entrer sans musique</button>
+    </div>
+  </div>
   <div class="intro-screen" aria-hidden="true">
     <div class="intro-screen__inner">
       <svg class="intro-screen__mono" viewBox="0 0 240 300"><use href="#logo-arche-date"></use></svg>

@@ -16,6 +16,9 @@
 
   window.__crReady = true;
   if (!hasGsap) html.classList.remove("motion", "intro", "curtain-in");
+  // Promesse résolue quand l'écran « Ouvrir l'invitation » est fermé (ou s'il n'y en a pas)
+  let gateDone = () => {};
+  window.__crGate = new Promise((resolve) => { gateDone = resolve; });
   const motion = html.classList.contains("motion");
   const store = (() => { try { return window.sessionStorage; } catch (e) { return null; } })();
 
@@ -196,16 +199,70 @@
     // Premier geste du visiteur (clic, toucher, touche) : on relance la lecture bloquée
     const GESTURES = ["pointerdown", "pointerup", "touchend", "keydown", "click"];
     const resume = (e) => {
-      if (e.target && e.target.closest && e.target.closest("[data-music]")) return;
+      if (e.target && e.target.closest && e.target.closest("[data-music], [data-gate]")) return;
       if (!wanted) { stopWaiting(); return; }
       play().then(() => { stopWaiting(); save(); }).catch(() => { /* pas encore un geste valable : on réessaie au suivant */ });
     };
     function stopWaiting() { GESTURES.forEach((g) => window.removeEventListener(g, resume, true)); }
     const saved = read();
     // Démarrage automatique, sauf si le visiteur a coupé la musique (dans cette visite ou une précédente)
+    /* ---------- Écran « Ouvrir l'invitation » : son clic autorise la musique ---------- */
+    const gate = $("[data-gate]");
+    const gateOn = !!gate && html.classList.contains("gate");
+    let hidden = [];
+    const closeGate = () => {
+      if (!gateOn || gate.dataset.closing) return;
+      gate.dataset.closing = "1";
+      try { store.setItem("cr-gate", "1"); store.setItem("cr-intro", "1"); } catch (e) { /* stockage indisponible */ }
+      const end = () => {
+        html.classList.remove("gate");
+        hidden.forEach((el) => { el.inert = false; });
+        if (window.__lenis) window.__lenis.start();
+        gateDone();
+      };
+      if (motion && gsap) gsap.to(gate, { clipPath: "inset(0% 0% 100% 0%)", duration: 1, ease: "expo.inOut", onComplete: end });
+      else end();
+    };
+    if (gateOn) {
+      hidden = $$("body > *").filter((el) => el !== gate && !el.classList.contains("cursor") && !el.inert);
+      hidden.forEach((el) => { el.inert = true; });
+      if (window.__lenis) window.__lenis.stop();
+      const openBtn = $("[data-gate-open]", gate);
+      openBtn.addEventListener("click", () => {
+        wanted = true;
+        remember(false);
+        stopWaiting();
+        musicBtn.classList.remove("is-waiting");
+        play().then(save).catch(() => render(false)); // clic = geste autorisé : la musique démarre
+        closeGate();
+      });
+      const silent = () => {
+        wanted = false;
+        remember(true);
+        stopWaiting();
+        musicBtn.classList.remove("is-waiting");
+        stop();
+        if (stateEl) stateEl.textContent = "Un peu de musique\u00a0?";
+        save();
+        closeGate();
+      };
+      $("[data-gate-silent]", gate).addEventListener("click", silent);
+      gate.addEventListener("keydown", (e) => { if (e.key === "Escape") { e.preventDefault(); silent(); } });
+      if (motion && gsap) {
+        gsap.timeline({ defaults: { ease: "power3.out" } })
+          .fromTo($(".gate-screen__mono", gate), { clipPath: "inset(100% 0% 0% 0%)", y: 20 }, { clipPath: "inset(0% 0% 0% 0%)", y: 0, duration: 1.4, ease: "power3.inOut" })
+          .fromTo($$(".gate-screen__inner > :not(svg)", gate), { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.9, stagger: 0.1 }, 0.7)
+          .fromTo($$(".gate-screen__flower", gate), { opacity: 0, scale: 0.6, rotation: (i) => (i ? 120 : -20) }, { opacity: (i) => (window.innerWidth < 560 ? [0.55, 0.7][i] : 1), scale: 1, rotation: (i) => (i ? 160 : 0), duration: 1.6, ease: "back.out(1.3)", stagger: 0.15 }, 0.4);
+      }
+      requestAnimationFrame(() => openBtn.focus({ preventScroll: true }));
+    } else {
+      gateDone();
+    }
+
     if (saved.on !== false && !refused()) {
       wanted = true;
-      play().then(save).catch(() => {
+      // Lecture autorisée d'emblée par le navigateur : l'écran d'accueil n'a plus lieu d'être
+      play().then(() => { save(); closeGate(); }).catch(() => {
         musicBtn.classList.add("is-waiting");
         if (stateEl) stateEl.textContent = "Un peu de musique\u00a0?";
         GESTURES.forEach((g) => window.addEventListener(g, resume, true));
@@ -229,6 +286,8 @@
       }
     }
   }
+  // Pas de bouton musique sur la page : pas d’écran d’accueil non plus
+  if (!musicBtn) { html.classList.remove("gate"); gateDone(); }
 
   /* ------------------------------------------------------- Retour en haut */
   const toTop = $("[data-to-top]");
@@ -1030,6 +1089,7 @@
     }
     await curtainOut();
     await playIntro();
+    await window.__crGate; // le héros s'anime une fois l'invitation ouverte
     heroIn();
     pageHero();
     } catch (err) {
