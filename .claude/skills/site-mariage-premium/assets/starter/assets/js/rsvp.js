@@ -1,4 +1,6 @@
-/* Formulaire de réponse (RSVP) — envoi automatique par e-mail via FormSubmit */
+/* Formulaire de réponse (RSVP) — envoi automatique par e-mail.
+   Services essayés dans l'ordre : Web3Forms (clé dans data-web3forms-key), puis FormSubmit (data-endpoint).
+   Si aucun ne répond, l'invité garde une solution : e-mail prérempli ou réponse à copier. */
 (() => {
   "use strict";
 
@@ -11,6 +13,7 @@
   const gsap = window.gsap;
   const motion = document.documentElement.classList.contains("motion") && !!gsap;
   const endpoint = form.dataset.endpoint;
+  const w3fKey = (form.dataset.web3formsKey || "").trim();
   const mailto = form.dataset.mailto;
   const list = $("[data-guests]", form);
   const addBtn = $("[data-guest-add]", form);
@@ -287,16 +290,60 @@
     requestAnimationFrame(() => window.crScrollTo && window.crScrollTo(success.closest(".rsvp-card")));
     if (p === "Oui") confetti();
   }
+  // Échec de tous les services : la réponse ne doit pas se perdre. Deux issues simples pour l'invité :
+  // son logiciel de messagerie (lien prérempli) ou la réponse copiée, à coller dans sa messagerie web.
   function showError(detail) {
     statusEl.className = "form-status form-status--error";
     statusEl.innerHTML = "";
-    const msg = document.createElement("span");
-    msg.textContent = `Oups, l’envoi n’a pas abouti${detail ? ` (${detail})` : ""}. Réessayez dans un instant, ou `;
+    const msg = document.createElement("p");
+    msg.textContent = `Oups, l’envoi automatique n’a pas abouti${detail ? ` (${detail})` : ""}. Pour que votre réponse nous parvienne quand même :`;
+    const actions = document.createElement("div");
+    actions.className = "form-status__actions";
     const a = document.createElement("a");
+    a.className = "btn btn--small";
     a.href = mailtoLink();
-    a.textContent = "envoyez votre réponse par e-mail";
-    statusEl.append(msg, a, document.createTextNode("."));
+    a.textContent = "L’envoyer par e-mail";
+    const copy = document.createElement("button");
+    copy.type = "button";
+    copy.className = "btn btn--small btn--ghost";
+    copy.textContent = "Copier ma réponse";
+    const s = summary();
+    const text = `RSVP mariage Clémentine & Romain — ${s.names}\n${s.lines.join("\n")}`;
+    copy.addEventListener("click", async () => {
+      let ok = false;
+      try { await navigator.clipboard.writeText(text); ok = true; } catch (e) { /* presse-papiers refusé */ }
+      if (!ok) {
+        const ta = document.createElement("textarea");
+        ta.value = text; ta.setAttribute("readonly", ""); ta.style.cssText = "position:fixed;opacity:0";
+        document.body.appendChild(ta); ta.select();
+        try { ok = document.execCommand("copy"); } catch (e) { /* ignore */ }
+        ta.remove();
+      }
+      copy.textContent = ok ? "Réponse copiée ✓" : "Copie impossible";
+    });
+    actions.append(a, copy);
+    const where = document.createElement("p");
+    where.className = "form-status__where";
+    where.append("À coller dans un e-mail adressé à ");
+    const addr = document.createElement("strong");
+    addr.textContent = mailto;
+    where.append(addr, ". Vous pouvez aussi réessayer dans un instant.");
+    statusEl.append(msg, actions, where);
   }
+
+  /* Services d'envoi : chacun renvoie true si la réponse est bien partie */
+  async function post(url, body, signal) {
+    const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(body), signal });
+    const data = await res.json().catch(() => ({}));
+    return res.ok && (data.success === true || data.success === "true");
+  }
+  function viaWeb3Forms(fields, email, signal) {
+    const body = { access_key: w3fKey, subject: fields._subject, from_name: "Site du mariage · Clémentine & Romain", botcheck: "", ...fields };
+    delete body._subject; delete body._template; delete body._captcha; delete body._replyto;
+    if (email) body.email = email; // Web3Forms s'en sert comme adresse de réponse
+    return post("https://api.web3forms.com/submit", body, signal);
+  }
+  function viaFormSubmit(fields, signal) { return post(endpoint, fields, signal); }
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -310,7 +357,7 @@
       return;
     }
     // Aucun service d’envoi configuré (aperçu du site) : on le dit clairement, sans rien simuler
-    if (!endpoint) {
+    if (!endpoint && !w3fKey) {
       statusEl.className = "form-status form-status--info";
       statusEl.textContent = "Aperçu du site : l’envoi automatique des réponses sera actif une fois le site mis en ligne.";
       return;
@@ -336,22 +383,22 @@
     if (email) { payload._replyto = email; payload.email = email; }
 
     setLoading(true);
-    const ctrl = "AbortController" in window ? new AbortController() : null;
-    const timer = setTimeout(() => ctrl && ctrl.abort(), 20000);
+    // Chaque service a 15 s ; en cas d'échec (panne, réseau, délai), on passe au suivant
+    const services = [];
+    if (w3fKey) services.push((signal) => viaWeb3Forms(payload, email, signal));
+    if (endpoint) services.push((signal) => viaFormSubmit(payload, signal));
+    let sent = false, timedOut = false;
     try {
-      const res = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify(payload),
-        signal: ctrl ? ctrl.signal : undefined,
-      });
-      const data = await res.json().catch(() => ({}));
-      if (res.ok && (data.success === true || data.success === "true")) showSuccess();
-      else showError(data.message ? "service indisponible" : `erreur ${res.status}`);
-    } catch (err) {
-      showError(err && err.name === "AbortError" ? "délai dépassé" : "connexion impossible");
+      for (const send of services) {
+        const ctrl = "AbortController" in window ? new AbortController() : null;
+        const timer = setTimeout(() => { timedOut = true; ctrl && ctrl.abort(); }, 15000);
+        try { sent = await send(ctrl ? ctrl.signal : undefined); } catch (err) { sent = false; }
+        clearTimeout(timer);
+        if (sent) break;
+      }
+      if (sent) showSuccess();
+      else showError(timedOut ? "délai dépassé" : "service momentanément indisponible");
     } finally {
-      clearTimeout(timer);
       setLoading(false);
       // Le bouton était désactivé pendant l'envoi : le focus ne doit pas se perdre sur la page
       if (document.activeElement === document.body && !form.hidden) submitBtn.focus();

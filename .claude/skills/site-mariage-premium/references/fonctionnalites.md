@@ -155,7 +155,7 @@ calligraphié qui se dessine, puis le statut. Les témoins qui entrent ensemble 
 
 ## 7. RSVP (`assets/js/rsvp.js`, `rsvp.html`)
 
-- Envoi AJAX à FormSubmit (`data-endpoint="https://formsubmit.co/ajax/<email>"`), `_subject` explicite
+- Envoi en chaîne : Web3Forms (`data-web3forms-key`), puis FormSubmit (`data-endpoint="https://formsubmit.co/ajax/<email>"`), 15 s chacun ; échec des deux → e-mail prérempli + « Copier ma réponse ». `_subject` explicite
   (✅/❌ + noms), `_template: table`, `_captcha: false`, pot de miel `_honey`, champ `email` (réponse
   directe à l'invité). Repli : lien mailto pré-rempli si l'envoi échoue.
 - Invités multiples (ajout/suppression, case « Enfant »), présence Oui/Non en `radiogroup`,
@@ -164,6 +164,10 @@ calligraphié qui se dessine, puis le statut. Les témoins qui entrent ensemble 
   décalage de mise en page fait rater le clic sur « Envoyer »). `form.noValidate = true` est posé en JS,
   pas dans le HTML, pour que le repli sans JS garde la validation native.
 - Libellé du bouton dans `[data-label]` (sinon « Envoi en cours… » reste affiché).
+- **Date limite impossible à manquer sur ordinateur** (retour de la mariée) : sur mobile, la carte douce
+  suffit ; à partir de 901 px, bandeau fuchsia (titre en grand, compte à rebours en pastille, pastille de
+  date qui pulse) + rappel cliquable « Réponse souhaitée avant le … » dans le haut de page, qui mène au
+  formulaire.
 - Succès : confettis, message personnalisé, réponse mémorisée (`localStorage`) avec « modifier ma
   réponse ». Date limite dépassée : message dédié.
 

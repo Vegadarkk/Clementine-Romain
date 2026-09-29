@@ -36,7 +36,10 @@ Pour tout retrouver : `grep -rn -i "clémentine\|clementine\|romain\|2027\|héry
 - `assets/js/environs.js` : les deux lieux du mariage sur la carte Leaflet (`wedding`, avec coordonnées et horaires).
 - `rsvp.html` : adresse FormSubmit (`mariage@example.com` dans `action`, `data-endpoint`, `data-mailto`),
   date limite, textes.
-- `assets/js/rsvp.js` : date limite (`deadline`), message de succès (date du mariage).
+- `assets/js/rsvp.js` : date limite (`deadline`), message de succès (date du mariage), prénoms dans
+  `from_name` (Web3Forms) et dans le texte « Copier ma réponse ».
+- `rsvp.html` : clé Web3Forms (`data-web3forms-key`, reçue par e-mail par la personne qui reçoit les
+  réponses), date limite du bandeau et du rappel en haut de page (`.hero-deadline`).
 - `assets/js/main.js` : fichier agenda `.ics` (UID, DTSTART/DTEND en UTC, titre, lieu, description, nom du
   fichier). Titre du morceau et source audio (`data-src`) : bouton musique dans `build-pages.mjs`.
 - `404.html`, `logos.html` : titres et textes.

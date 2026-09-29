@@ -63,7 +63,17 @@ canonical suffit pour que Google ne retienne que le domaine.
 Cloudflare sert `/environs` au lieu de `/environs.html` (redirection 308) : les `canonical` et le sitemap
 utilisent déjà la forme sans `.html`, et `main.js` considère les deux formes comme la même page.
 
-## Formulaire RSVP (FormSubmit)
+## Formulaire RSVP (Web3Forms + FormSubmit en relais)
+
+- **Web3Forms** (principal) : la personne qui reçoit les réponses saisit son adresse sur web3forms.com et
+  reçoit une clé d'accès (publique, sans compte, 250 envois par mois). Clé dans `data-web3forms-key`.
+  L'API refuse les appels hors navigateur (403 « Use our API in client side ») : c'est normal, les tests
+  se font dans le navigateur en interceptant `api.web3forms.com`.
+- **FormSubmit** (relais) : voir ci-dessous. En septembre 2026, il renvoyait 500 à tout envoi.
+- Échec des deux : e-mail prérempli + « Copier ma réponse » (beaucoup d'invités sur ordinateur n'ont pas
+  de logiciel de messagerie, le lien `mailto:` n'ouvre alors rien).
+
+### FormSubmit
 
 - Point d'envoi : `https://formsubmit.co/ajax/<email>` (dans `data-endpoint`), repli classique dans
   `action`, adresse aussi dans `data-mailto` pour le lien de secours.

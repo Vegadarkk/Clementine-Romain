@@ -33,15 +33,22 @@ Site **100 % statique** (HTML, CSS, JavaScript), sans base de données ni serveu
 
 ## Réponses RSVP par e-mail (à faire une seule fois)
 
-Les réponses sont envoyées via [FormSubmit](https://formsubmit.co) (gratuit, sans compte) à **clementine.leytier@hotmail.fr**.
+Les réponses arrivent par e-mail à **clementine.leytier@hotmail.fr**. Le formulaire essaie deux services
+gratuits, l'un après l'autre :
 
-1. Une fois le site en ligne, envoyer **une réponse de test** depuis la page RSVP.
-2. Clémentine reçoit un e-mail « Activate Form » de FormSubmit : cliquer sur **Activate**. (Vérifier les courriers indésirables.)
-3. C’est tout : chaque réponse arrive ensuite automatiquement, sous forme de tableau (présence, invités, adultes/enfants, allergies, petit mot, e-mail de l’invité pour répondre directement).
+1. **[Web3Forms](https://web3forms.com)** (service principal, 250 réponses par mois, sans compte) :
+   sur web3forms.com, saisir l'adresse de réception pour recevoir une **clé d'accès** par e-mail, puis la
+   coller dans `rsvp.html`, attribut `data-web3forms-key` du formulaire. La clé n'est pas secrète : elle
+   peut figurer dans le code.
+2. **[FormSubmit](https://formsubmit.co)** (relais) : `data-endpoint` du formulaire. Le premier envoi
+   déclenche un e-mail « Activate Form » à cliquer. En septembre 2026, FormSubmit renvoyait « Server
+   Error » à tous les envois : il sert seulement de relais au cas où il redeviendrait disponible.
 
-Optionnel : FormSubmit fournit après activation une adresse « alias » aléatoire. La remplacer dans `rsvp.html` (attributs `action` et `data-endpoint` du formulaire) masque l’adresse e-mail dans le code source.
+Si aucun service ne répond, l'invité n'est jamais bloqué : il peut envoyer sa réponse par son logiciel de
+messagerie (lien prérempli) ou la **copier** pour la coller dans un e-mail à l'adresse affichée.
 
-Si l’envoi échoue (connexion, service indisponible), l’invité se voit proposer un lien pour envoyer sa réponse par e-mail, pré-rempli.
+Chaque réponse contient : présence, invités, nombre d'adultes et d'enfants, allergies, petit mot et
+e-mail de l'invité (répondre à l'e-mail lui écrit directement).
 
 ## Modifier les contenus
 

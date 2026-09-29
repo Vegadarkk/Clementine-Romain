@@ -82,6 +82,7 @@ réintroduis pas en réécrivant du code.
 | L'erreur de présence n'est pas lue par les lecteurs d'écran | `aria-invalid` sur une div | `role="radiogroup"` étiqueté par la légende |
 | Nouvelle ligne d'invité à moitié invisible | clonage d'une ligne en cours d'animation | cloner un modèle propre enregistré au démarrage |
 | Les réponses de l'invité ne reviennent pas | champ nommé « E-mail » | champ `email` (+ `_replyto`) pour FormSubmit |
+| « L'envoi n'a pas abouti (connexion impossible) » pour tout le monde | FormSubmit renvoyait une erreur 500 **sans en-tête CORS** (panne du service, septembre 2026) : le navigateur n'y voit qu'une erreur réseau | ne jamais dépendre d'un seul service : Web3Forms d'abord (`data-web3forms-key`), FormSubmit en relais, puis e-mail prérempli **et** bouton « Copier ma réponse » ; diagnostiquer avec un envoi vers `…@example.com` ou une boîte jetable, jamais vers le couple |
 | Aucun e-mail reçu | FormSubmit non activé | le **1er envoi** déclenche un mail « Activate Form » au destinataire (vérifier les indésirables) ; ne pas l'envoyer sans accord |
 
 ## 6. Contenu et typographie

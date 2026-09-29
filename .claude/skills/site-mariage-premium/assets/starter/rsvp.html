@@ -28,7 +28,7 @@
   <link rel="preload" href="assets/fonts/pinyon-script-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/cormorant-garamond-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/jost-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css?v=7b2a327b">
+  <link rel="stylesheet" href="assets/css/style.css?v=b7628b04">
   <script>
     /* Active les animations si le visiteur ne les a pas désactivées ; filet de sécurité si le JS ne se charge pas */
     (function (d) {
@@ -117,6 +117,7 @@
         <p class="overline" data-hero>RSVP</p>
         <h1 id="page-title" data-hero>Serez-vous <em>des nôtres</em>&nbsp;?</h1>
         <p data-hero>Votre réponse nous est directement transmise. Il suffit de quelques secondes&nbsp;!</p>
+        <a class="hero-deadline" href="#rsvp-form" data-hero><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=d767b459#i-calendar-heart"/></svg><span>Réponse souhaitée avant le <strong>15&nbsp;mars&nbsp;2027</strong></span><svg class="icon hero-deadline__arrow" aria-hidden="true"><use href="assets/img/icons.svg?v=d767b459#i-arrow-down"/></svg></a>
       </div>
     </section>
 
@@ -133,13 +134,18 @@
         <div>
           <div class="deadline" data-reveal>
             <div class="deadline__date" aria-hidden="true"><div><strong>15</strong><span>mars 2027</span></div></div>
-            <p>Merci de nous répondre <u>avant le 15 mars 2027</u>. Sans réponse de votre part à cette date, nous vous considérerons comme absent(s) le 3&nbsp;juillet&nbsp;2027&nbsp;<span aria-label="visage inquiet" role="img">😟</span><span class="deadline__left" data-deadline-left></span></p>
+            <div class="deadline__body">
+              <p class="deadline__title">Merci de nous répondre <u>avant le 15&nbsp;mars&nbsp;2027</u>.</p>
+              <p class="deadline__text">Sans réponse de votre part à cette date, nous vous considérerons comme absent(s) le 3&nbsp;juillet&nbsp;2027&nbsp;<span aria-label="visage inquiet" role="img">😟</span></p>
+              <span class="deadline__left" data-deadline-left></span>
+            </div>
           </div>
 
           <div class="rsvp-card" data-reveal>
             <p class="rsvp-already" data-rsvp-already hidden><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=d767b459#i-check"/></svg><span></span></p>
 
             <form class="rsvp-form" id="rsvp-form" action="https://formsubmit.co/mariage@example.com" method="POST"
+                  data-web3forms-key=""
                   data-endpoint="https://formsubmit.co/ajax/mariage@example.com"
                   data-mailto="mariage@example.com">
               <input type="hidden" name="_subject" value="RSVP mariage Clémentine &amp; Romain">
@@ -267,8 +273,8 @@
   <script src="assets/vendor/ScrollTrigger.min.js?v=05ca5ad8" defer></script>
   <script src="assets/vendor/SplitText.min.js?v=6c4c7716" defer></script>
   <script src="assets/vendor/lenis.min.js?v=b5cf15f0" defer></script>
-  <script src="assets/js/main.js?v=a254e06a" defer></script>
+  <script src="assets/js/main.js?v=b2dd05be" defer></script>
   <!-- SCRIPTS:END -->
-  <script src="assets/js/rsvp.js?v=0e692ced" defer></script>
+  <script src="assets/js/rsvp.js?v=d81dfdc2" defer></script>
 </body>
 </html>
