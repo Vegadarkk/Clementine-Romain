@@ -2,13 +2,11 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8">
+  <!-- GitHub Pages sert cette page à n’importe quelle adresse introuvable : base fixe pour les liens relatifs
+       (écrite en dur pour que le navigateur précharge les bonnes ressources) ; hors de GitHub Pages, base à la racine -->
+  <base href="/Clementine-Romain/">
   <script>
-    /* GitHub Pages sert cette page à n’importe quelle adresse introuvable : on fixe la base des liens relatifs */
-    (function () {
-      var seg = location.pathname.split("/")[1];
-      var base = /\.github\.io$/.test(location.hostname) && seg ? "/" + seg + "/" : "/";
-      document.write('<base href="' + base + '">');
-    })();
+    if (!/^\/Clementine-Romain\//.test(location.pathname)) document.querySelector("base").setAttribute("href", "/");
   </script>
   <title>Page introuvable · Clémentine &amp; Romain</title>
   <meta name="description" content="Cette page n’existe pas.">
@@ -31,7 +29,7 @@
   <link rel="preload" href="assets/fonts/pinyon-script-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/cormorant-garamond-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/jost-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css?v=46e427a2">
+  <link rel="stylesheet" href="assets/css/style.css?v=2dec2476">
   <script>
     /* Active les animations si le visiteur ne les a pas désactivées ; filet de sécurité si le JS ne se charge pas */
     (function (d) {
@@ -165,7 +163,11 @@
   <script src="assets/vendor/ScrollTrigger.min.js?v=05ca5ad8" defer></script>
   <script src="assets/vendor/SplitText.min.js?v=6c4c7716" defer></script>
   <script src="assets/vendor/lenis.min.js?v=b5cf15f0" defer></script>
-  <script src="assets/js/main.js?v=abe8d7ff" defer></script>
+  <script src="assets/js/main.js?v=b916c896" defer></script>
   <!-- SCRIPTS:END -->
+  <script>
+    /* Avec <base>, « #contenu » pointerait vers l’accueil : les ancres restent sur cette page */
+    document.querySelectorAll('a[href^="#"]').forEach(function (a) { a.setAttribute("href", location.pathname + location.search + a.getAttribute("href")); });
+  </script>
 </body>
 </html>

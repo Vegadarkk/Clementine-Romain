@@ -169,12 +169,17 @@
       if (stateEl) stateEl.textContent = "Un peu de musique\u00a0?";
       // Une seule suggestion discrète par visite
       if (!read().hinted) {
-        write({ ...read(), hinted: true });
-        setTimeout(() => {
-          if (wanted) return;
-          musicBtn.classList.add("is-hinting");
-          setTimeout(() => musicBtn.classList.remove("is-hinting"), 4200);
-        }, 5000);
+        const onFirstScroll = () => {
+          if (window.scrollY < window.innerHeight * 0.6) return;
+          window.removeEventListener("scroll", onFirstScroll);
+          write({ ...read(), hinted: true });
+          setTimeout(() => {
+            if (wanted) return;
+            musicBtn.classList.add("is-hinting");
+            setTimeout(() => musicBtn.classList.remove("is-hinting"), 4200);
+          }, 1200);
+        };
+        window.addEventListener("scroll", onFirstScroll, { passive: true });
       }
     }
   }
@@ -322,7 +327,19 @@
         `DESCRIPTION:${esc("14h00 Arrivée des invités · 14h30 Cérémonie civile (mairie d’Héry-sur-Alby) · 15h30 Cérémonie religieuse (église d’Héry-sur-Alby) · 17h00 Vin d’honneur et 20h30 Dîner au Château de Saint-Offenge, 50 route de Sainte-Euphémie, 73100 Saint-Offenge")}`,
         "END:VEVENT", "END:VCALENDAR",
       ];
-      const blob = new Blob([lines.join("\r\n")], { type: "text/calendar;charset=utf-8" });
+      // RFC 5545 : lignes pliées à 75 octets (CRLF + espace), fin de fichier en CRLF
+      const enc = new TextEncoder();
+      const fold = (line) => {
+        const out = [];
+        let cur = "";
+        for (const ch of line) {
+          if (enc.encode(cur + ch).length > (out.length ? 74 : 75)) { out.push(cur); cur = ch; }
+          else cur += ch;
+        }
+        out.push(cur);
+        return out.join("\r\n ");
+      };
+      const blob = new Blob([lines.map(fold).join("\r\n") + "\r\n"], { type: "text/calendar;charset=utf-8" });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
@@ -376,10 +393,25 @@
     if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.target === "_blank") return;
     const url = new URL(a.href, location.href);
     const norm = (path) => path.replace(/\/index\.html$/, "/");
-    if (url.origin !== location.origin || norm(url.pathname) !== norm(location.pathname) || url.hash || /^(mailto|tel):/.test(a.getAttribute("href"))) return;
+    if (url.origin !== location.origin || norm(url.pathname) !== norm(location.pathname) || /^(mailto|tel):/.test(a.getAttribute("href"))) return;
+    if (url.hash) {
+      // Même page mais adresse écrite autrement (« / » et « /index.html ») : on défile au lieu de recharger.
+      // Si l'adresse est identique, Lenis (option anchors) ou le navigateur s'en chargent déjà.
+      if (url.pathname === location.pathname) return;
+      let id = url.hash.slice(1);
+      try { id = decodeURIComponent(id); } catch (err) { /* ancre mal formée */ }
+      const target = document.getElementById(id);
+      if (!target) return;
+      e.preventDefault();
+      scrollToEl(target);
+      history.pushState(null, "", url.hash);
+      return;
+    }
     e.preventDefault();
-    if (lenis) lenis.scrollTo(0, { duration: 1.4, force: true });
-    else window.scrollTo({ top: 0, behavior: motion ? "smooth" : "auto" });
+    const brand = $(".brand");
+    const done = () => brand && brand.focus({ preventScroll: true });
+    if (lenis) lenis.scrollTo(0, { duration: 1.4, force: true, onComplete: done });
+    else { window.scrollTo({ top: 0, behavior: motion ? "smooth" : "auto" }); done(); }
   });
   if (motion && curtain) {
     document.addEventListener("click", (e) => {
@@ -687,7 +719,7 @@
           const v = self.getVelocity();
           rate = gsap.utils.clamp(-5, 5, 1 + v / 450);
           anim.playbackRate = rate;
-          gsap.to(track, { skewX: gsap.utils.clamp(-8, 8, -v / 250), duration: 0.4, overwrite: true });
+          gsap.to($$(".marquee__group", track), { skewX: gsap.utils.clamp(-8, 8, -v / 250), duration: 0.4, overwrite: true });
         },
       });
       gsap.ticker.add(() => {
@@ -736,7 +768,7 @@
         defaults: { ease: "none" },
         scrollTrigger: {
           trigger: sec, pin: $(".map-story__pin", sec), start: "top top", end: "+=220%", scrub: 1,
-          onUpdate: (self) => setStep(self.progress < 0.12 ? 0 : self.progress < 0.36 ? 1 : 2),
+          onUpdate: (self) => setStep(self.progress < 0.12 ? 0 : self.progress < 0.48 ? 1 : 2),
         },
       });
       franceIn(gsap.timeline({ scrollTrigger: { trigger: sec, start: "top 65%" } }));
@@ -795,7 +827,7 @@
       const night = clamp01((p - 0.8) / 0.14);
       sec.style.setProperty("--dusk", dusk.toFixed(3));
       sec.style.setProperty("--night", night.toFixed(3));
-      sec.classList.toggle("is-dusk", p > 0.8);
+      sec.classList.toggle("is-dusk", p > 0.7);
       sec.classList.toggle("is-night", night > 0.6);
       if (sun) {
         // Une seule courbe continue (arc parabolique) : le soleil glisse d'abord presque à plat,
@@ -818,7 +850,13 @@
       });
       gsap.to($$(".programme__intro > *", sec), { opacity: 1, y: 0, startAt: { y: 30 }, duration: 1, stagger: 0.1, scrollTrigger: { trigger: sec, start: "top 70%" } });
       $$(".moment, .programme__outro", sec).forEach((m) => {
-        gsap.fromTo(m, { opacity: 0, rotation: 3, yPercent: 20 }, { opacity: 1, rotation: 0, yPercent: 0, duration: 1, scrollTrigger: { trigger: m, containerAnimation: tween, start: "left 88%", toggleActions: "play none none reverse" } });
+        // Les cartes visibles dès le début de l'épinglage apparaissent avec la section (sinon, en arrivant
+        // pile au début par une ancre, leur déclencheur horizontal ne se lance jamais)
+        const early = m.offsetLeft < window.innerWidth * 0.88;
+        const st = early
+          ? { trigger: sec, start: "top 75%", toggleActions: "play none none reverse" }
+          : { trigger: m, containerAnimation: tween, start: "left 88%", toggleActions: "play none none reverse" };
+        gsap.fromTo(m, { opacity: 0, rotation: 3, yPercent: 20 }, { opacity: 1, rotation: 0, yPercent: 0, duration: 1, scrollTrigger: st });
       });
       // Clavier : amener dans le champ de vision l’élément du fil qui reçoit le focus
       const onFocus = (e) => {
@@ -901,7 +939,7 @@
 
   /* ---------- Lancement ---------- */
   const fontsReady = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
-  Promise.all([fontsReady, curtainOut()]).then(async () => {
+  fontsReady.then(async () => {
     try {
     splitTitles();
     reveals();
@@ -918,8 +956,9 @@
       let id = location.hash.slice(1);
       try { id = decodeURIComponent(id); } catch (e) { /* ancre mal formée : ignorée */ }
       const target = document.getElementById(id);
-      if (target) requestAnimationFrame(() => scrollToEl(target, true));
+      if (target) scrollToEl(target, true);
     }
+    await curtainOut();
     await playIntro();
     heroIn();
     pageHero();

@@ -22,6 +22,16 @@
   const filters = $("[data-filters]");
   const status = $("[data-filter-status]");
   const grid = $("[data-places]");
+  if (grid && filters) {
+    grid.addEventListener("focusin", (e) => {
+      const fb = filters.getBoundingClientRect().bottom;
+      const t = e.target.getBoundingClientRect().top;
+      if (t < fb + 8) {
+        const y = window.scrollY + t - fb - 24;
+        if (window.__lenis) window.__lenis.scrollTo(y, { immediate: true, force: true }); else window.scrollTo(0, y);
+      }
+    });
+  }
   if (filters) {
     filters.hidden = false;
     const chips = $$("[data-filter]", filters);
@@ -101,7 +111,13 @@
     const L = window.L;
     mapEl.innerHTML = "";
     const touch = window.matchMedia("(pointer: coarse)").matches;
-    map = L.map(mapEl, { scrollWheelZoom: false, dragging: !touch, tap: false, zoomSnap: 0.5 });
+    map = L.map(mapEl, { scrollWheelZoom: false, dragging: !touch, tap: false, zoomSnap: 0.5, zoomControl: false });
+    L.control.zoom({ zoomInTitle: "Zoom avant", zoomOutTitle: "Zoom arrière" }).addTo(map);
+    map.attributionControl.setPrefix('<a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a>');
+    map.on("popupopen", (ev) => {
+      const close = ev.popup.getElement() && ev.popup.getElement().querySelector(".leaflet-popup-close-button");
+      if (close) { close.setAttribute("aria-label", "Fermer"); close.title = "Fermer"; }
+    });
     // Fond Esri « World Topo » (relief doux, sans clé API) ; repli sur OpenStreetMap
     // si ses tuiles ne répondent pas.
     const OSM = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
@@ -123,7 +139,7 @@
     const bounds = [];
     wedding.forEach((w) => {
       markers[w.key] = L.marker([w.lat, w.lng], { icon: icon("mariage"), title: w.name, zIndexOffset: 1000 })
-        .bindPopup(`<strong>${w.name}</strong>${w.sub}<br><a href="${gmaps(w.lat, w.lng)}" target="_blank" rel="noopener">Itinéraire</a>`)
+        .bindPopup(`<strong>${w.name}</strong>${w.sub}<br><a href="${gmaps(w.lat, w.lng)}" target="_blank" rel="noopener">Itinéraire<span class="visually-hidden"> (nouvel onglet)</span></a>`)
         .addTo(map);
       bounds.push([w.lat, w.lng]);
     });
@@ -132,12 +148,13 @@
       const lat = +p.dataset.lat, lng = +p.dataset.lng;
       const name = $("h3", p).textContent;
       markers[p.id] = L.marker([lat, lng], { icon: icon(p.dataset.cat), title: name })
-        .bindPopup(`<strong>${name}</strong>${CATS[p.dataset.cat]}<br><a href="${gmaps(lat, lng)}" target="_blank" rel="noopener">Itinéraire</a>`)
+        .bindPopup(`<strong>${name}</strong>${CATS[p.dataset.cat]}<br><a href="${gmaps(lat, lng)}" target="_blank" rel="noopener">Itinéraire<span class="visually-hidden"> (nouvel onglet)</span></a>`)
         .addTo(map);
       bounds.push([lat, lng]);
     });
     map.fitBounds(bounds, { padding: [36, 36] });
-    map.on("click focus", () => { map.scrollWheelZoom.enable(); map.dragging.enable(); });
+    map.on("click focus", () => { map.scrollWheelZoom.enable(); if (!touch) map.dragging.enable(); });
+    map.on("blur", () => map.scrollWheelZoom.disable());
     map.on("mouseout", () => map.scrollWheelZoom.disable());
   }
 
@@ -160,7 +177,7 @@
     btn.addEventListener("click", () => {
       initMap();
       const m = markers[p.id];
-      if (window.crScrollTo) window.crScrollTo(mapEl.closest("section"));
+      if (window.crScrollTo) window.crScrollTo(mapEl.closest(".env-map-wrap") || mapEl);
       else mapEl.scrollIntoView({ behavior: "smooth", block: "center" });
       if (map && m) {
         setTimeout(() => {
