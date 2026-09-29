@@ -50,6 +50,16 @@ mise à jour du site = `npm run pages` + ce script + `git push`. Publie d'abord 
 vérifie, **puis** pousse sur GitHub : la redirection de l'ancienne adresse ne doit partir que vers un
 site déjà en ligne. Vérifie en ligne avec curl (Chromium de l'environnement refuse le TLS du proxy).
 
+**Adresse sans suffixe** (`clementine-et-romain.fr` au lieu de `….pages.dev`) : l'hébergement reste
+gratuit, mais le nom de domaine s'achète (environ 1 à 12 € par an selon l'extension et les promotions).
+Aucun nom gratuit sans suffixe n'existe aujourd'hui (Freenom est fermé ; `eu.org` est gratuit mais
+garde le suffixe et demande des jours d'attente). Vérifie la disponibilité par RDAP
+(`https://rdap.nic.fr/domain/<nom>.fr`, `https://rdap.verisign.com/com/v1/domain/<nom>.com` : 404 = libre).
+L'achat revient à l'utilisateur (paiement) ; ensuite, rattache le domaine au projet Pages
+(`POST /accounts/<id>/pages/projects/<projet>/domains`, DNS chez Cloudflare de préférence), puis mets
+`SITE_URL` sur le domaine (canonical, sitemap, aperçus). L'adresse `pages.dev` reste servie : la balise
+canonical suffit pour que Google ne retienne que le domaine.
+
 Cloudflare sert `/environs` au lieu de `/environs.html` (redirection 308) : les `canonical` et le sitemap
 utilisent déjà la forme sans `.html`, et `main.js` considère les deux formes comme la même page.
 
