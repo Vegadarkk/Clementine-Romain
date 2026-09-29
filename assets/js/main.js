@@ -500,19 +500,21 @@
         const r = el.getBoundingClientRect();
         const [fx, fy] = (el.dataset.heartFocus || "0.5 0.5").split(" ").map(Number);
         if (!img || !img.naturalWidth) return { x: r.left + r.width * fx, y: r.top + r.height * fy, r };
-        // Position réelle du point dans l’image recadrée (object-fit: cover)
-        const k = Math.max(r.width / img.naturalWidth, r.height / img.naturalHeight);
+        // Position réelle du point dans l’image recadrée (object-fit: cover), zoom GSAP compris
+        const b = img.getBoundingClientRect();
+        const k = Math.max(b.width / img.naturalWidth, b.height / img.naturalHeight);
         const w = img.naturalWidth * k, h = img.naturalHeight * k;
         const [ox, oy] = getComputedStyle(img).objectPosition.split(" ").map((v) => parseFloat(v) / 100);
-        return { x: r.left + (r.width - w) * ox + w * fx, y: r.top + (r.height - h) * oy + h * fy, r };
+        return { x: b.left + (b.width - w) * ox + w * fx, y: b.top + (b.height - h) * oy + h * fy, r };
       };
-      function heartMove(e) {
-        px = e.clientX; py = e.clientY;
+      // Recalculé à chaque image : la photo bouge aussi pendant le défilement, souris immobile
+      function heartTarget() {
         if (!hearty) { target = 0; return; }
         const f = focusPoint(hearty);
         const d = Math.hypot(px - f.x, py - f.y);
-        target = gsap.utils.clamp(0, 1, 1 - d / (Math.max(f.r.width, f.r.height) * 0.55));
+        target = gsap.utils.clamp(0, 1, 1 - d / (Math.max(f.r.width, f.r.height) * (parseFloat(hearty.dataset.heartReach) || 0.55)));
       }
+      function heartMove(e) { px = e.clientX; py = e.clientY; }
       function floatHeart(x, y, big) {
         const h = document.createElement("span");
         h.className = "heart-float";
@@ -525,6 +527,7 @@
         });
       }
       gsap.ticker.add((time, dt) => {
+        heartTarget();
         closeness += ((hearty ? target : 0) - closeness) * 0.08;
         cursor.style.setProperty("--close", closeness.toFixed(3));
         if (!hearty) { phase = 0; return; }

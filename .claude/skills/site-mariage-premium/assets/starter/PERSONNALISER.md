@@ -23,7 +23,8 @@ Pour tout retrouver : `grep -rn -i "clémentine\|clementine\|romain\|2027\|héry
   plein écran (`data-rp-text`), lieux (adresses, horaires, itinéraires), carte racontée (textes des
   étapes), programme (horaires, lieux, textes), plan du domaine (photos, positions `left/top` en %,
   textes, crédit), infos pratiques, bandeau RSVP. Point focal du baiser : `data-heart-focus` sur
-  `.hero__arch`. Point focal de la photo plein écran : `focus()` dans `revealPhoto()` (`main.js`).
+  `.hero__arch`. Point focal de la photo plein écran : `focus()` dans `revealPhoto()` (`main.js`), et point du cœur
+  (entre les visages) : `data-heart-focus` sur `.reveal-photo__frame` (`data-heart-reach` = rayon d’approche).
 - `hebergements.html` : citation du couple, rayon du radar, chiffres clés, tentes/vans/douche, fiches
   (`.stay`), taxis, liens de recherche (dates dans les URL Booking/Airbnb), crédit.
 - `temoins.html` : texte d'intro, prénoms, statuts, photos, e-mail de contact (`temoins@example.com`).

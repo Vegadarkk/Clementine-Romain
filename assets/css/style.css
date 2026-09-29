@@ -999,6 +999,7 @@ body.menu-open .to-top { opacity: 0; visibility: hidden; }
 .reveal-photo__scrim { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(0deg, rgba(28, 20, 24, .82) 0%, rgba(28, 20, 24, .5) 32%, rgba(28, 20, 24, 0) 62%); }
 .reveal-photo__text { position: relative; z-index: 1; margin: 0 0 clamp(2.2rem, 8vh, 5rem); padding: 0 var(--gutter); text-align: center; color: var(--paper); }
 .reveal-photo__text p { margin: 0; }
+.cursor-on .reveal-photo__text { pointer-events: none; } /* le cœur reste actif sous le texte */
 .rp-over { display: inline-flex; align-items: center; gap: .9em; font: 500 clamp(.7rem, 1.2vw, .85rem)/1 var(--f-body); letter-spacing: .42em; text-transform: uppercase; color: var(--blossom); text-shadow: 0 1px 12px rgba(0, 0, 0, .35); }
 .rp-over::before { content: ""; width: 2.4em; height: 1px; background: currentColor; opacity: .7; }
 .rp-script { --ink: 112%; display: block; margin: -.22em -.3em -.3em !important; padding: .22em .3em .3em; font-size: clamp(4.2rem, 12vw, 9.5rem); line-height: .95; color: #FFFBF6; text-shadow: 0 6px 40px rgba(20, 10, 14, .45), 0 1px 3px rgba(20, 10, 14, .35); -webkit-mask-image: linear-gradient(100deg, #000 calc(var(--ink) - 12%), transparent var(--ink)); mask-image: linear-gradient(100deg, #000 calc(var(--ink) - 12%), transparent var(--ink)); }
