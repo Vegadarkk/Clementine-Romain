@@ -162,6 +162,7 @@ button, input, textarea, select { font: inherit; color: inherit; }
 html:not(.js) .site-header { background: rgba(255, 249, 242, .96); box-shadow: 0 1px 0 var(--line); }
 .site-header.is-scrolled { background: rgba(255, 249, 242, .86); backdrop-filter: blur(14px) saturate(1.2); -webkit-backdrop-filter: blur(14px) saturate(1.2); box-shadow: 0 1px 0 var(--line), 0 10px 30px -24px rgba(78, 94, 67, .5); }
 .site-header.is-hidden { transform: translateY(-100%); }
+.site-header.is-hidden:focus-within { transform: none; } /* jamais masqué quand un de ses liens a le focus */
 .site-header.on-dark:not(.is-scrolled) .brand, .site-header.on-dark:not(.is-scrolled) .nav__link { color: var(--paper); text-shadow: 0 1px 12px rgba(0, 0, 0, .25); }
 .site-header.on-dark:not(.is-scrolled) .brand { --mono-accent: var(--blossom); }
 .site-header.on-dark:not(.is-scrolled) .brand__mark { filter: drop-shadow(0 1px 8px rgba(0, 0, 0, .35)); }
@@ -521,7 +522,7 @@ html:not(.js) .countdown, html:not(.js) [data-ics] { display: none; }
 .site-footer__home .site-footer__mark { transition: transform .6s var(--ease); }
 .site-footer__home:hover .site-footer__mark, .site-footer__home:focus-visible .site-footer__mark { transform: translateY(-4px) scale(1.04); }
 .site-footer__home:focus-visible { outline-color: var(--blossom); outline-offset: 8px; }
-.site-footer__names { display: block; font: 400 clamp(2.6rem, 6vw, 3.6rem)/1 var(--f-script); margin: 0; color: var(--paper); }
+.site-footer__names { display: block; font: 400 clamp(2.2rem, 9vw, 3.6rem)/1 var(--f-script); margin: 0; color: var(--paper); }
 .site-footer__names span { color: var(--blossom); }
 .site-footer__date { margin: .8rem 0 1.8rem; font: 500 .78rem/1.5 var(--f-body); letter-spacing: .3em; text-transform: uppercase; color: var(--paper); }
 .site-footer nav ul { display: flex; flex-wrap: wrap; justify-content: center; gap: .4rem 1.6rem; list-style: none; margin: 0 0 2rem; padding: 0; }
@@ -1055,6 +1056,7 @@ body.menu-open .to-top { opacity: 0; visibility: hidden; }
 .programme__sun { position: absolute; z-index: 1; left: 12%; top: 14%; width: clamp(70px, 9vw, 120px); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 40% 40%, #FFF3DA, var(--sun) 60%); box-shadow: 0 0 80px 30px color-mix(in srgb, var(--sun) 45%, transparent); transform: translate(-50%, -50%); }
 .programme__stars { position: absolute; inset: 0 0 30%; opacity: var(--night, 0); }
 .programme__stars i { position: absolute; width: var(--s); height: var(--s); border-radius: 50%; background: #FFF8EC; box-shadow: 0 0 calc(var(--s) * 2.5) rgba(255, 248, 236, .8); animation: twinkle var(--t) ease-in-out var(--d) infinite; }
+.programme:not(.is-dusk) .programme__stars i { animation-play-state: paused; } /* étoiles invisibles le jour : pas d'animation */
 @keyframes twinkle { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .25; transform: scale(.6); } }
 .programme__moon { position: absolute; right: 9%; top: 12%; width: clamp(46px, 5vw, 72px); aspect-ratio: 1; border-radius: 50%; box-shadow: inset calc(clamp(46px, 5vw, 72px) * -.26) calc(clamp(46px, 5vw, 72px) * -.08) 0 0 #FFF1CF; filter: drop-shadow(0 0 18px rgba(255, 236, 190, .55)); opacity: var(--night, 0); transform: translateY(calc((1 - var(--night, 0)) * 40px)) rotate(30deg); }
 /* Programme vertical (mobile, tablette) : la nuit arrive tout en bas, la lune et les étoiles aussi */

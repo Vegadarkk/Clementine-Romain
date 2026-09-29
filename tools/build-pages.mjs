@@ -92,6 +92,9 @@ const HEAD = `<meta name="viewport" content="width=device-width, initial-scale=1
   <meta property="og:title" content="Clémentine &amp; Romain · 3 juillet 2027">
   <meta property="og:description" content="Nous nous marions&nbsp;! Programme, lieux, hébergements et réponse à l’invitation.">
   <meta property="og:image" content="${SITE_URL}assets/img/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Clémentine et Romain sous une arche de verdure · samedi 3 juillet 2027">
   <meta property="og:locale" content="fr_FR">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
@@ -165,7 +168,7 @@ const FOOTER = `<footer class="site-footer">
       <div class="container">
         <a class="site-footer__home" href="index.html">
           <svg class="site-footer__mark" viewBox="0 0 240 300" aria-hidden="true" focusable="false"><use href="#logo-arche"></use></svg>
-          <span class="site-footer__names">Clémentine <span>&amp;</span> Romain</span>
+          <span class="site-footer__names">Clémentine <span>&amp;</span>&nbsp;Romain</span>
           <b class="visually-hidden"> · retour à l’accueil</b>
         </a>
         <p class="site-footer__date">Samedi 3&nbsp;juillet&nbsp;2027 · <span class="nowrap">Héry-sur-Alby</span> · <span class="nowrap">Saint-Offenge</span></p>

@@ -321,7 +321,7 @@
         clearInterval(timer);
         const done = document.createElement("p");
         done.className = "countdown--done";
-        done.textContent = diff > -86400000 ? "C’est le grand jour !" : "Merci d’avoir partagé ce jour avec nous";
+        done.textContent = diff > -86400000 ? "C’est le grand jour\u00a0!" : "Merci d’avoir partagé ce jour avec nous";
         el.replaceWith(done);
         return;
       }
@@ -974,7 +974,8 @@
   }
 
   /* ---------- Lancement ---------- */
-  const fontsReady = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+  // On attend les polices, mais jamais plus de 600 ms : le haut de page ne reste pas masqué
+  const fontsReady = Promise.race([document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve(), new Promise((r) => setTimeout(r, 600))]);
   fontsReady.then(async () => {
     try {
     splitTitles();

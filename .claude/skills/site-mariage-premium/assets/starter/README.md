@@ -21,7 +21,7 @@ Site **100 % statique** (HTML, CSS, JavaScript), sans base de données ni serveu
 2. **Activer Pages** : Settings → **Pages** → Build and deployment → Source : **Deploy from a branch** → branche `claude/eloquent-hamilton-t3b9w6` (ou `main` si la branche a été renommée/fusionnée), dossier **`/ (root)`** → Save.
 3. Après 1 à 2 minutes, le site est en ligne à l’adresse **https://vegadarkk.github.io/Clementine-Romain/**.
 
-Le site est marqué `noindex` et `robots.txt` bloque les moteurs de recherche : il n’apparaît pas sur Google, seules les personnes ayant le lien y accèdent.
+Chaque page porte la balise `noindex, nofollow` : le site n’apparaît pas sur Google, seules les personnes ayant le lien y accèdent. (Le fichier `robots.txt` n’a pas d’effet dans un sous-dossier GitHub Pages ; c’est la balise qui protège.)
 
 Si l’adresse finale change (autre compte, nom de domaine), mettre à jour `SITE_URL` dans `tools/build-pages.mjs` puis lancer `npm run pages` (sert à l’aperçu du lien partagé sur WhatsApp/SMS).
 
