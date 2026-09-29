@@ -13,7 +13,7 @@
   const gsap = window.gsap;
   const motion = document.documentElement.classList.contains("motion") && !!gsap;
   const endpoint = form.dataset.endpoint;
-  const w3fKey = (form.dataset.web3formsKey || "").trim();
+  const w3fKeys = (form.dataset.web3formsKey || "").split(/[\s,]+/).filter(Boolean);
   const mailto = form.dataset.mailto;
   const list = $("[data-guests]", form);
   const addBtn = $("[data-guest-add]", form);
@@ -337,11 +337,16 @@
     const data = await res.json().catch(() => ({}));
     return res.ok && (data.success === true || data.success === "true");
   }
+  // Une clé par destinataire (plusieurs clés séparées par des espaces) : la réponse part vers chacun,
+  // l'envoi est réussi dès qu'au moins un destinataire l'a reçue.
   function viaWeb3Forms(fields, email, signal) {
-    const body = { access_key: w3fKey, subject: fields._subject, from_name: "Site du mariage · Clémentine & Romain", botcheck: "", ...fields };
-    delete body._subject; delete body._template; delete body._captcha; delete body._replyto;
-    if (email) body.email = email; // Web3Forms s'en sert comme adresse de réponse
-    return post("https://api.web3forms.com/submit", body, signal);
+    const one = (key) => {
+      const body = { access_key: key, subject: fields._subject, from_name: "Mariage Clémentine & Romain", botcheck: "" };
+      if (email) body.replyto = email; // « Répondre » dans la messagerie écrit directement à l'invité
+      Object.keys(fields).forEach((k) => { if (k.charAt(0) !== "_") body[k] = fields[k]; });
+      return post("https://api.web3forms.com/submit", body, signal).catch(() => false);
+    };
+    return Promise.all(w3fKeys.map(one)).then((res) => res.some(Boolean));
   }
   function viaFormSubmit(fields, signal) { return post(endpoint, fields, signal); }
 
@@ -357,7 +362,7 @@
       return;
     }
     // Aucun service d’envoi configuré (aperçu du site) : on le dit clairement, sans rien simuler
-    if (!endpoint && !w3fKey) {
+    if (!endpoint && !w3fKeys.length) {
       statusEl.className = "form-status form-status--info";
       statusEl.textContent = "Aperçu du site : l’envoi automatique des réponses sera actif une fois le site mis en ligne.";
       return;
@@ -365,27 +370,41 @@
     // Pot de miel anti-robots : on simule un succès sans rien envoyer
     if ($("input[name='_honey']", form).value) { showSuccess(); return; }
 
+    // E-mail reçu par les mariés : un résumé chaleureux d'abord, puis le détail (rubriques vides omises)
     const g = guests();
-    const p = presence();
+    const yes = presence() === "Oui";
     const email = $("#email").value.trim();
+    const allergy = $("#allergies").value.trim();
+    const note = $("#message").value.trim();
+    const names = g.map((x) => x.name);
+    const who = names.length > 1 ? `${names.slice(0, -1).join(", ")} et ${names[names.length - 1]}` : names[0];
+    const many = g.length > 1;
+    const count = (n, word) => `${n} ${word}${n > 1 ? "s" : ""}`;
+    const adults = g.filter((x) => !x.child).length, kids = g.length - adults;
+    const seats = [adults ? count(adults, "adulte") : "", kids ? count(kids, "enfant") : ""].filter(Boolean).join(" et ");
     const payload = {
-      _subject: `RSVP ${p === "Oui" ? "✅ Présent(s)" : "❌ Absent(s)"} — ${g.map((x) => x.name).join(", ")}`,
+      _subject: yes
+        ? `💌 Oui ! ${who} ${many ? "seront" : "sera"} là le 3 juillet (${seats})`
+        : `✉️ ${who} ne ${many ? "pourront" : "pourra"} pas venir le 3 juillet`,
       _template: "table",
       _captcha: "false",
-      "Réponse": p === "Oui" ? "Oui, présent(s)" : "Non, absent(s)",
-      "Invités": g.map((x) => (x.child ? `${x.name} (enfant)` : x.name)).join(", "),
-      "Nombre d’adultes": p === "Oui" ? String(g.filter((x) => !x.child).length) : "—",
-      "Nombre d’enfants": p === "Oui" ? String(g.filter((x) => x.child).length) : "—",
-      "Allergies / intolérances": p === "Oui" ? ($("#allergies").value.trim() || "—") : "—",
-      "Petit mot": $("#message").value.trim() || "—",
-      "E-mail de l’invité": email || "—",
+      "💌 Réponse": yes
+        ? `Oui, avec joie ! ${who} ${many ? "seront des nôtres" : "sera des nôtres"} le samedi 3 juillet 2027 🎉`
+        : `${who} ne ${many ? "pourront" : "pourra"} malheureusement pas être des nôtres le 3 juillet.`,
+      "👥 Invités": g.map((x) => (x.child ? `${x.name} (enfant)` : x.name)).join(" · "),
     };
-    if (email) { payload._replyto = email; payload.email = email; }
+    if (yes) payload["🍽️ À prévoir"] = seats;
+    if (yes && allergy) payload["🥗 Allergies ou régime"] = allergy;
+    if (note) payload["💬 Petit mot"] = `« ${note} »`;
+    if (email) payload["✉️ Adresse e-mail"] = `${email} (il suffit de répondre à ce message pour ${many ? "leur" : "lui"} écrire)`;
+    const now = new Date();
+    payload["🕰️ Réponse envoyée le"] = `${now.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })} à ${now.getHours()}h${String(now.getMinutes()).padStart(2, "0")}`;
+    if (email) payload._replyto = email;
 
     setLoading(true);
     // Chaque service a 15 s ; en cas d'échec (panne, réseau, délai), on passe au suivant
     const services = [];
-    if (w3fKey) services.push((signal) => viaWeb3Forms(payload, email, signal));
+    if (w3fKeys.length) services.push((signal) => viaWeb3Forms(payload, email, signal));
     if (endpoint) services.push((signal) => viaFormSubmit(payload, signal));
     let sent = false, timedOut = false;
     try {

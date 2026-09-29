@@ -69,6 +69,14 @@ utilisent déjà la forme sans `.html`, et `main.js` considère les deux formes 
   reçoit une clé d'accès (publique, sans compte, 250 envois par mois). Clé dans `data-web3forms-key`.
   L'API refuse les appels hors navigateur (403 « Use our API in client side ») : c'est normal, les tests
   se font dans le navigateur en interceptant `api.web3forms.com`.
+- **Destinataire = l'adresse qui a créé la clé.** Une clé créée par la personne qui monte le site envoie
+  les réponses chez elle, pas chez les mariés : la clé doit être créée avec l'adresse des mariés
+  (web3forms.com → « Create Access Key », clé reçue par e-mail). Plusieurs clés séparées par des espaces
+  dans `data-web3forms-key` = une copie par destinataire (le « CC » de Web3Forms est payant).
+- **E-mail reçu** : objet, nom d'expéditeur et rubriques en français avec emojis (résumé chaleureux en
+  premier, rubriques vides omises, date « mardi 29 septembre 2026 à 20h55 »), `replyto` = adresse de
+  l'invité (jamais un champ `email`, qui s'afficherait « email » en anglais). La phrase d'accueil anglaise
+  « Hello, A new form has been submitted… » et le pied de page Web3Forms ne se changent qu'en offre payante.
 - **FormSubmit** (relais) : voir ci-dessous. En septembre 2026, il renvoyait 500 à tout envoi.
 - Échec des deux : e-mail prérempli + « Copier ma réponse » (beaucoup d'invités sur ordinateur n'ont pas
   de logiciel de messagerie, le lien `mailto:` n'ouvre alors rien).
