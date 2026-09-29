@@ -80,7 +80,7 @@ l'adapter. Les fonctions JS citées sont dans `assets/js/main.js`, sauf mention 
   images, envol sur leurs conteneurs : jamais deux animations sur la même propriété du même élément.
 - **Écran « Ouvrir l'invitation »** (`[data-gate]`, gabarit commun) : première page de la visite ; son
   clic autorise la musique, qui continue ensuite de page en page (Chrome garde l'autorisation lors d'une
-  navigation par lien). Se ferme seul si le son est déjà permis ; « Entrer sans musique » est mémorisé ;
+  navigation par lien). Ne se ferme **jamais** seul (demande du couple : l'invité clique pour entrer, même si le navigateur permettrait le son) ; la musique attend ce clic ; « Entrer sans musique » est mémorisé ;
   jamais pour les robots ; l'intro du monogramme et le héros attendent sa fermeture (`window.__crGate`).
 - **Ruban défilant** (`fillMarquee()` / `marquee()`) : le groupe est dupliqué autant que nécessaire pour
   couvrir l'écran, et le décalage vaut exactement la largeur d'un groupe (`--marquee-shift`). Il

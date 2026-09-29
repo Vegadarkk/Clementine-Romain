@@ -283,8 +283,9 @@
 
     if (saved.on !== false && !refused()) {
       wanted = true;
-      // Lecture autorisée d'emblée par le navigateur : l'écran d'accueil n'a plus lieu d'être
-      play().then(() => { save(); closeGate(); }).catch(() => {
+      // Écran d'accueil affiché : il ne se ferme jamais seul, l'invité clique pour entrer ; la musique
+      // attend ce clic (« Ouvrir l'invitation ») même si le navigateur autoriserait le son d'emblée
+      if (!gateOn) play().then(save).catch(() => {
         musicBtn.classList.add("is-waiting");
         if (stateEl) stateEl.textContent = "Un peu de musique\u00a0?";
         GESTURES.forEach((g) => listen(window, g, resume, true));
