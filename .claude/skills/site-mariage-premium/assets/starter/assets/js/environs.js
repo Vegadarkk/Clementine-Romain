@@ -7,6 +7,8 @@
   const html = document.documentElement;
   const motion = html.classList.contains("motion") && !!window.gsap;
   const gsap = window.gsap;
+  // Navigation sans rechargement (nav.js) : ce qui est posé hors de la page est retiré en la quittant
+  const onLeave = (fn) => { if (window.__crNav) window.__crNav.onLeave(fn); };
   const places = $$(".place");
   let revealTriggers = [];
   // Au premier filtrage, on abandonne l’apparition au défilement : toutes les cartes deviennent visibles
@@ -216,12 +218,14 @@
         if (s) step(+s.dataset.lbStep);
       });
       // Écouté sur tout le document : un clic dans le vide ne doit pas désactiver le clavier
-      document.addEventListener("keydown", (e) => {
+      const onKey = (e) => {
         if (lb.hidden) return;
         if (e.key === "Escape") { e.preventDefault(); close(); }
         else if (e.key === "ArrowRight") step(1);
         else if (e.key === "ArrowLeft") step(-1);
-      });
+      };
+      document.addEventListener("keydown", onKey);
+      onLeave(() => document.removeEventListener("keydown", onKey));
       // Balayage sur mobile
       let x0 = null, y0 = 0;
       lb.addEventListener("touchstart", (e) => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
@@ -368,12 +372,14 @@
     map.on("mouseout", () => map.scrollWheelZoom.disable());
   }
 
+  onLeave(() => { if (map) { map.remove(); map = null; } });
   if (mapEl) {
     if ("IntersectionObserver" in window) {
       const io = new IntersectionObserver((entries) => {
         if (entries.some((e) => e.isIntersecting)) { initMap(); io.disconnect(); }
       }, { rootMargin: "400px" });
       io.observe(mapEl);
+      onLeave(() => io.disconnect());
     } else {
       initMap();
     }
@@ -391,6 +397,7 @@
       else mapEl.scrollIntoView({ behavior: "smooth", block: "center" });
       if (map && m) {
         setTimeout(() => {
+          if (!map) return; // page quittée entre-temps
           map.flyTo(m.getLatLng(), 13, { duration: 1.2 });
           map.once("moveend", () => m.openPopup());
         }, 700);

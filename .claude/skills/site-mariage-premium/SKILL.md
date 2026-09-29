@@ -92,8 +92,9 @@ Détail et fichiers dans `references/fonctionnalites.md`. Le socle habituel :
 | RSVP | date limite, noms (enfants compris), présence Oui/Non, allergies, petit mot, envoi automatique par e-mail | confettis, validation douce, réponse mémorisée |
 | 404 + `logos.html` | page d'erreur ; comparatif des pistes de logo à montrer au couple | — |
 
-Sur toutes les pages : rideau de transition, barre de progression, bouton « haut de page » (en fin de
-page), bouton de musique d'ambiance (jamais en lecture automatique), curseur personnalisé sur ordinateur.
+Sur toutes les pages : rideau de transition et navigation sans rechargement (`nav.js` : la musique
+continue sans coupure), barre de progression, bouton « haut de page » (en fin de page), bouton de musique
+d'ambiance, curseur personnalisé sur ordinateur.
 
 ### 5. Logo / monogramme
 Propose 3 ou 4 pistes (arche fleurie, couronne, sceau de cire, éditorial) dessinées à partir des vraies
@@ -131,9 +132,11 @@ En attente de ta part : <décision / info manquante>.
 
 ## Contraintes à respecter (et pourquoi)
 
-- **Musique : jamais de lecture automatique.** Un bouton discret, un fondu du volume, une reprise de page
-  en page seulement si le visiteur l'a activée. Uniquement des enregistrements du domaine public ou CC0
-  (Musopen, Open Goldberg…), crédités dans le README.
+- **Musique : jamais de son sans geste du visiteur** (les navigateurs l'interdisent de toute façon) : écran
+  « Ouvrir l'invitation » dont le clic lance la musique, « Entrer sans musique » mémorisé, fondu du volume,
+  aucune coupure d'une page à l'autre (`nav.js`, voir `references/fonctionnalites.md` § 10). Morceau
+  fourni par le couple, ou enregistrement du domaine public / CC0 (Musopen, Open Goldberg…), crédité dans
+  le README.
 - **Droits** : les photos et plans d'un lieu de réception s'utilisent avec un crédit visible
   « © <Lieu> » et un lien. Garde les avis, noms et images d'autres mariages hors du site.
 - **Données personnelles** : les adresses e-mail du couple et des témoins apparaissent dans le code d'un

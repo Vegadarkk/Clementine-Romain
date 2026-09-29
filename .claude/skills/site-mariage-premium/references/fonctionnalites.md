@@ -10,6 +10,7 @@
 7. RSVP
 8. Logo et page de choix
 9. Musique d'ambiance
+10. Navigation sans rechargement (musique continue)
 
 Chaque entrée indique **où** la trouver dans le kit (`assets/starter/`) et **ce qui compte** pour
 l'adapter. Les fonctions JS citées sont dans `assets/js/main.js`, sauf mention contraire.
@@ -204,10 +205,43 @@ calligraphié qui se dessine, puis le statut. Les témoins qui entrent ensemble 
   respecté aux visites suivantes ; il n'y a alors plus de lecture automatique, seulement la suggestion
   discrète. Pour revenir à « aucune lecture automatique », il suffit de démarrer dans la branche « refus ».
 - Fondu d'entrée de 2,2 s jusqu'au volume 0,32, fondu de sortie de 0,7 s. État et position mémorisés dans
-  `sessionStorage`. Sur la page suivante, reprise au même endroit. Si le navigateur bloque la lecture,
+  `sessionStorage` (repli si la navigation se fait par rechargement). Si le navigateur bloque la lecture,
   elle reprend au premier geste du visiteur (le bouton pulse).
+- **Aucune coupure entre les pages** grâce à la navigation sans rechargement (§ 10) : un seul lecteur
+  (`window.__crAudio`) pour toute la visite, réutilisé par chaque page.
 - Fichier : MP3 VBR (~100 kb/s), volume normalisé (`loudnorm I=-20`), fondus au début et à la fin,
   métadonnées propres. Pour l'encoder sans ffmpeg système : `pip install imageio-ffmpeg`.
 - Sources sûres : Musopen (domaine public), Open Goldberg / Open Well-Tempered Clavier (CC0),
   Internet Archive en filtrant sur `licenseurl` (publicdomain / CC0), en vérifiant l'interprète.
   L'API Wikimedia peut renvoyer 429 depuis un serveur partagé.
+
+## 10. Navigation sans rechargement (`assets/js/nav.js`)
+
+But : la musique ne se coupe plus d'une page à l'autre, et les changements de page sont plus rapides.
+Chaque page reste un vrai fichier HTML (adresse, référencement, accès direct, Précédent/Suivant).
+
+- Chargé une seule fois, avant `main.js` (bloc SCRIPTS). Au survol d'un lien interne, la page suivante est
+  chargée en arrière-plan ; au clic, `main.js` ferme le rideau et appelle `__crNav.go(href)` (sans
+  animations : `nav.js` prend le clic lui-même).
+- Remplacement : nettoyage de la page affichée (`__crNav.onLeave`), arrêt de tous les ScrollTrigger et des
+  animations restées sur l'ancien contenu, mise à jour du `<head>` (titre, description, canonique, robots,
+  og:url, JSON-LD, feuilles de style manquantes comme `leaflet.css`), remplacement du contenu de `<body>`,
+  défilement en haut, puis exécution des scripts de page (`assets/js/*.js`) ; les bibliothèques déjà
+  chargées ne le sont pas deux fois. `main.js` attend `__crNav.ready` (tous les scripts exécutés) puis
+  recalcule après `__crNav.loaded` (images chargées), comme `load` au premier chargement.
+- **Chaque script de page déclare ce qu'il pose hors de la page** : `listen(cible, type, fn)` pour window,
+  document et `matchMedia`, `onTick(fn)` pour `gsap.ticker`, `onLeave(() => …)` pour les intervalles,
+  `mm.revert()`, `lenis.destroy()`, `ST.removeEventListener`, `map.remove()`, `io.disconnect()`. Tout ajout
+  d'écouteur global doit passer par là, sinon il s'additionne à chaque page visitée.
+- Précédent/Suivant : identifiant par entrée d'historique, position de défilement retrouvée ; un
+  Précédent pendant la fermeture du rideau l'emporte. Ancres (`index.html#programme`) comme au chargement.
+- Navigation classique de secours (le rideau reste fermé, la page suivante l'ouvre) : page introuvable,
+  réponse qui n'est pas une page du site, script ou feuille de style d'une autre version (site mis à jour
+  entre-temps), erreur pendant l'exécution. Désactivée sur la page 404 (`<base>`).
+- Accessibilité : focus remis au début du document, titre annoncé (`role="status"`), lien d'évitement
+  premier au Tab.
+- Tests indispensables (voir `pieges.md` § 3) : comparer chaque page atteinte sans rechargement avec la
+  même page chargée normalement (nombre de ScrollTrigger et leurs positions, intervalles, écouteurs
+  globaux, animations orphelines, un seul lecteur audio, `currentTime` qui continue) ; Précédent/Suivant ;
+  ancre ; mobile + menu ; mouvement réduit ; 30 navigations d'affilée (mémoire stable).
+

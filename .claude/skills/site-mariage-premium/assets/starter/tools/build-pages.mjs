@@ -231,6 +231,7 @@ const SCRIPTS = `<script src="assets/vendor/gsap.min.js" defer></script>
   <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
   <script src="assets/vendor/SplitText.min.js" defer></script>
   <script src="assets/vendor/lenis.min.js" defer></script>
+  <script src="assets/js/nav.js" defer></script>
   <script src="assets/js/main.js" defer></script>`;
 
 // Page 404 : base des liens relatifs = chemin du site (racine si la page est servie ailleurs)

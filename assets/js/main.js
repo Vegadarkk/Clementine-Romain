@@ -22,6 +22,19 @@
   const motion = html.classList.contains("motion");
   const store = (() => { try { return window.sessionStorage; } catch (e) { return null; } })();
 
+  // Navigation sans rechargement (nav.js) : tout ce que cette page pose sur window, document ou les
+  // bibliothèques est retiré au changement de page, pour que la page suivante reparte de zéro.
+  const nav = window.__crNav || null;
+  const leaving = [];
+  let alive = true;
+  const onLeave = (fn) => { leaving.push(fn); };
+  if (nav) nav.onLeave(() => { alive = false; leaving.splice(0).reverse().forEach((fn) => { try { fn(); } catch (e) { /* on continue le nettoyage */ } }); });
+  const listen = (target, type, fn, opts) => {
+    if (target.addEventListener) target.addEventListener(type, fn, opts); else target.addListener(fn);
+    onLeave(() => { if (target.removeEventListener) target.removeEventListener(type, fn, opts); else target.removeListener(fn); });
+  };
+  const onTick = (fn) => { gsap.ticker.add(fn); onLeave(() => gsap.ticker.remove(fn)); };
+
   /* ------------------------------------------------------------------ Outils */
   const toastEl = $("[data-toast]");
   let toastTimer;
@@ -32,6 +45,7 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => toastEl.classList.remove("is-visible"), 2800);
   }
+  onLeave(() => clearTimeout(toastTimer));
   window.crToast = toast;
 
   async function copyText(text) {
@@ -65,9 +79,10 @@
   if (motion && window.Lenis) {
     lenis = new window.Lenis({ lerp: 0.11, wheelMultiplier: 0.95, smoothWheel: true, anchors: true });
     lenis.on("scroll", ST.update);
-    gsap.ticker.add((t) => lenis.raf(t * 1000));
+    onTick((t) => lenis.raf(t * 1000));
     gsap.ticker.lagSmoothing(0);
     html.classList.add("lenis");
+    onLeave(() => { lenis.destroy(); if (window.__lenis === lenis) window.__lenis = null; });
   }
   window.__lenis = lenis;
   // Le décalage sous l’en-tête vient du CSS (scroll-padding-top / scroll-margin-top),
@@ -93,7 +108,7 @@
     return sec && sec.classList.contains("pin-spacer") ? sec.firstElementChild : sec;
   };
   let seenTick = 0;
-  window.addEventListener("scroll", () => {
+  listen(window, "scroll", () => {
     if (seenTick) return;
     seenTick = requestAnimationFrame(() => {
       seenTick = 0;
@@ -108,10 +123,9 @@
     const before = performance.now() - 250;
     for (let i = seen.length - 1; i >= 0; i--) if (seen[i].t < before) { keepEl = seen[i].el; break; }
   };
-  window.addEventListener("resize", () => { if (docW() !== lastW) { lastW = docW(); onFormatChange(); } }, { passive: true });
+  listen(window, "resize", () => { if (docW() !== lastW) { lastW = docW(); onFormatChange(); } }, { passive: true });
   ["(min-width: 1024px) and (min-height: 620px)", "(min-width: 900px) and (min-height: 640px)"].forEach((q) => {
-    const mq = window.matchMedia(q);
-    if (mq.addEventListener) mq.addEventListener("change", onFormatChange); else mq.addListener(onFormatChange);
+    listen(window.matchMedia(q), "change", onFormatChange);
   });
 
   /* ---------------------------------------------------------------- En-tête */
@@ -128,7 +142,7 @@
     }
     lastY = y;
   }
-  window.addEventListener("scroll", onScroll, { passive: true });
+  listen(window, "scroll", onScroll, { passive: true });
   onScroll();
 
   /* ------------------------------------------------ Musique d’ambiance */
@@ -148,14 +162,22 @@
     const stateEl = $("[data-music-state]", musicBtn);
     const VOL = 0.32;
     let audio = null, fadeId = 0, wanted = false;
+    // Un seul lecteur pour toute la visite : il survit aux changements de page (nav.js), la musique continue
     const ensure = () => {
       if (audio) return audio;
-      audio = new Audio(musicBtn.dataset.src);
+      const src = new URL(musicBtn.dataset.src, location.href).href;
+      const live = window.__crAudio;
+      if (live && live.src === src) { audio = live; return audio; }
+      if (live) live.pause();
+      audio = new Audio(src);
       audio.loop = true;
       audio.preload = "auto";
       audio.volume = 0;
+      window.__crAudio = audio;
       return audio;
     };
+    // Changement de page : les fondus en cours s'arrêtent ; une musique coupée s'arrête pour de bon
+    onLeave(() => { fadeId++; if (audio && !wanted) audio.pause(); });
     const fade = (to, ms, done) => {
       const id = ++fadeId, from = audio.volume, t0 = performance.now();
       const step = (now) => {
@@ -194,8 +216,8 @@
       save();
     });
     // Page suivante : on mémorise la position pour reprendre au même endroit
-    window.addEventListener("pagehide", save);
-    document.addEventListener("click", (e) => { if (e.target.closest("a[href]")) save(); }, true);
+    listen(window, "pagehide", save);
+    listen(document, "click", (e) => { if (e.target.closest("a[href]")) save(); }, true);
     // Premier geste du visiteur (clic, toucher, touche) : on relance la lecture bloquée
     const GESTURES = ["pointerdown", "pointerup", "touchend", "keydown", "click"];
     const resume = (e) => {
@@ -265,7 +287,7 @@
       play().then(() => { save(); closeGate(); }).catch(() => {
         musicBtn.classList.add("is-waiting");
         if (stateEl) stateEl.textContent = "Un peu de musique\u00a0?";
-        GESTURES.forEach((g) => window.addEventListener(g, resume, true));
+        GESTURES.forEach((g) => listen(window, g, resume, true));
       });
     } else {
       render(false);
@@ -282,7 +304,7 @@
             setTimeout(() => musicBtn.classList.remove("is-hinting"), 4200);
           }, 1200);
         };
-        window.addEventListener("scroll", onFirstScroll, { passive: true });
+        listen(window, "scroll", onFirstScroll, { passive: true });
       }
     }
   }
@@ -306,8 +328,8 @@
         toTop.tabIndex = show ? 0 : -1;
       }
     };
-    window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update, { passive: true });
+    listen(window, "scroll", update, { passive: true });
+    listen(window, "resize", update, { passive: true });
     update();
     toTop.addEventListener("click", () => {
       const brand = $(".brand");
@@ -346,7 +368,7 @@
     }
     const fromHash = slides.findIndex((sl) => location.hash === `#${sl.id}`);
     show(fromHash > -1 ? fromHash : 0, false);
-    if (motion) document.addEventListener("cr:animations", () => {
+    if (motion) listen(document, "cr:animations", () => {
       gsap.from(spots, { scale: 0, duration: 0.7, ease: "back.out(2)", stagger: 0.07, scrollTrigger: { trigger: domaine, start: "top 70%" } });
     });
   }
@@ -372,11 +394,11 @@
       }
     };
     toggle.addEventListener("click", () => setMenu(toggle.getAttribute("aria-expanded") !== "true"));
-    document.addEventListener("keydown", (e) => {
+    listen(document, "keydown", (e) => {
       if (e.key === "Escape" && menu.classList.contains("is-open")) { setMenu(false); toggle.focus(); }
     });
     $$("a", menu).forEach((a) => a.addEventListener("click", () => setMenu(false)));
-    window.matchMedia("(min-width: 961px)").addEventListener("change", (e) => e.matches && setMenu(false));
+    listen(window.matchMedia("(min-width: 961px)"), "change", (e) => e.matches && setMenu(false));
   }
 
   /* ---------------------------------------------------------- Compte à rebours */
@@ -412,6 +434,7 @@
     };
     tick();
     timer = setInterval(tick, 1000);
+    onLeave(() => clearInterval(timer));
   });
 
   /* ------------------------------------------------------------- Agenda .ics */
@@ -493,7 +516,7 @@
     return /(\.html|\/)$/.test(url.pathname);
   }
   // Lien vers la page où l'on se trouve déjà (logo, « Accueil » sur l'accueil) : on remonte en douceur, sans recharger
-  document.addEventListener("click", (e) => {
+  listen(document, "click", (e) => {
     const a = e.target.closest("a[href]");
     if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.target === "_blank") return;
     const url = new URL(a.href, location.href);
@@ -518,19 +541,29 @@
     if (lenis) lenis.scrollTo(0, { duration: 1.4, force: true, onComplete: done });
     else { window.scrollTo({ top: 0, behavior: motion ? "smooth" : "auto" }); done(); }
   });
+  // Le rideau se ferme, puis la page suivante s'affiche : sans rechargement avec nav.js (la musique
+  // continue), sinon par une navigation classique
+  const closeCurtain = () => new Promise((resolve) => {
+    gsap.killTweensOf(curtainPanels); // rideau encore en train de s'ouvrir : il repart d'où il est
+    curtain.style.visibility = "visible";
+    // y: 0 explicite : sinon GSAP ajoute le décalage CSS de départ (translateY(100%)) au sien et, sur la
+    // première page visitée, le rideau finissait sa course sous l'écran, invisible
+    gsap.timeline({ onComplete: resolve })
+      .fromTo(curtainPanels, { y: 0, yPercent: 100 }, { y: 0, yPercent: 0, duration: 0.55, ease: "power4.inOut", stagger: 0.09 });
+  });
   if (motion && curtain) {
-    document.addEventListener("click", (e) => {
+    if (nav) nav.setLeave(closeCurtain);
+    listen(document, "click", (e) => {
       const a = e.target.closest("a");
       if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || !isInternalPage(a)) return;
       e.preventDefault();
       const href = a.href;
       store && store.setItem("cr-curtain", "1");
-      curtain.style.visibility = "visible";
-      gsap.timeline({ onComplete: () => { location.href = href; } })
-        .fromTo(curtainPanels, { yPercent: 100 }, { yPercent: 0, duration: 0.55, ease: "power4.inOut", stagger: 0.09 });
+      if (nav) nav.go(href);
+      else closeCurtain().then(() => { location.href = href; });
     });
-    window.addEventListener("pageshow", (e) => {
-      if (e.persisted) { gsap.set(curtainPanels, { yPercent: 100 }); curtain.style.visibility = "hidden"; }
+    listen(window, "pageshow", (e) => {
+      if (e.persisted) { gsap.set(curtainPanels, { y: 0, yPercent: 100 }); curtain.style.visibility = "hidden"; }
     });
   }
   function curtainOut() {
@@ -549,9 +582,14 @@
       const label = $(".cursor__label", cursor);
       const xTo = gsap.quickTo(cursor, "x", { duration: 0.35, ease: "power3" });
       const yTo = gsap.quickTo(cursor, "y", { duration: 0.35, ease: "power3" });
-      window.addEventListener("pointermove", (e) => { xTo(e.clientX); yTo(e.clientY); cursor.classList.remove("is-out"); heartMove(e); }, { passive: true });
-      document.addEventListener("pointerleave", () => cursor.classList.add("is-out"));
-      document.addEventListener("pointerover", (e) => {
+      listen(window, "pointermove", (e) => { xTo(e.clientX); yTo(e.clientY); cursor.classList.remove("is-out"); heartMove(e); }, { passive: true });
+      listen(document, "pointerleave", () => cursor.classList.add("is-out"));
+      // Page affichée sans rechargement : le curseur reprend là où se trouve la souris
+      if (nav && nav.soft && nav.pointer) {
+        gsap.set(cursor, { x: nav.pointer.x, y: nav.pointer.y });
+        cursor.classList.remove("is-out");
+      }
+      listen(document, "pointerover", (e) => {
         const link = e.target.closest("a, button, label, input, textarea, select, [role=button]");
         // Un lien placé dans une zone étiquetée garde son propre curseur
         let labelled = e.target.closest("[data-cursor]");
@@ -587,6 +625,7 @@
         target = gsap.utils.clamp(0, 1, 1 - d / (Math.max(f.r.width, f.r.height) * (parseFloat(hearty.dataset.heartReach) || 0.55)));
       }
       function heartMove(e) { px = e.clientX; py = e.clientY; }
+      if (nav && nav.soft && nav.pointer) { px = nav.pointer.x; py = nav.pointer.y; }
       function floatHeart(x, y, big) {
         const h = document.createElement("span");
         h.className = "heart-float";
@@ -598,7 +637,7 @@
           keyframes: { opacity: [0, 1, 1, 0] }, duration: gsap.utils.random(1.1, 1.7), ease: "power2.out", onComplete: () => h.remove(),
         });
       }
-      gsap.ticker.add((time, dt) => {
+      onTick((time, dt) => {
         heartTarget();
         closeness += ((hearty ? target : 0) - closeness) * 0.08;
         cursor.style.setProperty("--close", closeness.toFixed(3));
@@ -705,7 +744,7 @@
         .to(screen, { clipPath: "inset(0 0 100% 0)", duration: 0.85, ease: "expo.inOut" }, "+=0.05");
       const skip = () => tl.progress(0.92);
       screen.addEventListener("click", skip, { once: true });
-      document.addEventListener("keydown", skip, { once: true });
+      listen(document, "keydown", skip, { once: true });
     });
   }
 
@@ -773,6 +812,7 @@
       };
       placeDeco();
       ST.addEventListener("refreshInit", placeDeco);
+      onLeave(() => ST.removeEventListener("refreshInit", placeDeco));
       if (deco) {
         // Apparition, comme l’arche de l’accueil, quand la section arrive à l’écran
         const pick = (s) => $(s, deco);
@@ -871,7 +911,8 @@
     $$("[data-marquee]").forEach((m) => {
       fillMarquee(m);
       let rt;
-      window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => fillMarquee(m), 200); });
+      listen(window, "resize", () => { clearTimeout(rt); rt = setTimeout(() => fillMarquee(m), 200); });
+      onLeave(() => clearTimeout(rt));
       const track = $(".marquee__track", m);
       const anim = track.getAnimations ? track.getAnimations()[0] : null;
       if (!anim) return;
@@ -885,7 +926,7 @@
           gsap.to($$(".marquee__group", track), { skewX: gsap.utils.clamp(-8, 8, -v / 250), duration: 0.4, overwrite: true });
         },
       });
-      gsap.ticker.add(() => {
+      onTick(() => {
         if (Math.abs(rate - 1) > 0.01) { rate += (1 - rate) * 0.05; anim.playbackRate = rate; }
       });
     });
@@ -924,6 +965,7 @@
     pulse = gsap.fromTo($(".map-pulse", fr), { attr: { r: 10 }, opacity: 0.32 }, { attr: { r: 26 }, opacity: 0, duration: 1.8, repeat: -1, repeatDelay: 0.4, ease: "power1.out", paused: true });
 
     const mm = gsap.matchMedia();
+    onLeave(() => mm.revert());
     mm.add("(min-width: 900px) and (min-height: 640px)", () => {
       sec.classList.add("is-story");
       const holder = $(".pin-main", fr).parentNode;
@@ -1008,6 +1050,7 @@
     sky(0);
 
     const mm = gsap.matchMedia();
+    onLeave(() => mm.revert());
     mm.add("(min-width: 1024px) and (min-height: 620px)", () => {
       sec.classList.add("is-horizontal");
       const distance = () => Math.max(0, track.scrollWidth - window.innerWidth);
@@ -1107,7 +1150,9 @@
   /* ---------- Lancement ---------- */
   // On attend les polices, mais jamais plus de 600 ms : le haut de page ne reste pas masqué
   const fontsReady = Promise.race([document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve(), new Promise((r) => setTimeout(r, 600))]);
-  fontsReady.then(async () => {
+  // Page affichée sans rechargement : on attend aussi les scripts propres à la page (ex. environs.js)
+  (nav && nav.soft ? Promise.all([fontsReady, nav.ready]) : fontsReady).then(async () => {
+    if (!alive) return; // page déjà quittée
     try {
     splitTitles();
     reveals();
@@ -1120,7 +1165,11 @@
     progressBar();
     document.dispatchEvent(new CustomEvent("cr:animations"));
     ST.refresh();
-    if (location.hash) {
+    // Retour arrière sans rechargement : position mémorisée ; sinon l'ancre de l'adresse
+    const backTo = nav && nav.soft ? nav.takeScroll() : null;
+    if (backTo != null) {
+      if (lenis) lenis.scrollTo(backTo, { immediate: true, force: true }); else window.scrollTo(0, backTo);
+    } else if (location.hash) {
       let id = location.hash.slice(1);
       try { id = decodeURIComponent(id); } catch (e) { /* ancre mal formée : ignorée */ }
       const target = document.getElementById(id);
@@ -1129,6 +1178,7 @@
     await curtainOut();
     await playIntro();
     await window.__crGate; // le héros s'anime une fois l'invitation ouverte
+    if (!alive) return;
     heroIn();
     pageHero();
     } catch (err) {
@@ -1137,12 +1187,16 @@
       if (window.console) console.error(err);
     }
   });
-  window.addEventListener("load", () => ST.refresh());
+  // Images chargées : recalcul des positions (page affichée sans rechargement : ses propres images)
+  if (nav && nav.soft) nav.loaded.then(() => { if (alive) ST.refresh(); });
+  else listen(window, "load", () => ST.refresh());
   // Plusieurs recalculs s'enchaînent après un changement de format : on se replace une fois qu'ils sont finis
   let restoreTimer = 0;
-  ST.addEventListener("refresh", () => {
+  const onRefresh = () => {
     if (!keepEl) return;
     clearTimeout(restoreTimer);
     restoreTimer = setTimeout(() => { const el = keepEl; keepEl = null; if (el) scrollToEl(el, true); }, 180);
-  });
+  };
+  ST.addEventListener("refresh", onRefresh);
+  onLeave(() => { ST.removeEventListener("refresh", onRefresh); clearTimeout(restoreTimer); });
 })();
