@@ -56,8 +56,9 @@ reproduis-le à la même taille d'écran avant de corriger.
 
 ### 1. Préparer les ressources
 - Photos converties en WebP en plusieurs tailles (`scripts/images_webp.py`), recadrées sur les visages.
-- Photo affichée en plein écran trop petite : demande l'original ; sinon `scripts/agrandir_photo.py`
-  (IA à 35 % seulement, visages vérifiés avant / après).
+- Photo affichée en plein écran trop petite : demande l'original. N'agrandis par IA (`scripts/agrandir_photo.py`)
+  qu'avec l'accord des mariés, visages avant / après à l'appui : un visage légèrement retouché les gêne, et le
+  premier couple est revenu à sa photo originale (si accord : IA à 35 % seulement).
 - Photos des lieux (page Environs) : Wikimedia Commons, licences libres, avec `scripts/photos_commons.py`.
   Regarde chaque image avant de la retenir : les homonymes de lieux sont fréquents.
   Le couple ne doit **jamais** être coupé, que ce soit dans une arche, un plein écran ou sur un écran large.

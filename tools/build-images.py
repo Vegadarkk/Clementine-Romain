@@ -14,7 +14,9 @@ OUT = Path(__file__).resolve().parent.parent / "assets" / "img"
 # (fichier source, nom de sortie, largeurs, recadrage (gauche, haut, droite, bas) ou None)
 PHOTOS = [
     ("Photo Romain et Clémentine pour site internet 2.png", "photos/couple-arche", [640, 1024, 1448], None),
-    ("Photo Romain et Clémentine pour site internet 1.png", "photos/couple-jardin", [640, 1024, 1446], None),
+    # Photo plein écran : l'originale telle quelle (aucun agrandissement par IA, qui modifiait le visage),
+    # en qualité 85 ; au-delà de 1446 px, c'est le navigateur qui agrandit
+    ("Photo Romain et Clémentine pour site internet 1.png", "photos/couple-jardin", [640, 1024, 1446], None, 85),
     ("photo Saint Offenge entrée salle.webp", "photos/chateau-entree", [640, 1024, 1600], None),
 ]
 
@@ -40,12 +42,12 @@ def load(name: str) -> Image.Image:
     return ImageOps.exif_transpose(im).convert("RGB")
 
 
-for src, out, widths, crop in PHOTOS:
+for src, out, widths, crop, *quality in PHOTOS:
     im = load(src)
     if crop:
         im = im.crop(crop)
     for w in widths:
-        save_webp(im, OUT / f"{out}-{w}.webp", min(w, im.width))
+        save_webp(im, OUT / f"{out}-{w}.webp", min(w, im.width), *quality)
 
 for src, out, crop in TEMOINS:
     im = load(src).crop(crop)
