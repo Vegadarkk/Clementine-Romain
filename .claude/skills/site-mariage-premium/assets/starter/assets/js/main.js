@@ -16,6 +16,9 @@
 
   window.__crReady = true;
   if (!hasGsap) html.classList.remove("motion", "intro", "curtain-in");
+  // Promesse résolue quand l'écran « Ouvrir l'invitation » est fermé (ou s'il n'y en a pas)
+  let gateDone = () => {};
+  window.__crGate = new Promise((resolve) => { gateDone = resolve; });
   const motion = html.classList.contains("motion");
   const store = (() => { try { return window.sessionStorage; } catch (e) { return null; } })();
 
@@ -196,16 +199,70 @@
     // Premier geste du visiteur (clic, toucher, touche) : on relance la lecture bloquée
     const GESTURES = ["pointerdown", "pointerup", "touchend", "keydown", "click"];
     const resume = (e) => {
-      if (e.target && e.target.closest && e.target.closest("[data-music]")) return;
+      if (e.target && e.target.closest && e.target.closest("[data-music], [data-gate]")) return;
       if (!wanted) { stopWaiting(); return; }
       play().then(() => { stopWaiting(); save(); }).catch(() => { /* pas encore un geste valable : on réessaie au suivant */ });
     };
     function stopWaiting() { GESTURES.forEach((g) => window.removeEventListener(g, resume, true)); }
     const saved = read();
     // Démarrage automatique, sauf si le visiteur a coupé la musique (dans cette visite ou une précédente)
+    /* ---------- Écran « Ouvrir l'invitation » : son clic autorise la musique ---------- */
+    const gate = $("[data-gate]");
+    const gateOn = !!gate && html.classList.contains("gate");
+    let hidden = [];
+    const closeGate = () => {
+      if (!gateOn || gate.dataset.closing) return;
+      gate.dataset.closing = "1";
+      try { store.setItem("cr-gate", "1"); store.setItem("cr-intro", "1"); } catch (e) { /* stockage indisponible */ }
+      const end = () => {
+        html.classList.remove("gate");
+        hidden.forEach((el) => { el.inert = false; });
+        if (window.__lenis) window.__lenis.start();
+        gateDone();
+      };
+      if (motion && gsap) gsap.to(gate, { clipPath: "inset(0% 0% 100% 0%)", duration: 1, ease: "expo.inOut", onComplete: end });
+      else end();
+    };
+    if (gateOn) {
+      hidden = $$("body > *").filter((el) => el !== gate && !el.classList.contains("cursor") && !el.inert);
+      hidden.forEach((el) => { el.inert = true; });
+      if (window.__lenis) window.__lenis.stop();
+      const openBtn = $("[data-gate-open]", gate);
+      openBtn.addEventListener("click", () => {
+        wanted = true;
+        remember(false);
+        stopWaiting();
+        musicBtn.classList.remove("is-waiting");
+        play().then(save).catch(() => render(false)); // clic = geste autorisé : la musique démarre
+        closeGate();
+      });
+      const silent = () => {
+        wanted = false;
+        remember(true);
+        stopWaiting();
+        musicBtn.classList.remove("is-waiting");
+        stop();
+        if (stateEl) stateEl.textContent = "Un peu de musique\u00a0?";
+        save();
+        closeGate();
+      };
+      $("[data-gate-silent]", gate).addEventListener("click", silent);
+      gate.addEventListener("keydown", (e) => { if (e.key === "Escape") { e.preventDefault(); silent(); } });
+      if (motion && gsap) {
+        gsap.timeline({ defaults: { ease: "power3.out" } })
+          .fromTo($(".gate-screen__mono", gate), { clipPath: "inset(100% 0% 0% 0%)", y: 20 }, { clipPath: "inset(0% 0% 0% 0%)", y: 0, duration: 1.4, ease: "power3.inOut" })
+          .fromTo($$(".gate-screen__inner > :not(svg)", gate), { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.9, stagger: 0.1 }, 0.7)
+          .fromTo($$(".gate-screen__flower", gate), { opacity: 0, scale: 0.6, rotation: (i) => (i ? 120 : -20) }, { opacity: (i) => (window.innerWidth < 560 ? [0.55, 0.7][i] : 1), scale: 1, rotation: (i) => (i ? 160 : 0), duration: 1.6, ease: "back.out(1.3)", stagger: 0.15 }, 0.4);
+      }
+      requestAnimationFrame(() => openBtn.focus({ preventScroll: true }));
+    } else {
+      gateDone();
+    }
+
     if (saved.on !== false && !refused()) {
       wanted = true;
-      play().then(save).catch(() => {
+      // Lecture autorisée d'emblée par le navigateur : l'écran d'accueil n'a plus lieu d'être
+      play().then(() => { save(); closeGate(); }).catch(() => {
         musicBtn.classList.add("is-waiting");
         if (stateEl) stateEl.textContent = "Un peu de musique\u00a0?";
         GESTURES.forEach((g) => window.addEventListener(g, resume, true));
@@ -229,6 +286,8 @@
       }
     }
   }
+  // Pas de bouton musique sur la page : pas d’écran d’accueil non plus
+  if (!musicBtn) { html.classList.remove("gate"); gateDone(); }
 
   /* ------------------------------------------------------- Retour en haut */
   const toTop = $("[data-to-top]");
@@ -698,13 +757,33 @@
       const frame = $(".reveal-photo__frame", sec);
       const img = $("img", frame);
       // Arche toujours verticale, quelle que soit la forme de l’écran
-      const arch = () => {
+      const archBox = () => {
         const w = frame.clientWidth, h = frame.clientHeight;
         const ah = h * (w < 700 ? 0.64 : 0.7);
         const aw = Math.min(ah * 0.8, w * 0.8);
-        const x = (w - aw) / 2, y = (h - ah) / 2, r = aw / 2;
-        return `inset(${y}px ${x}px ${y}px ${x}px round ${r}px ${r}px 22px 22px)`;
+        return { x: (w - aw) / 2, y: (h - ah) / 2, w: aw, h: ah };
       };
+      const arch = () => { const a = archBox(); return `inset(${a.y}px ${a.x}px ${a.y}px ${a.x}px round ${a.w / 2}px ${a.w / 2}px 22px 22px)`; };
+      // Décor (filet, fleurs, tampon) calé sur l’arche de départ, recalé à chaque changement de format
+      const deco = $("[data-rp-deco]", sec);
+      const placeDeco = () => {
+        if (!deco) return;
+        const a = archBox();
+        deco.style.cssText = `left:${a.x}px;top:${a.y}px;width:${a.w}px;height:${a.h}px`;
+      };
+      placeDeco();
+      ST.addEventListener("refreshInit", placeDeco);
+      if (deco) {
+        // Apparition, comme l’arche de l’accueil, quand la section arrive à l’écran
+        const pick = (s) => $(s, deco);
+        const enter = gsap.timeline({ paused: true, defaults: { ease: "back.out(1.4)" } })
+          .fromTo(pick(".rp-deco__line"), { opacity: 0, scale: 0.94 }, { opacity: 0.45, scale: 1, duration: 1.2, ease: "power2.out" }, 0)
+          .fromTo(pick(".rp-deco__item--bouquet img"), { opacity: 0, scale: 0.4, rotation: -25 }, { opacity: 1, scale: 1, rotation: 0, duration: 1.5 }, 0.15)
+          .fromTo(pick(".rp-deco__item--top img"), { opacity: 0, scale: 0.4, rotation: 120 }, { opacity: 1, scale: 1, rotation: 160, duration: 1.5 }, 0.3)
+          .fromTo(pick(".rp-deco__item--rose img"), { opacity: 0, scale: 0.4, rotation: 30 }, { opacity: 1, scale: 1, rotation: -12, duration: 1.4 }, 0.42)
+          .fromTo(pick(".rp-deco__stamp"), { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 1, ease: "back.out(2)" }, 0.6);
+        ST.create({ trigger: sec, start: "top 70%", once: true, onEnter: () => enter.play() });
+      }
       // Position du couple dans l’image affichée (object-fit: cover, object-position: 50% 38%)
       const focus = () => {
         const w = frame.clientWidth, h = frame.clientHeight;
@@ -716,13 +795,28 @@
       };
       const origin = () => { const f = focus(); return `${f.x}px ${f.y}px`; };
       const tl = gsap.timeline({ scrollTrigger: { trigger: sec, start: "top top", end: "bottom bottom", scrub: 0.8, invalidateOnRefresh: true } });
-      tl.fromTo(frame, { clipPath: arch }, { clipPath: "inset(0px 0px 0px 0px round 0px 0px 0px 0px)", ease: "power2.inOut", duration: 1 })
+      // 1) Le décor s’envole vers l’extérieur (durée D), 2) la photo s’ouvre, 3) le texte s’écrit
+      const D = deco ? 0.3 : 0;
+      // État de départ posé dès le temps 0 : pendant l’envol du décor, la photo est déjà cadrée sur les
+      // visages (sans cela, elle sauterait au début de l’ouverture)
+      const zx = () => { const f = focus(); return f.w / 2 - f.x; };
+      const zy = () => { const f = focus(); return f.h * 0.46 - f.y; };
+      tl.set(frame, { clipPath: arch }, 0).set(img, { scale: 1.25, x: zx, y: zy, transformOrigin: origin }, 0);
+      if (deco) {
+        const pick = (s) => $(s, deco);
+        tl.to(pick(".rp-deco__item--line"), { opacity: 0, scale: 1.06, duration: D, ease: "power1.in" }, 0)
+          .to(pick(".rp-deco__item--bouquet"), { xPercent: -70, yPercent: 40, rotation: -18, opacity: 0, duration: D, ease: "power2.in" }, 0)
+          .to(pick(".rp-deco__item--top"), { xPercent: 80, yPercent: -70, rotation: 40, opacity: 0, duration: D, ease: "power2.in" }, 0)
+          .to(pick(".rp-deco__item--rose"), { xPercent: -90, yPercent: -60, rotation: -30, opacity: 0, duration: D, ease: "power2.in" }, 0.02)
+          .to(pick(".rp-deco__item--stamp"), { xPercent: 60, yPercent: 60, scale: 0.6, rotation: 90, opacity: 0, duration: D, ease: "power2.in" }, 0.02);
+      }
+      tl.fromTo(frame, { clipPath: arch }, { clipPath: "inset(0px 0px 0px 0px round 0px 0px 0px 0px)", ease: "power2.inOut", duration: 1 }, D)
         .fromTo(img,
-          { scale: 1.25, x: () => { const f = focus(); return f.w / 2 - f.x; }, y: () => { const f = focus(); return f.h * 0.46 - f.y; }, transformOrigin: origin },
-          { scale: 1, x: 0, y: 0, transformOrigin: origin, ease: "power2.inOut", duration: 1 }, 0)
-        .to($(".reveal-photo__scrim", sec), { opacity: 1, ease: "none", duration: 0.45 }, 0.55)
+          { scale: 1.25, x: zx, y: zy, transformOrigin: origin },
+          { scale: 1, x: 0, y: 0, transformOrigin: origin, ease: "power2.inOut", duration: 1 }, D)
+        .to($(".reveal-photo__scrim", sec), { opacity: 1, ease: "none", duration: 0.45 }, D + 0.55)
         // Pause, photo pleinement ouverte, le temps de lire le texte
-        .to({}, { duration: 0.35 }, 1);
+        .to({}, { duration: 0.35 }, D + 1);
       img.addEventListener("load", () => ST.refresh(), { once: true });
 
       // Texte : écrit à l’encre une fois la photo ouverte, effacé en remontant.
@@ -731,7 +825,7 @@
       const text = $("[data-rp-text]", sec);
       if (!text) return;
       // Garde-fou lié au défilement : le texte s'éteint avec l'arche si l'on remonte vite
-      tl.fromTo(text, { "--rp-safe": 0 }, { "--rp-safe": 1, ease: "none", duration: 0.1 }, 0.75);
+      tl.fromTo(text, { "--rp-safe": 0 }, { "--rp-safe": 1, ease: "none", duration: 0.1 }, D + 0.75);
       const words = $$(".rp-w > span", text);
       const t = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } })
         .fromTo($(".rp-over", text), { opacity: 0, letterSpacing: "1em" }, { opacity: 1, letterSpacing: "0.42em", duration: 1.5 }, 0)
@@ -746,12 +840,12 @@
       gsap.set(text, { "--rp-show": 0 });
       tl.eventCallback("onUpdate", () => {
         const time = tl.time();
-        if (!written && time >= 0.97) {
+        if (!written && time >= D + 0.97) {
           written = true;
           gsap.killTweensOf(text, "--rp-show");
           gsap.set(text, { "--rp-show": 1 });
           t.timeScale(1).restart();
-        } else if (written && time < 0.95) {
+        } else if (written && time < D + 0.95) {
           written = false;
           gsap.killTweensOf(text, "--rp-show"); // uniquement cette propriété : le garde-fou de `tl` reste intact
           gsap.to(text, { "--rp-show": 0, duration: 0.3, ease: "power2.out", onComplete: () => t.pause(0) });
@@ -1030,6 +1124,7 @@
     }
     await curtainOut();
     await playIntro();
+    await window.__crGate; // le héros s'anime une fois l'invitation ouverte
     heroIn();
     pageHero();
     } catch (err) {

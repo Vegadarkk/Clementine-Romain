@@ -34,7 +34,7 @@
   <link rel="preload" href="assets/fonts/pinyon-script-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/cormorant-garamond-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/jost-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css?v=469827a0">
+  <link rel="stylesheet" href="assets/css/style.css?v=532f2a59">
   <script>
     /* Active les animations si le visiteur ne les a pas désactivées ; filet de sécurité si le JS ne se charge pas */
     (function (d) {
@@ -227,7 +227,21 @@
                sizes="(orientation: portrait) 166vh, 125vw" width="1024" height="768" loading="lazy" decoding="async"
                alt="Clémentine et Romain assis côte à côte dans un jardin fleuri, souriants">
         </div>
+        <!-- Décor de l’arche (comme au héros) : il s’envole au défilement, avant l’ouverture de la photo -->
+        <div class="reveal-photo__deco" aria-hidden="true" data-rp-deco>
+          <div class="rp-deco__item rp-deco__item--line"><div class="rp-deco__line"></div></div>
+          <div class="rp-deco__item rp-deco__item--bouquet"><img src="assets/img/bouquet.svg" alt="" width="420" height="340"></div>
+          <div class="rp-deco__item rp-deco__item--top"><img src="assets/img/fleur-pivoine.svg" alt="" width="200" height="200"></div>
+          <div class="rp-deco__item rp-deco__item--rose"><img src="assets/img/fleur-rose.svg" alt="" width="200" height="200"></div>
+          <div class="rp-deco__item rp-deco__item--stamp">
+            <div class="hero__stamp rp-deco__stamp">
+              <svg class="hero__stamp-ring" viewBox="0 0 120 120"><defs><path id="stamp-circle-rp" d="M60 60m-47 0a47 47 0 1 1 94 0a47 47 0 1 1-94 0"/></defs><text><textPath href="#stamp-circle-rp">Clémentine &amp; Romain · Save the date · </textPath></text></svg>
+              <div><strong>03</strong>07 · 27</div>
+            </div>
+          </div>
+        </div>
         <div class="reveal-photo__scrim" aria-hidden="true"></div>
+        <div class="petals reveal-photo__petals" aria-hidden="true" data-petals="18"></div>
         <div class="reveal-photo__text" data-rp-text>
           <p class="rp-over">Nous vous donnons</p>
           <p class="rp-script script">Rendez-vous</p>
@@ -706,7 +720,7 @@
   <script src="assets/vendor/ScrollTrigger.min.js?v=05ca5ad8" defer></script>
   <script src="assets/vendor/SplitText.min.js?v=6c4c7716" defer></script>
   <script src="assets/vendor/lenis.min.js?v=b5cf15f0" defer></script>
-  <script src="assets/js/main.js?v=3ba31fa4" defer></script>
+  <script src="assets/js/main.js?v=9af805dd" defer></script>
   <!-- SCRIPTS:END -->
 </body>
 </html>

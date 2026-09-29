@@ -955,6 +955,27 @@ html.lightbox-lock, html.lightbox-lock body { overflow: hidden; }
 .intro-screen__mono { --mono-accent: var(--fuchsia); --mono-sub: var(--moss-deep); --mono-sw: 2.6; --mono-sw2: 1.2; --mono-ink-sw: .6; width: min(52vw, 230px); height: auto; overflow: visible; color: var(--ink); clip-path: inset(100% 0 0 0); }
 .intro body { overflow: hidden; }
 
+/* ---------- Écran d'accueil « Ouvrir l'invitation » (son clic autorise la musique) ---------- */
+.gate-screen { display: none; }
+.gate .gate-screen { position: fixed; inset: 0; z-index: 495; display: grid; place-items: center; padding: 1.5rem; overflow: hidden; background: radial-gradient(70% 60% at 50% 42%, var(--paper), var(--ivory) 72%, var(--blossom-soft)); }
+.gate body { overflow: hidden; }
+.gate-screen__inner { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; max-width: 100%; text-align: center; }
+.gate-screen__mono { --mono-accent: var(--fuchsia); --mono-sub: var(--moss-deep); --mono-sw: 2.6; --mono-sw2: 1.2; --mono-ink-sw: .6; width: min(34vw, 150px); height: auto; overflow: visible; color: var(--ink); }
+.gate-screen p { margin: 0; }
+.gate-screen .gate-screen__over { margin-top: 1.3rem; font: 500 .72rem/1.3 var(--f-body); letter-spacing: .34em; text-transform: uppercase; color: var(--fuchsia-deep); }
+.gate-screen .gate-screen__names { margin-top: .1rem; font-size: clamp(2.7rem, 9vw, 4.6rem); line-height: 1.2; color: var(--ink); }
+.gate-screen__names span { color: var(--fuchsia); }
+.gate-screen .gate-screen__date { margin: .2rem 0 1.9rem; font: italic 400 1.15rem/1.4 var(--f-display); color: var(--ink-soft); }
+.gate-screen__open { animation: gate-pulse 2.4s var(--ease) 1.8s infinite; }
+@keyframes gate-pulse { 0% { box-shadow: 0 0 0 0 rgba(194, 24, 91, .45); } 70%, 100% { box-shadow: 0 0 0 18px rgba(194, 24, 91, 0); } }
+.gate-screen .gate-screen__note { margin-top: .85rem; font-size: .82rem; color: var(--ink-soft); }
+.gate-screen__silent { margin-top: .5rem; padding: .5rem .8rem; border: 0; background: none; color: var(--ink-soft); font: 400 .85rem/1.3 var(--f-body); text-decoration: underline; text-underline-offset: .2em; cursor: pointer; }
+.gate-screen__silent:hover { color: var(--fuchsia-deep); }
+.gate-screen__flower { position: absolute; height: auto; pointer-events: none; }
+.gate-screen__flower--1 { left: max(-80px, -6vw); bottom: -40px; width: clamp(180px, 28vw, 360px); }
+.gate-screen__flower--2 { right: -30px; top: -26px; width: clamp(120px, 16vw, 210px); transform: rotate(160deg); }
+@media (max-width: 560px) { .gate-screen__flower--1 { opacity: .55; } .gate-screen__flower--2 { opacity: .7; } }
+
 /* ---------- Rideau de transition entre pages ---------- */
 .page-curtain { position: fixed; inset: 0; z-index: 450; pointer-events: none; visibility: hidden; }
 .page-curtain__panel { position: absolute; inset: 0; background: linear-gradient(135deg, var(--peony), var(--fuchsia)); transform: translateY(100%); }
@@ -1114,7 +1135,21 @@ body.menu-open .to-top { opacity: 0; visibility: hidden; }
 
 
 
-.motion .reveal-photo { height: 270vh; } /* ouverture de l’arche puis courte pause, photo ouverte */
+.motion .reveal-photo { height: 310vh; } /* décor qui s’envole, ouverture de l’arche, puis courte pause photo ouverte */
+/* Décor de l’arche, calé en JS sur l’arche de départ ; il n’existe qu’avec les animations */
+.reveal-photo__deco { position: absolute; left: 33%; top: 15%; width: 34%; height: 70%; pointer-events: none; }
+html:not(.motion) .reveal-photo__deco { display: none; }
+.rp-deco__item { position: absolute; }
+.rp-deco__item--line { inset: -14px -14px auto; height: calc(100% + 14px); }
+.rp-deco__line { width: 100%; height: 100%; border: 1px solid var(--moss); border-bottom: 0; border-radius: var(--arch); opacity: .45; }
+.rp-deco__item img { display: block; width: 100%; height: auto; filter: drop-shadow(0 10px 18px rgba(163, 20, 77, .18)); }
+.rp-deco__item--bouquet { width: 40%; left: -18%; bottom: 5%; }
+.rp-deco__item--top { width: 27%; right: -10%; top: 11%; }
+.rp-deco__item--rose { width: 19%; left: -8%; top: 17%; }
+.rp-deco__item--stamp { right: -7%; bottom: -5%; }
+.hero__stamp.rp-deco__stamp { position: relative; right: auto; bottom: auto; }
+@media (max-width: 700px) { .hero__stamp.rp-deco__stamp { width: 90px; height: 90px; } .rp-deco__stamp strong { font-size: 1.8rem; } }
+.reveal-photo__petals { z-index: 0; }
 .motion .reveal-photo__sticky { position: sticky; top: 0; height: 100vh; height: 100svh; }
 .motion .reveal-photo__frame { clip-path: inset(15% 33% 15% 33% round 17vw 17vw 22px 22px); }
 .motion .reveal-photo__scrim { opacity: 0; }

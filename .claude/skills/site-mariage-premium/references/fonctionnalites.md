@@ -71,6 +71,16 @@ l'adapter. Les fonctions JS citées sont dans `assets/js/main.js`, sauf mention 
   Même effet sur la photo plein écran (`.reveal-photo__frame`, point entre les visages, portée réduite
   `data-heart-reach="0.4"`) : le point est recalculé à chaque image depuis le cadre réel de `img`
   (zoom GSAP compris), et le texte posé dessus est en `pointer-events: none` pour ne pas couper le cœur.
+- **Photo plein écran décorée** (`revealPhoto()`) : l'arche de départ porte le même décor que le héros
+  (filet, bouquet, pivoine, rose, tampon « Save the date », pétales qui tombent), calé en JS sur l'arche
+  (`placeDeco()`, recalé à chaque `refreshInit`). Chorégraphie liée au défilement : le décor s'envole
+  vers l'extérieur (0 → 0,3), puis la photo s'ouvre (0,3 → 1,3), puis « Rendez-vous » s'écrit (≥ 1,27),
+  pause de 0,35 ; section de 310vh. Apparition du décor par un déclencheur simple (`top 70%`) sur les
+  images, envol sur leurs conteneurs : jamais deux animations sur la même propriété du même élément.
+- **Écran « Ouvrir l'invitation »** (`[data-gate]`, gabarit commun) : première page de la visite ; son
+  clic autorise la musique, qui continue ensuite de page en page (Chrome garde l'autorisation lors d'une
+  navigation par lien). Se ferme seul si le son est déjà permis ; « Entrer sans musique » est mémorisé ;
+  jamais pour les robots ; l'intro du monogramme et le héros attendent sa fermeture (`window.__crGate`).
 - **Ruban défilant** (`fillMarquee()` / `marquee()`) : le groupe est dupliqué autant que nécessaire pour
   couvrir l'écran, et le décalage vaut exactement la largeur d'un groupe (`--marquee-shift`). Il
   accélère et s'incline selon la vitesse de défilement.
