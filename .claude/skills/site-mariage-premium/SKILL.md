@@ -56,6 +56,8 @@ reproduis-le à la même taille d'écran avant de corriger.
 
 ### 1. Préparer les ressources
 - Photos converties en WebP en plusieurs tailles (`scripts/images_webp.py`), recadrées sur les visages.
+- Photo affichée en plein écran trop petite : demande l'original ; sinon `scripts/agrandir_photo.py`
+  (IA à 35 % seulement, visages vérifiés avant / après).
 - Photos des lieux (page Environs) : Wikimedia Commons, licences libres, avec `scripts/photos_commons.py`.
   Regarde chaque image avant de la retenir : les homonymes de lieux sont fréquents.
   Le couple ne doit **jamais** être coupé, que ce soit dans une arche, un plein écran ou sur un écran large.
@@ -173,4 +175,4 @@ sont celles du projet d'origine : garde leur structure et leurs attributs `data-
 - `references/audit.md` : protocole d'audit et utilisation des scripts.
 - `references/deploiement.md` : GitHub Pages, Cloudflare Pages, référencement Google, cache, FormSubmit, vérification en ligne, README.
 - `scripts/` : `audit_axe.cjs`, `audit_console.cjs`, `captures.cjs`, `verif_en_ligne.sh`, `images_webp.py`,
-  `photos_commons.py` (photos libres des lieux, avec crédits).
+  `photos_commons.py` (photos libres des lieux, avec crédits), `agrandir_photo.py` (photo trop petite).

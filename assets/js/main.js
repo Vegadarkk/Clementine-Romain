@@ -721,12 +721,15 @@
           { scale: 1.25, x: () => { const f = focus(); return f.w / 2 - f.x; }, y: () => { const f = focus(); return f.h * 0.46 - f.y; }, transformOrigin: origin },
           { scale: 1, x: 0, y: 0, transformOrigin: origin, ease: "power2.inOut", duration: 1 }, 0)
         .to($(".reveal-photo__scrim", sec), { opacity: 1, ease: "none", duration: 0.45 }, 0.55);
+      // Le bloc de texte suit le défilement, comme l'arche et le voile : il ne peut jamais rester visible
+      // sur le fond crème quand on remonte vite (l'écriture elle-même se joue dans la chronologie `t`).
+      const textBox = $("[data-rp-text]", sec);
+      if (textBox) tl.fromTo(textBox, { opacity: 0 }, { opacity: 1, ease: "none", duration: 0.1 }, 0.52);
       img.addEventListener("load", () => ST.refresh(), { once: true });
 
       // Texte : écrit à l’encre une fois la photo presque déployée, effacé en remontant
       const text = $("[data-rp-text]", sec);
       if (!text) return;
-      gsap.set(text, { opacity: 1 });
       const words = $$(".rp-w > span", text);
       const t = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } })
         .fromTo($(".rp-over", text), { opacity: 0, letterSpacing: "1em" }, { opacity: 1, letterSpacing: "0.42em", duration: 1.5 }, 0)
@@ -738,7 +741,7 @@
         trigger: sec, invalidateOnRefresh: true,
         start: () => `top+=${Math.round((sec.offsetHeight - window.innerHeight) * 0.62)} top`,
         onEnter: () => t.timeScale(1).play(),
-        onLeaveBack: () => t.timeScale(2).reverse(),
+        onLeaveBack: () => t.timeScale(3).reverse(),
       });
       if (window.scrollY > st.start) t.progress(1); // arrivée directe plus bas (ancre, retour arrière)
     });
