@@ -2,12 +2,14 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8">
-  <!-- GitHub Pages sert cette page à n’importe quelle adresse introuvable : base fixe pour les liens relatifs
-       (écrite en dur pour que le navigateur précharge les bonnes ressources) ; hors de GitHub Pages, base à la racine -->
-  <base href="/Clementine-Romain/">
+  <!-- L’hébergeur sert cette page à n’importe quelle adresse introuvable : base fixe pour les liens relatifs
+       (écrite en dur pour que le navigateur précharge les bonnes ressources), générée d’après SITE_URL -->
+  <!-- BASE:START -->
+  <base href="/">
   <script>
-    if (!/^\/Clementine-Romain\//.test(location.pathname)) document.querySelector("base").setAttribute("href", "/");
+    if (location.pathname.indexOf("/") !== 0) document.querySelector("base").setAttribute("href", "/");
   </script>
+  <!-- BASE:END -->
   <title>Page introuvable · Clémentine &amp; Romain</title>
   <meta name="description" content="Cette page n’existe pas.">
   <!-- HEAD:START -->
@@ -21,7 +23,7 @@
   <meta property="og:site_name" content="Clémentine &amp; Romain">
   <meta property="og:title" content="Clémentine &amp; Romain · 3 juillet 2027">
   <meta property="og:description" content="Nous nous marions&nbsp;! Programme, lieux, hébergements et réponse à l’invitation.">
-  <meta property="og:image" content="https://vegadarkk.github.io/Clementine-Romain/assets/img/og-image.jpg">
+  <meta property="og:image" content="https://nom-du-projet.pages.dev/assets/img/og-image.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Clémentine et Romain sous une arche de verdure · samedi 3 juillet 2027">

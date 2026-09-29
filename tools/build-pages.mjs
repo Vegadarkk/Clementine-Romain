@@ -25,11 +25,11 @@ function bustCache(html) {
 
 const PAGES = ["index.html", "hebergements.html", "temoins.html", "environs.html", "rsvp.html", "404.html", "logos.html"];
 // Adresse publique du site (avec la barre finale). Pour changer d'hébergeur : modifier ici, puis `npm run pages`.
-const SITE_URL = "https://vegadarkk.github.io/Clementine-Romain/";
+const SITE_URL = "https://clementine-et-romain.pages.dev/";
 // Référencement : true = le site peut apparaître sur Google ; false = caché (noindex + robots.txt fermé).
-const INDEXABLE = false;
+const INDEXABLE = true;
 // Anciennes adresses redirigées automatiquement vers SITE_URL (ex. l'adresse GitHub Pages après un déménagement).
-const OLD_SITES = [];
+const OLD_SITES = ["https://vegadarkk.github.io/Clementine-Romain/"];
 // Pages jamais référencées (page d'erreur, comparatif des logos réservé aux mariés).
 const PRIVATE_PAGES = ["404.html", "logos.html"];
 const pageUrl = (page) => SITE_URL + (page === "index.html" ? "" : page.replace(/\.html$/, ""));
@@ -214,8 +214,15 @@ const SCRIPTS = `<script src="assets/vendor/gsap.min.js" defer></script>
   <script src="assets/vendor/lenis.min.js" defer></script>
   <script src="assets/js/main.js" defer></script>`;
 
+// Page 404 : base des liens relatifs = chemin du site (racine si la page est servie ailleurs)
+const BASE_PATH = new URL(SITE_URL).pathname;
+const BASE = `<base href="${BASE_PATH}">
+  <script>
+    if (location.pathname.indexOf(${JSON.stringify(BASE_PATH)}) !== 0) document.querySelector("base").setAttribute("href", "/");
+  </script>`;
+
 const BLOCKS = {
-  HEAD, HEADER, FOOTER, SCRIPTS,
+  HEAD, HEADER, FOOTER, SCRIPTS, BASE,
   PAYSAGE: landscape("landscape--hero"),
   // Programme : paysage large, sans soleil dessiné (le vrai soleil se couche derrière).
   // Calé en haut (YMin) : si la hauteur manque, c'est le pied des montagnes qui est rogné, jamais les cimes.

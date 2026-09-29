@@ -15,15 +15,21 @@ Site **100 % statique** (HTML, CSS, JavaScript), sans base de données ni serveu
 | `rsvp.html` | Formulaire de réponse envoyé automatiquement par e-mail |
 | `404.html` | Page introuvable |
 
-## Mise en ligne (GitHub Pages)
+## Mise en ligne
 
-1. **Rendre le dépôt public** : Settings → General → tout en bas « Danger Zone » → **Change visibility** → Public.
-2. **Activer Pages** : Settings → **Pages** → Build and deployment → Source : **Deploy from a branch** → branche `claude/eloquent-hamilton-t3b9w6` (ou `main` si la branche a été renommée/fusionnée), dossier **`/ (root)`** → Save.
-3. Après 1 à 2 minutes, le site est en ligne à l’adresse **https://vegadarkk.github.io/Clementine-Romain/**.
+**Adresse officielle : https://clementine-et-romain.pages.dev/** (Cloudflare Pages, gratuit, HTTPS).
 
-Chaque page porte la balise `noindex, nofollow` : le site n’apparaît pas sur Google, seules les personnes ayant le lien y accèdent. (Le fichier `robots.txt` n’a pas d’effet dans un sous-dossier GitHub Pages ; c’est la balise qui protège.)
-
-Si l’adresse finale change (autre compte, nom de domaine), mettre à jour `SITE_URL` dans `tools/build-pages.mjs` puis lancer `npm run pages` (sert à l’aperçu du lien partagé sur WhatsApp/SMS).
+- **Publier une mise à jour** : `cd tools && npm run pages`, puis depuis la racine `sh tools/deploy-cloudflare.sh`
+  (variables `CLOUDFLARE_API_TOKEN` et `CLOUDFLARE_ACCOUNT_ID` requises). Seuls les fichiers du site sont
+  publiés (`tools/dist.sh`) ; `_headers` ajoute les en-têtes de sécurité et le cache des polices.
+- **Ancienne adresse** : GitHub Pages (branche `claude/eloquent-hamilton-t3b9w6`, dossier racine) reste
+  active uniquement pour **rediriger automatiquement** les liens déjà partagés vers la nouvelle adresse.
+- **Google** : le site est référençable (`INDEXABLE = true` dans `tools/build-pages.mjs`), avec
+  `sitemap.xml`, `robots.txt` et des adresses canoniques. `logos.html` et `404.html` ne sont jamais
+  référencées. Pour accélérer l'indexation : Google Search Console → ajouter la propriété
+  `https://clementine-et-romain.pages.dev/` → envoyer `sitemap.xml`. Pour cacher de nouveau le site :
+  `INDEXABLE = false`, `npm run pages`, republier.
+- Changer d'adresse : `SITE_URL` (et `OLD_SITES` pour rediriger l'ancienne) dans `tools/build-pages.mjs`.
 
 ## Réponses RSVP par e-mail (à faire une seule fois)
 

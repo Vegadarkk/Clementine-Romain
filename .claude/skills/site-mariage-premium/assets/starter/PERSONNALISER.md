@@ -41,6 +41,7 @@ Pour tout retrouver : `grep -rn -i "clémentine\|clementine\|romain\|2027\|héry
   fichier). Titre du morceau et source audio (`data-src`) : bouton musique dans `build-pages.mjs`.
 - `404.html`, `logos.html` : titres et textes.
 - `README.md` : liens, adresse de réception, crédits.
+- `tools/deploy-cloudflare.sh` : nom du projet Cloudflare Pages (`--project-name`), si le site y est publié.
 
 ## Cartes (données géographiques)
 - `tools/build-map.mjs` + `tools/data/` : départements, lacs, trajet entre les lieux, pics, villages,

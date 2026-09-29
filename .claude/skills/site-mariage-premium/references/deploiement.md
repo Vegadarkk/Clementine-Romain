@@ -41,6 +41,15 @@ lui-même :
    donne le code, ajoute-le dans `HEAD` de `build-pages.mjs`) → envoyer `sitemap.xml`. Compter quelques
    jours à quelques semaines ; la recherche « Clémentine et Romain mariage » doit alors trouver le site.
 
+**Si la liaison Git échoue** (erreur 8000011 : l'application GitHub de Cloudflare n'est pas installée)
+et qu'un jeton `CLOUDFLARE_API_TOKEN` (droit « Cloudflare Pages : Edit ») est disponible, fais-le
+toi-même : `GET /accounts` pour l'identifiant du compte, `POST /accounts/<id>/pages/projects` avec
+`{"name": "…", "production_branch": "main"}` (projet **séparé** des projets existants de l'utilisateur),
+puis `sh tools/deploy-cloudflare.sh` (wrangler, envoi direct ; `CLOUDFLARE_ACCOUNT_ID` requis). Chaque
+mise à jour du site = `npm run pages` + ce script + `git push`. Publie d'abord sur Cloudflare et
+vérifie, **puis** pousse sur GitHub : la redirection de l'ancienne adresse ne doit partir que vers un
+site déjà en ligne. Vérifie en ligne avec curl (Chromium de l'environnement refuse le TLS du proxy).
+
 Cloudflare sert `/environs` au lieu de `/environs.html` (redirection 308) : les `canonical` et le sitemap
 utilisent déjà la forme sans `.html`, et `main.js` considère les deux formes comme la même page.
 

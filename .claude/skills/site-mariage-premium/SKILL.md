@@ -1,6 +1,6 @@
 ---
 name: site-mariage-premium
-description: Conçoit, anime, audite et met en ligne un site web de mariage premium (multi-pages statique, animations au scroll, programme de la journée, lieux et carte, hébergements, témoins, idées de sorties, formulaire RSVP envoyé par e-mail, musique d'ambiance, logo monogramme) hébergé gratuitement sur GitHub Pages. À utiliser dès qu'on demande un site de mariage, un site pour les invités, un « save the date » ou un faire-part en ligne, une page RSVP ou de réponse à l'invitation, ou qu'on transmet le mail ou les infos d'un couple (date, mairie, église, château, horaires, témoins, hébergements) pour en faire un site — même si le mot « site » n'apparaît pas, et aussi pour modifier ou améliorer un site de mariage existant. Wedding website, premium animated wedding site, RSVP page.
+description: Conçoit, anime, audite et met en ligne un site web de mariage premium (multi-pages statique, animations au scroll, programme de la journée, lieux et carte, hébergements, témoins, idées de sorties, formulaire RSVP envoyé par e-mail, musique d'ambiance, logo monogramme) hébergé gratuitement (GitHub Pages, ou Cloudflare Pages pour une adresse sans le pseudo GitHub). À utiliser dès qu'on demande un site de mariage, un site pour les invités, un « save the date » ou un faire-part en ligne, une page RSVP ou de réponse à l'invitation, ou qu'on transmet le mail ou les infos d'un couple (date, mairie, église, château, horaires, témoins, hébergements) pour en faire un site — même si le mot « site » n'apparaît pas, et aussi pour modifier ou améliorer un site de mariage existant. Wedding website, premium animated wedding site, RSVP page.
 ---
 
 # Site de mariage premium
@@ -8,7 +8,7 @@ description: Conçoit, anime, audite et met en ligne un site web de mariage prem
 Ce skill reprend tout ce qui a été appris en créant le site de Clémentine & Romain
 (https://vegadarkk.github.io/Clementine-Romain/). C'est un site statique multi-pages en HTML/CSS/JS
 sans framework, avec GSAP (ScrollTrigger, SplitText) et Lenis pour le mouvement, Leaflet pour la carte
-et FormSubmit pour les réponses. Il est hébergé gratuitement sur GitHub Pages.
+et FormSubmit pour les réponses. Il est hébergé gratuitement sur GitHub Pages, ou sur Cloudflare Pages (`nom.pages.dev`) si l'adresse ne doit pas montrer le pseudo GitHub.
 
 Un **kit de démarrage complet** et fonctionnel est fourni dans `assets/starter/` : pages, styles,
 scripts, générateurs (logo, fleurs, cartes, icônes, gabarit commun), polices et bibliothèques.
@@ -171,6 +171,6 @@ sont celles du projet d'origine : garde leur structure et leurs attributs `data-
 - `references/pieges.md` : bugs déjà rencontrés, leur cause et leur correction. À lire avant de modifier
   une animation, la carte, les filtres ou le formulaire.
 - `references/audit.md` : protocole d'audit et utilisation des scripts.
-- `references/deploiement.md` : GitHub Pages, cache, FormSubmit, vérification en ligne, README.
+- `references/deploiement.md` : GitHub Pages, Cloudflare Pages, référencement Google, cache, FormSubmit, vérification en ligne, README.
 - `scripts/` : `audit_axe.cjs`, `audit_console.cjs`, `captures.cjs`, `verif_en_ligne.sh`, `images_webp.py`,
   `photos_commons.py` (photos libres des lieux, avec crédits).
