@@ -535,8 +535,9 @@
         phase += (dt / 1000) * (0.85 + closeness * 1.5);
         const t = phase % 1;
         const bump = (c, w) => Math.max(0, 1 - Math.abs(t - c) / w);
-        const beat = 1 + 0.26 * bump(0.08, 0.1) + 0.16 * bump(0.3, 0.1);
-        gsap.set(heartSvg, { scale: beat * (1 + closeness * 0.25) });
+        // Petit cœur loin du couple, presque la taille du disque tout près (battement adouci quand il est grand)
+        const beat = 1 + (0.26 - 0.14 * closeness) * bump(0.08, 0.1) + (0.16 - 0.08 * closeness) * bump(0.3, 0.1);
+        gsap.set(heartSvg, { scale: beat * (0.56 + 2.84 * closeness) });
         if (Math.floor(phase) !== lastBeat) {
           lastBeat = Math.floor(phase);
           const wave = document.createElement("i");

@@ -62,7 +62,8 @@ l'adapter. Les fonctions JS citées sont dans `assets/js/main.js`, sauf mention 
   compte à rebours (`data-unit`), boutons « Je réponds » / « Le programme ».
 - **Cœur vivant au survol du couple** : `.hero__arch[data-cursor-heart][data-heart-focus="0.466 0.585"]`
   (point du baiser dans l'image, en fractions). Le curseur devient un disque avec un vrai cœur SVG qui
-  **bat** (double battement calculé à chaque image). Le rythme passe de 50 à 140 battements par minute
+  **bat** (double battement calculé à chaque image) et **grandit** avec la proximité : petit loin du couple,
+  presque la taille du disque tout près (échelle 0,56 → 3,4, battement adouci quand il est grand). Le rythme passe de 50 à 140 battements par minute
   quand on approche du point focal, avec une onde à chaque battement, une lueur, et de petits cœurs qui
   s'envolent tout près. Un clic lance une gerbe. Le point focal tient compte de `object-fit: cover`.
   Pour une autre photo, repère le point sur l'image et mets à jour `data-heart-focus`.
