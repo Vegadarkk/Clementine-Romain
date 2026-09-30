@@ -244,8 +244,8 @@
         if (window.__lenis) window.__lenis.start();
         gateDone();
       };
-      // Faire-part à volets (CSS) : le cachet se brise, les rubans glissent, puis les volets s'ouvrent ;
-      // l'accueil commence à s'animer derrière pendant qu'ils pivotent
+      // Ouverture (CSS) : le cachet se brise, le ruban glisse, une lumière et une gerbe de pétales naissent
+      // du cachet ; l'accueil commence à s'animer sous la lumière, qui se dissipe ensuite
       if (motion) {
         gate.classList.add("is-opening");
         setTimeout(gateDone, 1000);
