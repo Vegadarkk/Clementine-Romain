@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Choix de l’écran d’accueil · Clémentine &amp; Romain</title>
+  <meta name="description" content="Trois écrans d’accueil animés pour le site du mariage de Clémentine et Romain : la version actuelle et deux nouvelles propositions.">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#FFF3E6">
+  <meta name="color-scheme" content="only light">
+  <meta name="darkreader-lock">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/cormorant-garamond-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/jost-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/style.css?v=c94e2ab8">
+  <style>
+    /* Même mise en page que les choix du logo et du faire-part */
+    .lg { padding: clamp(1.2rem, 3vw, 2rem) 0 clamp(3rem, 8vw, 6rem); }
+    .lg-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: clamp(2.5rem, 7vw, 5rem); font-size: .8rem; letter-spacing: .16em; text-transform: uppercase; }
+    .lg-top a { color: var(--ink); text-decoration: none; display: inline-flex; align-items: center; gap: .5rem; }
+    .lg-top a:hover { color: var(--fuchsia); }
+    .lg-top .icon { width: 1rem; height: 1rem; transform: scaleX(-1); }
+    .lg-top span { color: var(--moss-deep); }
+
+    .lg-head { text-align: center; max-width: 800px; margin: 0 auto clamp(3rem, 7vw, 5rem); }
+    .lg-head h1 { margin: 0; font: 500 clamp(2.4rem, 6vw, 4.2rem)/1.08 var(--f-display); text-wrap: balance; }
+    .lg-head h1 em { color: var(--fuchsia); }
+    .lg-head .lead { margin: 1.2rem auto 0; max-width: 62ch; text-wrap: pretty; }
+    .lg-how { display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem 1.4rem; margin: 1.8rem 0 0; padding: 0; list-style: none; font-size: .9rem; color: var(--ink-soft); }
+    .lg-how li { display: inline-flex; align-items: center; gap: .45rem; }
+    .lg-how b { display: inline-grid; place-items: center; width: 1.6rem; height: 1.6rem; border-radius: 50%; background: var(--blossom-soft); color: var(--fuchsia); font: 600 .8rem/1 var(--f-body); }
+
+    .lg-list { display: grid; gap: clamp(2.8rem, 6vw, 4.5rem); margin: 0; padding: 0; list-style: none; }
+    .piste { position: relative; display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); grid-template-rows: auto 1fr auto; grid-template-areas: "stage stage" "side phone" "act phone"; gap: clamp(1rem, 2.5vw, 2rem); padding: clamp(1rem, 2.5vw, 1.6rem); border-radius: var(--radius-lg); background: rgba(255, 249, 242, .6); border: 1px solid var(--line); transition: border-color .4s, box-shadow .4s; }
+    .piste.is-picked { border-color: var(--fuchsia); box-shadow: 0 0 0 2px var(--fuchsia), 0 30px 70px -40px rgba(194, 24, 91, .55); }
+    .piste__letter { position: absolute; top: -1.1rem; left: clamp(1rem, 2.5vw, 1.6rem); z-index: 2; display: grid; place-items: center; width: 2.6rem; height: 2.6rem; border-radius: 50%; background: var(--ink); color: var(--paper); font: 500 1.35rem/1 var(--f-display); box-shadow: 0 8px 18px -8px rgba(47, 56, 41, .6); }
+    .piste--new .piste__letter { background: var(--fuchsia); }
+
+    /* Aperçu jouable (écran d'ordinateur ; téléphone en petit à côté) */
+    .stage { grid-area: stage; align-self: start; justify-self: center; width: 100%; max-width: 1000px; min-width: 0; position: relative; overflow: hidden; border-radius: var(--radius); background: #FFF3E6; box-shadow: var(--shadow-card); border: 1px solid var(--line); aspect-ratio: 16 / 10; }
+    .stage iframe { position: absolute; left: 0; top: 0; width: 1280px; height: 800px; border: 0; transform-origin: 0 0; }
+    .stage__hint { position: absolute; left: 50%; bottom: .8rem; z-index: 1; transform: translateX(-50%); padding: .35rem .8rem; border-radius: 999px; background: rgba(47, 56, 41, .78); color: var(--paper); font-size: .72rem; letter-spacing: .06em; pointer-events: none; white-space: nowrap; }
+
+    .piste__side { grid-area: side; display: flex; flex-direction: column; gap: clamp(.8rem, 2vw, 1.1rem); min-width: 0; }
+    .piste__side h2 { margin: .4rem 0 0; font: 500 clamp(1.9rem, 3.4vw, 2.5rem)/1.1 var(--f-display); }
+    .piste__side h2 em { color: var(--fuchsia); }
+    .piste__side > p { margin: 0; color: var(--ink-soft); font-size: .98rem; max-width: 60ch; }
+    .piste__badge { align-self: flex-start; display: inline-flex; align-items: center; gap: .4rem; padding: .35rem .8rem; border-radius: 999px; font-size: .66rem; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; }
+    .piste__badge--now { background: var(--sage-soft); color: var(--moss-deep); }
+    .piste__badge--new { background: var(--fuchsia); color: var(--paper); }
+    .steps { display: grid; gap: .45rem; margin: 0; padding: 0; list-style: none; font-size: .9rem; color: var(--ink-soft); counter-reset: st; }
+    .steps li { position: relative; padding-left: 1.6rem; counter-increment: st; }
+    .steps li::before { content: counter(st); position: absolute; left: 0; top: .12rem; display: grid; place-items: center; width: 1.1rem; height: 1.1rem; border-radius: 50%; background: var(--blossom-soft); color: var(--fuchsia-deep); font: 600 .62rem/1 var(--f-body); }
+
+    .phone { grid-area: phone; align-self: start; margin: 0; display: grid; justify-items: center; gap: .6rem; }
+    .phone__device { position: relative; width: 214px; padding: 10px; border-radius: 36px; background: #22271F; box-shadow: 0 30px 50px -28px rgba(34, 39, 31, .7), inset 0 0 0 1.5px #3A4234; }
+    .phone__screen { position: relative; overflow: hidden; width: 194px; height: 420px; border-radius: 27px; background: #FFF3E6; }
+    .phone__screen iframe { position: absolute; left: 0; top: 0; width: 390px; height: 844px; border: 0; transform-origin: 0 0; transform: scale(.4974); }
+    .phone figcaption { font-size: .78rem; letter-spacing: .06em; color: var(--ink-soft); }
+
+    .piste__actions { grid-area: act; align-self: end; display: flex; flex-wrap: wrap; align-items: center; gap: .7rem 1rem; }
+    .pick { display: inline-flex; align-items: center; gap: .55rem; padding: .8rem 1.3rem; border-radius: 999px; border: 1px solid var(--fuchsia); background: transparent; color: var(--fuchsia); font: 500 .78rem/1 var(--f-body); letter-spacing: .14em; text-transform: uppercase; cursor: pointer; transition: background-color .3s, color .3s, transform .3s var(--ease); }
+    .pick .icon { width: 1rem; height: 1rem; }
+    .pick:hover { transform: translateY(-2px); }
+    .pick[aria-pressed="true"] { background: var(--fuchsia); color: var(--paper); }
+    .pick[aria-pressed="true"] .icon { fill: currentColor; }
+    .try { display: inline-flex; align-items: center; gap: .4rem; font-size: .88rem; color: var(--moss-deep); }
+    .try .icon { width: .95rem; height: .95rem; }
+
+    .lg-choice { position: sticky; bottom: calc(1rem + env(safe-area-inset-bottom, 0px)); z-index: 5; display: flex; justify-content: center; margin-top: 2rem; pointer-events: none; }
+    .lg-choice p { margin: 0; padding: .8rem 1.4rem; border-radius: 999px; background: var(--ink); color: var(--paper); font-size: .9rem; box-shadow: var(--shadow-soft); pointer-events: auto; text-align: center; }
+    .lg-choice strong { color: var(--blossom); font-weight: 500; }
+
+    .lg-foot { margin-top: clamp(3rem, 7vw, 5rem); text-align: center; color: var(--ink-soft); font-size: .88rem; }
+    .lg-foot p { margin: .3rem auto; max-width: 66ch; }
+
+    @media (max-width: 900px) {
+      .piste { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; grid-template-areas: "side" "stage" "act"; padding-top: 2rem; }
+      .phone { display: none; }
+      .stage { aspect-ratio: 390 / 844; max-width: 420px; width: 100%; justify-self: center; }
+      .stage iframe { width: 390px; height: 844px; }
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .lg-head, .piste { animation: lg-in 1s var(--ease) both; }
+      .piste:nth-child(2) { animation-delay: .08s; } .piste:nth-child(3) { animation-delay: .16s; }
+      @keyframes lg-in { from { opacity: 0; transform: translateY(24px); } }
+    }
+  </style>
+</head>
+<body>
+  <main class="lg container" id="contenu">
+    <div class="lg-top">
+      <a href="index.html"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=7fa75719#i-arrow-right"/></svg>Retour au site</a>
+      <span>Clémentine &amp; Romain · 03 · 07 · 2027</span>
+    </div>
+
+    <header class="lg-head">
+      <p class="overline">Pour Clémentine</p>
+      <h1>Quel écran d’accueil pour <em>vos invités</em>&nbsp;?</h1>
+      <p class="lead">C’est la première chose qu’ils verront en cliquant sur le lien du faire-part&nbsp;: le cachet de cire à briser pour entrer sur le site. Voici la version actuelle et deux nouvelles propositions.</p>
+      <ul class="lg-how">
+        <li><b>1</b>Cliquez sur «&nbsp;Ouvrir l’invitation&nbsp;» dans l’aperçu</li>
+        <li><b>2</b>«&nbsp;Rejouer&nbsp;» pour la revoir</li>
+        <li><b>3</b>Ou essayez-la en vrai, avec la musique</li>
+      </ul>
+    </header>
+
+    <ol class="lg-list">
+      <li class="piste" id="volets" data-piste="A · Le faire-part à volets">
+        <span class="piste__letter" aria-hidden="true">A</span>
+        <div class="stage"><iframe src="assets/choix-ouverture/volets-ordi.html" data-desk="assets/choix-ouverture/volets-ordi.html" data-mob="assets/choix-ouverture/volets-mobile.html" title="Aperçu jouable : le faire-part à volets" loading="lazy"></iframe><span class="stage__hint">Aperçu jouable</span></div>
+        <div class="piste__side">
+          <span class="piste__badge piste__badge--now">Version actuelle</span>
+          <h2>A · Le faire-part <em>à volets</em></h2>
+          <p>Celui qui est en ligne aujourd’hui. Le faire-part s’ouvre au milieu comme deux volets.</p>
+          <ol class="steps">
+            <li>Le cachet se brise, le ruban se retire.</li>
+            <li>Les deux volets pivotent vers l’extérieur et dévoilent l’accueil.</li>
+          </ol>
+        </div>
+        <figure class="phone"><div class="phone__device"><div class="phone__screen"><iframe src="assets/choix-ouverture/volets-mobile.html" title="Aperçu sur téléphone : le faire-part à volets" loading="lazy" data-phone></iframe></div></div><figcaption>Sur téléphone</figcaption></figure>
+        <div class="piste__actions">
+          <button class="pick" type="button" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=7fa75719#i-heart"/></svg>Je choisis celui-ci</button>
+          <a class="try" href="https://clementine-et-romain.pages.dev/" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=7fa75719#i-external-link"/></svg>L’essayer sur le site</a>
+        </div>
+      </li>
+
+      <li class="piste piste--new" id="petales" data-piste="B · L’envolée de pétales">
+        <span class="piste__letter" aria-hidden="true">B</span>
+        <div class="stage"><iframe src="assets/choix-ouverture/petales-ordi.html" data-desk="assets/choix-ouverture/petales-ordi.html" data-mob="assets/choix-ouverture/petales-mobile.html" title="Aperçu jouable : l’envolée de pétales" loading="lazy"></iframe><span class="stage__hint">Aperçu jouable</span></div>
+        <div class="piste__side">
+          <span class="piste__badge piste__badge--new">Nouvelle proposition</span>
+          <h2>B · L’envolée <em>de pétales</em></h2>
+          <p>Le même faire-part, d’un seul tenant&nbsp;: plus de rainure au milieu. C’est l’ouverture qui change.</p>
+          <ol class="steps">
+            <li>Le cachet se brise, le ruban glisse.</li>
+            <li>Une lumière naît du cachet et une gerbe de pétales jaillit.</li>
+            <li>La lumière se dissipe doucement sur l’accueil.</li>
+          </ol>
+        </div>
+        <figure class="phone"><div class="phone__device"><div class="phone__screen"><iframe src="assets/choix-ouverture/petales-mobile.html" title="Aperçu sur téléphone : l’envolée de pétales" loading="lazy" data-phone></iframe></div></div><figcaption>Sur téléphone</figcaption></figure>
+        <div class="piste__actions">
+          <button class="pick" type="button" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=7fa75719#i-heart"/></svg>Je choisis celui-ci</button>
+          <a class="try" href="https://petales.clementine-et-romain.pages.dev/" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=7fa75719#i-external-link"/></svg>L’essayer sur le site</a>
+        </div>
+      </li>
+
+      <li class="piste piste--new" id="enveloppe" data-piste="C · L’enveloppe scellée">
+        <span class="piste__letter" aria-hidden="true">C</span>
+        <div class="stage"><iframe src="assets/choix-ouverture/enveloppe-ordi.html" data-desk="assets/choix-ouverture/enveloppe-ordi.html" data-mob="assets/choix-ouverture/enveloppe-mobile.html" title="Aperçu jouable : l’enveloppe scellée" loading="lazy"></iframe><span class="stage__hint">Aperçu jouable</span></div>
+        <div class="piste__side">
+          <span class="piste__badge piste__badge--new">Nouvelle proposition</span>
+          <h2>C · L’enveloppe <em>scellée</em></h2>
+          <p>Tout l’écran devient le dos d’une enveloppe&nbsp;: vos prénoms sur un grand rabat, fermé par le ruban et le cachet. Le faire-part par e-mail est l’enveloppe, le site l’ouvre.</p>
+          <ol class="steps">
+            <li>Le cachet se brise, le ruban glisse.</li>
+            <li>Le rabat se soulève et dévoile sa doublure.</li>
+            <li>L’enveloppe descend et libère la carte, qui s’efface sur l’accueil.</li>
+          </ol>
+        </div>
+        <figure class="phone"><div class="phone__device"><div class="phone__screen"><iframe src="assets/choix-ouverture/enveloppe-mobile.html" title="Aperçu sur téléphone : l’enveloppe scellée" loading="lazy" data-phone></iframe></div></div><figcaption>Sur téléphone</figcaption></figure>
+        <div class="piste__actions">
+          <button class="pick" type="button" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=7fa75719#i-heart"/></svg>Je choisis celui-ci</button>
+          <a class="try" href="https://enveloppe.clementine-et-romain.pages.dev/" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=7fa75719#i-external-link"/></svg>L’essayer sur le site</a>
+        </div>
+      </li>
+    </ol>
+
+    <div class="lg-choice" data-choice hidden><p role="status" aria-live="polite">Votre choix&nbsp;: <strong data-choice-name></strong>. Il ne reste qu’à nous le dire&nbsp;!</p></div>
+
+    <footer class="lg-foot">
+      <p>Sur le vrai site, l’écran ne s’affiche qu’une fois par visite&nbsp;: pour le revoir, fermez l’onglet et cliquez à nouveau sur «&nbsp;L’essayer sur le site&nbsp;».</p>
+      <p>Dans les trois cas, le reste du site ne change pas, et tout peut encore être ajusté.</p>
+    </footer>
+  </main>
+
+  <script>
+    (function () {
+      /* ---------- Choix (mémorisé sur cet appareil) ---------- */
+      var cards = document.querySelectorAll(".piste");
+      var bar = document.querySelector("[data-choice]");
+      var name = document.querySelector("[data-choice-name]");
+      var store = null;
+      try { store = window.localStorage; } catch (e) {}
+      function pick(id) {
+        var chosen = null;
+        cards.forEach(function (c) {
+          var on = c.id === id;
+          c.classList.toggle("is-picked", on);
+          var b = c.querySelector(".pick");
+          b.setAttribute("aria-pressed", String(on));
+          b.lastChild.textContent = on ? "Mon préféré" : "Je choisis celui-ci";
+          if (on) chosen = c;
+        });
+        bar.hidden = !chosen;
+        if (chosen) name.textContent = chosen.getAttribute("data-piste");
+        try { id ? store.setItem("cr-ouverture", id) : store.removeItem("cr-ouverture"); } catch (e) {}
+      }
+      cards.forEach(function (c) {
+        c.querySelector(".pick").addEventListener("click", function () {
+          pick(c.classList.contains("is-picked") ? null : c.id);
+        });
+      });
+      var saved = null;
+      try { saved = store && store.getItem("cr-ouverture"); } catch (e) {}
+      if (saved && document.getElementById(saved)) pick(saved);
+
+      /* ---------- Aperçus : écran d'ordinateur réduit à la colonne ; version téléphone sur petit écran ---------- */
+      var narrow = window.matchMedia("(max-width: 900px)");
+      function fit() {
+        document.querySelectorAll(".stage iframe").forEach(function (f) {
+          var want = narrow.matches ? f.getAttribute("data-mob") : f.getAttribute("data-desk");
+          if (f.getAttribute("src") !== want) f.setAttribute("src", want);
+          var w = f.parentNode.clientWidth;
+          f.style.transform = "scale(" + (w / (narrow.matches ? 390 : 1280)) + ")";
+        });
+      }
+      fit();
+      var t;
+      window.addEventListener("resize", function () { clearTimeout(t); t = setTimeout(fit, 100); });
+    })();
+  </script>
+</body>
+</html>

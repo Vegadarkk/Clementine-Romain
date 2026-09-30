@@ -92,6 +92,7 @@ Détail et fichiers dans `references/fonctionnalites.md`. Le socle habituel :
 | Environs | idées du .docx par catégorie, filtres, carte Leaflet, idées bonus | filtres en fondu en cascade, carte synchronisée |
 | RSVP | date limite, noms (enfants compris), présence Oui/Non, allergies, petit mot, envoi automatique par e-mail | confettis, validation douce, réponse mémorisée |
 | 404 + `logos.html` | page d'erreur ; comparatif des pistes de logo à montrer au couple | — |
+| `choix-ouverture.html` (privée) | choix de l'écran d'accueil animé : aperçus jouables (ordinateur + téléphone, « Rejouer ») et lien vers chaque version en ligne (adresses d'aperçu Cloudflare `--branch <nom>`) | prototypes autonomes dans `assets/choix-ouverture/` |
 | `choix-faire-part.html` + `faire-part.html` (privées) | choix du faire-part par e-mail (comme les logos), puis envoi par copier-coller dans Hotmail/Gmail, liens vers l'accueil | e-mail en tableaux, visuels @2x rendus depuis le site |
 
 Sur toutes les pages : rideau de transition et navigation sans rechargement (`nav.js` : la musique
