@@ -128,7 +128,19 @@ const HEAD = `${REDIRECT}<meta name="viewport" content="width=device-width, init
       try { l = window.localStorage; } catch (e) {}
       // Écran « Ouvrir l'invitation » à la première page de la visite : son clic autorise la musique
       // (sauf si le visiteur l'a déjà refusée, et jamais pour les robots d'indexation)
-      if (s && !s.getItem("cr-gate") && !(l && l.getItem("cr-music-off") === "1") && !/bot|crawl|spider|lighthouse|slurp/i.test(navigator.userAgent)) h.classList.add("gate");
+      if (s && !s.getItem("cr-gate") && !(l && l.getItem("cr-music-off") === "1") && !/bot|crawl|spider|lighthouse|slurp/i.test(navigator.userAgent)) {
+        h.classList.add("gate");
+        // Arrivée ailleurs que sur l'accueil (lien « Répondre », adresse tapée…) : l'invité entre toujours par
+        // l'accueil, où l'écran l'attend ; une seule fois par visite, et seulement si la mémoire de visite marche
+        if (!h.hasAttribute("data-intro") && !s.getItem("cr-home")) {
+          try {
+            s.setItem("cr-home", "1");
+            h.style.visibility = "hidden";
+            setTimeout(function () { h.style.visibility = ""; }, 4000);
+            location.replace(new URL(".", location.href).href);
+          } catch (e) { h.style.visibility = ""; }
+        }
+      }
       setTimeout(function () { if (!window.__crReady) h.classList.remove("motion", "intro", "curtain-in", "gate"); }, 5000);
       if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       h.classList.add("motion");
@@ -293,7 +305,7 @@ for (const page of PAGES) {
 /* ------------------------------------------- Moteurs de recherche : robots.txt et sitemap.xml */
 const publicPages = PAGES.filter((p) => !PRIVATE_PAGES.includes(p));
 writeFileSync(new URL("../robots.txt", import.meta.url), INDEXABLE
-  ? `User-agent: *\nDisallow: /logos\nDisallow: /logos.html\n\nSitemap: ${SITE_URL}sitemap.xml\n`
+  ? `User-agent: *\n${PRIVATE_PAGES.filter((p) => p !== "404.html").map((p) => `Disallow: /${p.replace(/\.html$/, "")}\nDisallow: /${p}\n`).join("")}\nSitemap: ${SITE_URL}sitemap.xml\n`
   : "User-agent: *\nDisallow: /\n");
 const today = new Date().toISOString().slice(0, 10);
 const sitemapUrl = new URL("../sitemap.xml", import.meta.url);

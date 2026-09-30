@@ -83,6 +83,9 @@ l'adapter. Les fonctions JS citées sont dans `assets/js/main.js`, sauf mention 
   clic autorise la musique, qui continue ensuite de page en page (Chrome garde l'autorisation lors d'une
   navigation par lien). Ne se ferme **jamais** seul (demande du couple : l'invité clique pour entrer, même si le navigateur permettrait le son) ; la musique attend ce clic ; « Entrer sans musique » est mémorisé ;
   jamais pour les robots ; l'intro du monogramme et le héros attendent sa fermeture (`window.__crGate`).
+  **On entre toujours par l'accueil** : une première visite arrivée sur une autre page (lien « Répondre »
+  d'un e-mail, adresse tapée) est renvoyée à l'accueil dès le `<head>` (page masquée le temps du renvoi,
+  une seule fois par visite, jamais pour les robots ni si la mémoire de visite est indisponible).
   Mise en scène « faire-part à volets » (tout en CSS, `gf-*`) : deux volets de papier portant chacun le
   même décor (`gateArt()` dans `build-pages.mjs`, le second masqué aux lecteurs d'écran), ruban de satin
   scellé par un cachet de cire réaliste (`assets/img/cachet.svg`, généré par `node build-logo.mjs --cachet`).
@@ -274,9 +277,13 @@ Chaque page reste un vrai fichier HTML (adresse, référencement, accès direct,
   messagerie l'accepte). Tout ce qui est en écriture manuscrite (prénoms, signature) ou décoratif est une
   **image** @2x hébergée sur le site (`assets/img/faire-part/`, adresses absolues, **ne jamais les
   renommer** : des e-mails déjà envoyés y pointent), avec un texte de remplacement.
+- **Tous les liens de l'e-mail mènent à l'accueil** (écran d'invitation, puis accueil), jamais
+  directement à la page de réponse.
 - Visuels rendus depuis `tools/faire-part/visuels.html` (mêmes fleurs, cachet, ruban, photo en arche
   que le site) par `node faire-part/rendre.mjs` ; images sur le fond papier exact de l'e-mail, fleurs
   coupées seulement par le cadre, jamais au milieu de la carte.
+- **Page de choix** `choix-faire-part.html` (privée, comme `logos.html`) : chaque e-mail dans une boîte mail
+  (aperçu ordinateur réduit à la colonne) et dans un téléphone, « Je choisis celui-ci » mémorisé.
 - **Page d'aide privée** `faire-part.html` (hors menu, `noindex`) : aperçu de chaque e-mail, bouton
   « Copier le faire-part » (presse-papiers HTML + texte, chargé d'avance pour Safari, repli par sélection),
   « Copier l'objet », mode d'emploi Hotmail/Outlook et Gmail (invités en Cci, test à soi-même, envois par

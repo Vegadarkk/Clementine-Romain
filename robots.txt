@@ -1,5 +1,9 @@
 User-agent: *
 Disallow: /logos
 Disallow: /logos.html
+Disallow: /choix-faire-part
+Disallow: /choix-faire-part.html
+Disallow: /faire-part
+Disallow: /faire-part.html
 
 Sitemap: https://clementine-et-romain.pages.dev/sitemap.xml
