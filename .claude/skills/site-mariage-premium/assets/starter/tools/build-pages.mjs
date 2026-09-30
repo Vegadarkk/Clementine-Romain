@@ -145,16 +145,28 @@ const NAV = [
   ["environs", "environs.html", "Environs"],
 ];
 
+// Écran d'invitation « faire-part à volets » : le même décor est posé sur chaque volet (chaque volet en
+// montre sa moitié) ; le second exemplaire est masqué aux lecteurs d'écran.
+const GATE_SPRIG = '<path d="M4 42C5 24 15 10 38 4"/><path d="M9 33c5-2 9 0 10 4"/><path d="M9 33c1-5 5-8 9-8"/><path d="M15 22c5-3 9-1 11 2"/><path d="M15 22c1-5 6-7 10-7"/><path d="M24 13c4-2 8-1 10 1"/><circle class="gf-sprig__dot" cx="39.5" cy="4" r="1.8"/>';
+const gateArt = (copy) => `<div class="gf-art"><div class="gf-grain"></div><div class="gf-frame"></div>${["tl", "tr", "bl", "br"].map((c) => `<svg class="gf-sprig gf-sprig--${c}" viewBox="0 0 46 46" aria-hidden="true" focusable="false">${GATE_SPRIG}</svg>`).join("")}
+      <img class="gf-fl gf-fl--1" src="assets/img/bouquet.svg" alt="" width="420" height="340" loading="lazy"><img class="gf-fl gf-fl--2" src="assets/img/fleur-pivoine.svg" alt="" width="200" height="200" loading="lazy">
+      <div class="gf-txt"><p class="gf-over">Bienvenue</p><p class="gf-names script"${copy ? "" : ' id="gate-title"'}><span class="gf-n1">Clémentine</span> <span class="gf-amp">&amp;</span>&nbsp;Romain</p><p class="gf-tag">ont la joie de vous convier à leur mariage</p><p class="gf-date"${copy ? "" : ' id="gate-desc"'}>Samedi 3&nbsp;juillet&nbsp;2027 · Héry-sur-Alby</p></div></div>`;
+// Éclats de cire projetés quand le cachet se brise
+const GATE_CRUMBS = [[-44, 10, 6], [-26, -18, 5], [-8, 26, 4], [18, -22, 5], [34, 16, 6], [48, -6, 4], [6, 38, 5]]
+  .map(([dx, dy, sz]) => `<span class="gf-crumb" style="--dx: ${dx}px; --dy: ${dy}px; --s: ${sz}px" aria-hidden="true"></span>`).join("");
+
 const HEADER = `${LOGO.symbols}
   <a class="skip-link" href="#contenu">Aller au contenu</a>
   <div class="gate-screen" data-gate role="dialog" aria-modal="true" aria-labelledby="gate-title" aria-describedby="gate-desc">
-    <img class="gate-screen__flower gate-screen__flower--1" src="assets/img/bouquet.svg" alt="" width="420" height="340">
-    <img class="gate-screen__flower gate-screen__flower--2" src="assets/img/fleur-pivoine.svg" alt="" width="200" height="200">
-    <div class="gate-screen__inner">
-      <svg class="gate-screen__mono" viewBox="0 0 240 300" aria-hidden="true" focusable="false"><use href="#logo-arche-date"></use></svg>
-      <p class="gate-screen__over">Bienvenue</p>
-      <p class="gate-screen__names script" id="gate-title">Clémentine <span>&amp;</span>&nbsp;Romain</p>
-      <p class="gate-screen__date" id="gate-desc">Samedi 3&nbsp;juillet&nbsp;2027 · Héry-sur-Alby</p>
+    <div class="gf-door gf-door--l">${gateArt(false)}<div class="gf-edge"></div><div class="gf-shade"></div></div>
+    <div class="gf-door gf-door--r" aria-hidden="true">${gateArt(true)}<div class="gf-edge"></div><div class="gf-shade"></div></div>
+    <div class="gf-seam" aria-hidden="true"></div>
+    <div class="petals gate-screen__petals" aria-hidden="true" data-petals="12"></div>
+    <div class="gf-ribbon" aria-hidden="true"><span class="gf-rib gf-rib--l"></span><span class="gf-rib gf-rib--r"></span></div>
+    <span class="gf-ripple" aria-hidden="true"></span>
+    <button class="gf-seal" type="button" data-gate-seal tabindex="-1" aria-hidden="true"><span class="gf-seal-in"><span class="gf-whole"><img src="assets/img/cachet.svg" alt="" width="300" height="300" loading="lazy"></span><span class="gf-half gf-half--l"><img src="assets/img/cachet.svg" alt="" width="300" height="300" loading="lazy"></span><span class="gf-half gf-half--r"><img src="assets/img/cachet.svg" alt="" width="300" height="300" loading="lazy"></span><span class="gf-sheen"></span></span></button>
+    ${GATE_CRUMBS}
+    <div class="gf-ui">
       <button class="btn gate-screen__open" type="button" data-gate-open><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg#i-heart"/></svg>Ouvrir l’invitation</button>
       <p class="gate-screen__note">La musique démarre à l’ouverture</p>
       <button class="gate-screen__silent" type="button" data-gate-silent>Entrer sans musique</button>

@@ -12,6 +12,8 @@ Pour tout retrouver : `grep -rn -i "clémentine\|clementine\|romain\|2027\|héry
   Ajuste aussi les couleurs du ciel du programme (`skyStops` dans `main.js`) à la palette.
 - `assets/fonts/` + `@font-face` en tête de `style.css` si tu changes de polices (`@fontsource/*` dans `tools/`).
 - `tools/build-flowers.mjs` : couleurs et formes des fleurs → `npm run flowers`.
+- `tools/build-pages.mjs` : textes de l'écran d'invitation (`gateArt()` : prénoms, accroche, date, lieu)
+  puis `node build-logo.mjs --cachet` pour regénérer le cachet de cire aux nouvelles initiales.
 - `tools/build-logo.mjs` : initiales (`glyph(PINYON, "C", …)` et `glyph(PINYON, "R", …)` dans `monogram()`), textes
   (« 03 · 07 · 2027 », prénoms en capitales, « samedi 3 juillet 2027 ») → `npm run logo` (site + favicon)
   et `npm run logos` (pistes pour `logos.html`).

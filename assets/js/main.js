@@ -244,8 +244,13 @@
         if (window.__lenis) window.__lenis.start();
         gateDone();
       };
-      if (motion && gsap) gsap.to(gate, { clipPath: "inset(0% 0% 100% 0%)", duration: 1, ease: "expo.inOut", onComplete: end });
-      else end();
+      // Faire-part à volets (CSS) : le cachet se brise, les rubans glissent, puis les volets s'ouvrent ;
+      // l'accueil commence à s'animer derrière pendant qu'ils pivotent
+      if (motion) {
+        gate.classList.add("is-opening");
+        setTimeout(gateDone, 1000);
+        setTimeout(end, 2700);
+      } else end();
     };
     if (gateOn) {
       hidden = $$("body > *").filter((el) => el !== gate && !el.classList.contains("cursor") && !el.inert);
@@ -272,12 +277,8 @@
       };
       $("[data-gate-silent]", gate).addEventListener("click", silent);
       gate.addEventListener("keydown", (e) => { if (e.key === "Escape") { e.preventDefault(); silent(); } });
-      if (motion && gsap) {
-        gsap.timeline({ defaults: { ease: "power3.out" } })
-          .fromTo($(".gate-screen__mono", gate), { clipPath: "inset(100% 0% 0% 0%)", y: 20 }, { clipPath: "inset(0% 0% 0% 0%)", y: 0, duration: 1.4, ease: "power3.inOut" })
-          .fromTo($$(".gate-screen__inner > :not(svg)", gate), { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.9, stagger: 0.1 }, 0.7)
-          .fromTo($$(".gate-screen__flower", gate), { opacity: 0, scale: 0.6, rotation: (i) => (i ? 120 : -20) }, { opacity: (i) => (window.innerWidth < 560 ? [0.55, 0.7][i] : 1), scale: 1, rotation: (i) => (i ? 160 : 0), duration: 1.6, ease: "back.out(1.3)", stagger: 0.15 }, 0.4);
-      }
+      // Le cachet de cire ouvre aussi l'invitation (souris ; le clavier passe par le bouton)
+      $("[data-gate-seal]", gate).addEventListener("click", () => openBtn.click());
       requestAnimationFrame(() => openBtn.focus({ preventScroll: true }));
     } else {
       gateDone();

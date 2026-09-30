@@ -212,6 +212,95 @@ export function sceau({ id = "ls", paper = "#FFF9F2" } = {}) {
   };
 }
 
+// Cachet de cire réaliste (écran d'invitation) : cire épaisse et irrégulière, bourrelet en relief,
+// empreinte en creux, couronne de feuilles et monogramme C & R en relief, reflets et grain de la cire.
+// Éclairage venant d'en haut à gauche : ce qui dépasse est clair en haut à gauche et sombre en bas à droite.
+export function cachet({ id = "cw" } = {}) {
+  let sd = 11;
+  const rnd = () => ((sd = (sd * 16807) % 2147483647) - 1) / 2147483646;
+  const smooth = (pts) => {
+    let d = `M${r2(pts[0][0])} ${r2(pts[0][1])}`;
+    for (let i = 0; i < pts.length; i++) {
+      const p0 = pts[(i - 1 + pts.length) % pts.length], p1 = pts[i], p2 = pts[(i + 1) % pts.length], p3 = pts[(i + 2) % pts.length];
+      d += `C${r2(p1[0] + (p2[0] - p0[0]) / 6)} ${r2(p1[1] + (p2[1] - p0[1]) / 6)} ${r2(p2[0] - (p3[0] - p1[0]) / 6)} ${r2(p2[1] - (p3[1] - p1[1]) / 6)} ${r2(p2[0])} ${r2(p2[1])}`;
+    }
+    return d + "Z";
+  };
+  // Contour de la cire : légèrement irrégulier, avec quelques coulures
+  // Contour de la cire : ondulations douces + quelques bourrelets arrondis (jamais de pointes)
+  const lumps = Array.from({ length: 7 }, () => [rnd() * Math.PI * 2, 4 + rnd() * 6, 0.16 + rnd() * 0.16]);
+  const blob = [];
+  for (let i = 0; i < 96; i++) {
+    const a = (i / 96) * Math.PI * 2;
+    let rr = 128 + Math.sin(a * 3 + 0.7) * 2.6 + Math.sin(a * 5 + 2) * 1.6 + Math.sin(a * 9 + 1) * 0.8;
+    for (const [c, h, w] of lumps) {
+      let da = Math.abs(a - c) % (Math.PI * 2);
+      if (da > Math.PI) da = Math.PI * 2 - da;
+      rr += h * Math.exp(-((da / w) ** 2));
+    }
+    blob.push([150 + Math.cos(a) * rr, 150 + Math.sin(a) * rr]);
+  }
+  const outline = smooth(blob);
+  // Bourrelet de cire repoussé par le cachet (anneau irrégulier)
+  const ridge = [];
+  for (let i = 0; i < 48; i++) {
+    const a = (i / 48) * Math.PI * 2;
+    ridge.push([150 + Math.cos(a) * (113 + (rnd() - 0.5) * 3.5), 150 + Math.sin(a) * (113 + (rnd() - 0.5) * 3.5)]);
+  }
+  const ridgeD = smooth(ridge);
+  // Couronne de feuilles gravée (deux branches qui montent depuis le bas)
+  let wreath = "";
+  const R = 84;
+  for (const side of [-1, 1]) {
+    const n = 11;
+    for (let i = 0; i < n; i++) {
+      const t = i / (n - 1);
+      const a = 90 + side * (14 + t * 128);
+      const rad = (a * Math.PI) / 180;
+      const out = i % 2 ? 1 : -1;
+      const x = 150 + Math.cos(rad) * R, y = 150 + Math.sin(rad) * R;
+      wreath += leaf(x, y, a + side * 90 + out * side * 40, 13 - t * 5, 4.4 - t * 1.4, "FILL");
+    }
+    const a0 = 90 + side * 14, a1 = 90 + side * 142;
+    const p = (a) => [150 + Math.cos((a * Math.PI) / 180) * R, 150 + Math.sin((a * Math.PI) / 180) * R];
+    const [x0, y0] = p(a0), [x1, y1] = p(a1);
+    wreath += `<path d="M${r2(x0)} ${r2(y0)}A${R} ${R} 0 0 ${side > 0 ? 1 : 0} ${r2(x1)} ${r2(y1)}" fill="none" stroke="FILL" stroke-width="1.3"></path>`;
+  }
+  const relief = (markup, base, k = 1) => `
+  <g transform="translate(${1.5 * k} ${2 * k})" opacity=".6">${markup.replaceAll("FILL", "#4E0623")}</g>
+  <g transform="translate(${-1 * k} ${-1.2 * k})" opacity=".55">${markup.replaceAll("FILL", "#FF9CBE")}</g>
+  <g>${markup.replaceAll("FILL", base)}</g>`;
+  const mono = (fill) => placeMono(`${id}-${fill.replace(/[^a-z0-9]/gi, "")}`, 150, 147, 128, fill);
+  return {
+    viewBox: "0 0 300 300",
+    svg: `<defs>
+    <radialGradient id="${id}-wax" cx="44%" cy="40%" r="62%"><stop offset="0" stop-color="#D23A73"></stop><stop offset=".55" stop-color="#B3154F"></stop><stop offset=".86" stop-color="#8A0C3F"></stop><stop offset="1" stop-color="#63072C"></stop></radialGradient>
+    <linearGradient id="${id}-lit" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFB3CE" stop-opacity=".85"></stop><stop offset=".45" stop-color="#FFB3CE" stop-opacity="0"></stop><stop offset=".6" stop-color="#3D0418" stop-opacity="0"></stop><stop offset="1" stop-color="#3D0418" stop-opacity=".7"></stop></linearGradient>
+    <linearGradient id="${id}-dent" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4E0623" stop-opacity=".75"></stop><stop offset=".5" stop-color="#4E0623" stop-opacity="0"></stop><stop offset=".65" stop-color="#FF9CBE" stop-opacity="0"></stop><stop offset="1" stop-color="#FF9CBE" stop-opacity=".7"></stop></linearGradient>
+    <radialGradient id="${id}-disc" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#B8184F"></stop><stop offset=".8" stop-color="#A5134A"></stop><stop offset="1" stop-color="#8C0E40"></stop></radialGradient>
+    <linearGradient id="${id}-mono" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#DE4C82"></stop><stop offset="1" stop-color="#B8195A"></stop></linearGradient>
+    <radialGradient id="${id}-spec" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".42"></stop><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"></stop></radialGradient>
+    <clipPath id="${id}-clip"><path d="${outline}"></path></clipPath>
+    <filter id="${id}-grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" seed="4"></feTurbulence><feColorMatrix type="saturate" values="0"></feColorMatrix><feComponentTransfer><feFuncA type="table" tableValues="0 .09"></feFuncA></feComponentTransfer></filter>
+  </defs>
+  <path d="${outline}" fill="url(#${id}-wax)"></path>
+  <path d="${outline}" fill="none" stroke="url(#${id}-lit)" stroke-width="3.5"></path>
+  <path d="${ridgeD}" fill="none" stroke="url(#${id}-lit)" stroke-width="9" opacity=".9"></path>
+  <circle cx="150" cy="150" r="104" fill="url(#${id}-disc)"></circle>
+  <circle cx="150" cy="150" r="103" fill="none" stroke="url(#${id}-dent)" stroke-width="5"></circle>
+  <circle cx="150" cy="150" r="96" fill="none" stroke="#FF9CBE" stroke-opacity=".35" stroke-width="1.2" transform="translate(-.6 -.8)"></circle>
+  <circle cx="150" cy="150" r="96" fill="none" stroke="#4E0623" stroke-opacity=".45" stroke-width="1.2" transform="translate(.8 1)"></circle>
+  ${relief(wreath, "#B9195A", 0.7)}
+  <g transform="translate(2 2.6)" opacity=".72">${mono("#4E0623")}</g>
+  <g transform="translate(-1.2 -1.4)" opacity=".75">${mono("#FFA8C7")}</g>
+  ${mono(`url(#${id}-mono)`)}
+  <rect width="300" height="300" filter="url(#${id}-grain)" clip-path="url(#${id}-clip)"></rect>
+  <ellipse cx="104" cy="92" rx="74" ry="38" transform="rotate(-38 104 92)" fill="url(#${id}-spec)" clip-path="url(#${id}-clip)"></ellipse>
+  <path d="M62 118C70 88 92 66 122 56" fill="none" stroke="#FFFFFF" stroke-opacity=".32" stroke-width="2" stroke-linecap="round"></path>
+  <path d="M232 196C226 210 216 222 204 231" fill="none" stroke="#FFFFFF" stroke-opacity=".18" stroke-width="1.6" stroke-linecap="round"></path>`,
+  };
+}
+
 // D · L’Éditorial
 export function editorial({ id = "le", ink = "currentColor", accent = "#C2185B", sub = "#4E5E43" } = {}) {
   const names = textPath(CORMORANT, "CLÉMENTINE & ROMAIN", 180, 186, 16, 4.2).d;
@@ -226,6 +315,12 @@ export function editorial({ id = "le", ink = "currentColor", accent = "#C2185B",
 }
 
 const wrap = (m, color = "#2F3829", bg = "") => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${m.viewBox}" style="color:${color}${bg ? `;background:${bg}` : ""}">${m.svg}</svg>\n`;
+
+if (process.argv[2] === "--cachet") {
+  const m = cachet();
+  writeFileSync(new URL("../assets/img/cachet.svg", import.meta.url), `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${m.viewBox}">${m.svg}</svg>\n`);
+  console.log(`cachet.svg : ${(m.svg.length / 1024).toFixed(1)} Ko`);
+}
 
 if (process.argv[2] === "--pistes") {
   const dir = new URL("./out/logo/", import.meta.url);
