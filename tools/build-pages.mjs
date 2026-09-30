@@ -157,24 +157,38 @@ const NAV = [
   ["environs", "environs.html", "Environs"],
 ];
 
-// Écran d'invitation « faire-part à volets » : le même décor est posé sur chaque volet (chaque volet en
-// montre sa moitié) ; le second exemplaire est masqué aux lecteurs d'écran.
+// Écran d'invitation : faire-part d'un seul tenant, scellé par le ruban et le cachet de cire.
 const GATE_SPRIG = '<path d="M4 42C5 24 15 10 38 4"/><path d="M9 33c5-2 9 0 10 4"/><path d="M9 33c1-5 5-8 9-8"/><path d="M15 22c5-3 9-1 11 2"/><path d="M15 22c1-5 6-7 10-7"/><path d="M24 13c4-2 8-1 10 1"/><circle class="gf-sprig__dot" cx="39.5" cy="4" r="1.8"/>';
-const gateArt = (copy) => `<div class="gf-art"><div class="gf-grain"></div><div class="gf-frame"></div>${["tl", "tr", "bl", "br"].map((c) => `<svg class="gf-sprig gf-sprig--${c}" viewBox="0 0 46 46" aria-hidden="true" focusable="false">${GATE_SPRIG}</svg>`).join("")}
+const gateArt = () => `<div class="gf-art"><div class="gf-grain"></div><div class="gf-frame"></div>${["tl", "tr", "bl", "br"].map((c) => `<svg class="gf-sprig gf-sprig--${c}" viewBox="0 0 46 46" aria-hidden="true" focusable="false">${GATE_SPRIG}</svg>`).join("")}
       <img class="gf-fl gf-fl--1" src="assets/img/bouquet.svg" alt="" width="420" height="340" loading="lazy"><img class="gf-fl gf-fl--2" src="assets/img/fleur-pivoine.svg" alt="" width="200" height="200" loading="lazy">
-      <div class="gf-txt"><p class="gf-over">Bienvenue</p><p class="gf-names script"${copy ? "" : ' id="gate-title"'}><span class="gf-n1">Clémentine</span> <span class="gf-amp">&amp;</span>&nbsp;Romain</p><p class="gf-tag">ont la joie de vous convier à leur mariage</p><p class="gf-date"${copy ? "" : ' id="gate-desc"'}>Samedi 3&nbsp;juillet&nbsp;2027 · Héry-sur-Alby</p></div></div>`;
+      <div class="gf-txt"><p class="gf-over">Bienvenue</p><p class="gf-names script" id="gate-title"><span class="gf-n1">Clémentine</span> <span class="gf-amp">&amp;</span>&nbsp;Romain</p><p class="gf-tag">ont la joie de vous convier à leur mariage</p><p class="gf-date" id="gate-desc">Samedi 3&nbsp;juillet&nbsp;2027 · Héry-sur-Alby</p></div></div>`;
 // Éclats de cire projetés quand le cachet se brise
 const GATE_CRUMBS = [[-44, 10, 6], [-26, -18, 5], [-8, 26, 4], [18, -22, 5], [34, 16, 6], [48, -6, 4], [6, 38, 5]]
   .map(([dx, dy, sz]) => `<span class="gf-crumb" style="--dx: ${dx}px; --dy: ${dy}px; --s: ${sz}px" aria-hidden="true"></span>`).join("");
+// Gerbe de pétales qui jaillit du cachet à l'ouverture (tirage fixe : le même d'un déploiement à l'autre).
+// Directions et distances en fractions de --spread (réglé en CSS selon l'écran).
+const GATE_BURST = (() => {
+  let seed = 9;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
+  const colors = ["#F06292", "#FFB085", "#FFD9C7", "#E91E63", "#F8BBD0", "#C2185B"];
+  const n = 56;
+  return Array.from({ length: n }, (_, i) => {
+    const a = (i / n) * Math.PI * 2 + (rnd() - 0.5) * 0.4;
+    const d = 0.35 + rnd() * 0.65;
+    const w = 13 + rnd() * 14;
+    const v = (x) => x.toFixed(3);
+    return `<i style="width: ${w.toFixed(1)}px; height: ${(w * 0.78).toFixed(1)}px; background: ${colors[i % colors.length]}; --fx: ${v(Math.cos(a) * d)}; --fy: ${v(Math.sin(a) * d * 0.75 - 0.12)}; --ff: ${v(0.25 + rnd() * 0.35)}; --r: ${Math.round((rnd() - 0.5) * 520)}deg; --d: ${(1.5 + rnd() * 0.7).toFixed(2)}s; --w: ${(0.24 + rnd() * 0.18).toFixed(2)}s"></i>`;
+  }).join("");
+})();
 
 const HEADER = `${LOGO.symbols}
   <a class="skip-link" href="#contenu">Aller au contenu</a>
   <div class="gate-screen" data-gate role="dialog" aria-modal="true" aria-labelledby="gate-title" aria-describedby="gate-desc">
-    <div class="gf-door gf-door--l">${gateArt(false)}<div class="gf-edge"></div><div class="gf-shade"></div></div>
-    <div class="gf-door gf-door--r" aria-hidden="true">${gateArt(true)}<div class="gf-edge"></div><div class="gf-shade"></div></div>
-    <div class="gf-seam" aria-hidden="true"></div>
+    <div class="gf-panel">${gateArt()}</div>
     <div class="petals gate-screen__petals" aria-hidden="true" data-petals="12"></div>
     <div class="gf-ribbon" aria-hidden="true"><span class="gf-rib gf-rib--l"></span><span class="gf-rib gf-rib--r"></span></div>
+    <div class="gf-glow" aria-hidden="true"></div>
+    <div class="gf-burst" aria-hidden="true">${GATE_BURST}</div>
     <span class="gf-ripple" aria-hidden="true"></span>
     <button class="gf-seal" type="button" data-gate-seal tabindex="-1" aria-hidden="true"><span class="gf-seal-in"><span class="gf-whole"><img src="assets/img/cachet.svg" alt="" width="300" height="300" loading="lazy"></span><span class="gf-half gf-half--l"><img src="assets/img/cachet.svg" alt="" width="300" height="300" loading="lazy"></span><span class="gf-half gf-half--r"><img src="assets/img/cachet.svg" alt="" width="300" height="300" loading="lazy"></span><span class="gf-sheen"></span></span></button>
     ${GATE_CRUMBS}
