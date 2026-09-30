@@ -12,7 +12,7 @@
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/cormorant-garamond-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/jost-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css?v=c94e2ab8">
+  <link rel="stylesheet" href="assets/css/style.css?v=0886ee83">
   <style>
     /* Même mise en page que les choix du logo et du faire-part */
     .lg { padding: clamp(1.2rem, 3vw, 2rem) 0 clamp(3rem, 8vw, 6rem); }
@@ -46,7 +46,7 @@
     .piste__side h2 em { color: var(--fuchsia); }
     .piste__side > p { margin: 0; color: var(--ink-soft); font-size: .98rem; max-width: 60ch; }
     .piste__badge { align-self: flex-start; display: inline-flex; align-items: center; gap: .4rem; padding: .35rem .8rem; border-radius: 999px; font-size: .66rem; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; }
-    .piste__badge--now { background: var(--sage-soft); color: var(--moss-deep); }
+    .piste__badge--opt { background: var(--sage-soft); color: var(--moss-deep); }
     .piste__badge--new { background: var(--fuchsia); color: var(--paper); }
     .steps { display: grid; gap: .45rem; margin: 0; padding: 0; list-style: none; font-size: .9rem; color: var(--ink-soft); counter-reset: st; }
     .steps li { position: relative; padding-left: 1.6rem; counter-increment: st; }
@@ -97,7 +97,7 @@
     <header class="lg-head">
       <p class="overline">Pour Clémentine</p>
       <h1>Quel écran d’accueil pour <em>vos invités</em>&nbsp;?</h1>
-      <p class="lead">C’est la première chose qu’ils verront en cliquant sur le lien du faire-part&nbsp;: le cachet de cire à briser pour entrer sur le site. Voici la version actuelle et deux nouvelles propositions.</p>
+      <p class="lead">C’est la première chose qu’ils verront en cliquant sur le lien du faire-part&nbsp;: le cachet de cire à briser pour entrer sur le site. Voici la version en ligne et deux autres possibilités.</p>
       <ul class="lg-how">
         <li><b>1</b>Cliquez sur «&nbsp;Ouvrir l’invitation&nbsp;» dans l’aperçu</li>
         <li><b>2</b>«&nbsp;Rejouer&nbsp;» pour la revoir</li>
@@ -106,13 +106,13 @@
     </header>
 
     <ol class="lg-list">
-      <li class="piste" id="volets" data-piste="A · Le faire-part à volets">
+      <li class="piste piste--opt" id="volets" data-piste="A · Le faire-part à volets">
         <span class="piste__letter" aria-hidden="true">A</span>
         <div class="stage"><iframe src="assets/choix-ouverture/volets-ordi.html" data-desk="assets/choix-ouverture/volets-ordi.html" data-mob="assets/choix-ouverture/volets-mobile.html" title="Aperçu jouable : le faire-part à volets" loading="lazy"></iframe><span class="stage__hint">Aperçu jouable</span></div>
         <div class="piste__side">
-          <span class="piste__badge piste__badge--now">Version actuelle</span>
+          <span class="piste__badge piste__badge--opt">Autre possibilité</span>
           <h2>A · Le faire-part <em>à volets</em></h2>
-          <p>Celui qui est en ligne aujourd’hui. Le faire-part s’ouvre au milieu comme deux volets.</p>
+          <p>La première version. Le faire-part s’ouvre au milieu comme deux volets.</p>
           <ol class="steps">
             <li>Le cachet se brise, le ruban se retire.</li>
             <li>Les deux volets pivotent vers l’extérieur et dévoilent l’accueil.</li>
@@ -121,7 +121,7 @@
         <figure class="phone"><div class="phone__device"><div class="phone__screen"><iframe src="assets/choix-ouverture/volets-mobile.html" title="Aperçu sur téléphone : le faire-part à volets" loading="lazy" data-phone></iframe></div></div><figcaption>Sur téléphone</figcaption></figure>
         <div class="piste__actions">
           <button class="pick" type="button" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=7fa75719#i-heart"/></svg>Je choisis celui-ci</button>
-          <a class="try" href="https://clementine-et-romain.pages.dev/" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=7fa75719#i-external-link"/></svg>L’essayer sur le site</a>
+          <a class="try" href="https://volets.clementine-et-romain.pages.dev/" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=7fa75719#i-external-link"/></svg>L’essayer sur le site</a>
         </div>
       </li>
 
@@ -129,7 +129,7 @@
         <span class="piste__letter" aria-hidden="true">B</span>
         <div class="stage"><iframe src="assets/choix-ouverture/petales-ordi.html" data-desk="assets/choix-ouverture/petales-ordi.html" data-mob="assets/choix-ouverture/petales-mobile.html" title="Aperçu jouable : l’envolée de pétales" loading="lazy"></iframe><span class="stage__hint">Aperçu jouable</span></div>
         <div class="piste__side">
-          <span class="piste__badge piste__badge--new">Nouvelle proposition</span>
+          <span class="piste__badge piste__badge--new">En ligne sur le site</span>
           <h2>B · L’envolée <em>de pétales</em></h2>
           <p>Le même faire-part, d’un seul tenant&nbsp;: plus de rainure au milieu. C’est l’ouverture qui change.</p>
           <ol class="steps">
@@ -141,15 +141,15 @@
         <figure class="phone"><div class="phone__device"><div class="phone__screen"><iframe src="assets/choix-ouverture/petales-mobile.html" title="Aperçu sur téléphone : l’envolée de pétales" loading="lazy" data-phone></iframe></div></div><figcaption>Sur téléphone</figcaption></figure>
         <div class="piste__actions">
           <button class="pick" type="button" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=7fa75719#i-heart"/></svg>Je choisis celui-ci</button>
-          <a class="try" href="https://petales.clementine-et-romain.pages.dev/" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=7fa75719#i-external-link"/></svg>L’essayer sur le site</a>
+          <a class="try" href="https://clementine-et-romain.pages.dev/" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=7fa75719#i-external-link"/></svg>L’essayer sur le site</a>
         </div>
       </li>
 
-      <li class="piste piste--new" id="enveloppe" data-piste="C · L’enveloppe scellée">
+      <li class="piste piste--opt" id="enveloppe" data-piste="C · L’enveloppe scellée">
         <span class="piste__letter" aria-hidden="true">C</span>
         <div class="stage"><iframe src="assets/choix-ouverture/enveloppe-ordi.html" data-desk="assets/choix-ouverture/enveloppe-ordi.html" data-mob="assets/choix-ouverture/enveloppe-mobile.html" title="Aperçu jouable : l’enveloppe scellée" loading="lazy"></iframe><span class="stage__hint">Aperçu jouable</span></div>
         <div class="piste__side">
-          <span class="piste__badge piste__badge--new">Nouvelle proposition</span>
+          <span class="piste__badge piste__badge--opt">Autre possibilité</span>
           <h2>C · L’enveloppe <em>scellée</em></h2>
           <p>Tout l’écran devient le dos d’une enveloppe&nbsp;: vos prénoms sur un grand rabat, fermé par le ruban et le cachet. Le faire-part par e-mail est l’enveloppe, le site l’ouvre.</p>
           <ol class="steps">
@@ -170,7 +170,7 @@
 
     <footer class="lg-foot">
       <p>Sur le vrai site, l’écran ne s’affiche qu’une fois par visite&nbsp;: pour le revoir, fermez l’onglet et cliquez à nouveau sur «&nbsp;L’essayer sur le site&nbsp;».</p>
-      <p>Dans les trois cas, le reste du site ne change pas, et tout peut encore être ajusté.</p>
+      <p>Le site utilise aujourd’hui la version B. Si vous préférez A ou C, dites-le-nous&nbsp;: le changement est immédiat, et le reste du site ne bouge pas.</p>
     </footer>
   </main>
 

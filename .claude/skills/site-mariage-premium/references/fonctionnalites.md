@@ -86,13 +86,16 @@ l'adapter. Les fonctions JS citées sont dans `assets/js/main.js`, sauf mention 
   **On entre toujours par l'accueil** : une première visite arrivée sur une autre page (lien « Répondre »
   d'un e-mail, adresse tapée) est renvoyée à l'accueil dès le `<head>` (page masquée le temps du renvoi,
   une seule fois par visite, jamais pour les robots ni si la mémoire de visite est indisponible).
-  Mise en scène « faire-part à volets » (tout en CSS, `gf-*`) : deux volets de papier portant chacun le
-  même décor (`gateArt()` dans `build-pages.mjs`, le second masqué aux lecteurs d'écran), ruban de satin
+  Mise en scène « l'envolée de pétales » (tout en CSS, `gf-*`) : un faire-part d'un seul tenant
+  (`gateArt()` dans `build-pages.mjs` ; pas de rainure au milieu, qui ferait « livre »), ruban de satin
   scellé par un cachet de cire réaliste (`assets/img/cachet.svg`, généré par `node build-logo.mjs --cachet`).
   Entrée : cadre, fleurs, « Bienvenue », prénoms qui s'écrivent, ruban qui glisse, cachet qui se pose
-  (onde), bouton. Ouverture (classe `.is-opening`) : le cachet se brise en deux avec des éclats, les rubans
-  glissent, les volets pivotent en 3D (`rotateY ±104°`) ; le héros démarre à 1 s (`gateDone`), l'écran
-  disparaît à 2,7 s. Le cachet est aussi cliquable (souris) ; clavier : le bouton. Hauteurs réglées par
+  (onde), bouton. Ouverture (classe `.is-opening`) : le cachet se brise en deux avec des éclats, le ruban
+  glisse, une lumière crème naît du cachet et couvre l'écran (elle masque le fondu entre les deux
+  « Clémentine & Romain »), une gerbe de pétales jaillit (`GATE_BURST`, tirage fixe au build, portée
+  `--spread`), puis la lumière se dissipe ; le héros démarre à 1 s sous la lumière (`gateDone`), l'écran
+  disparaît à 2,7 s. Variantes proposées au couple (branches et adresses d'aperçu) : volets qui pivotent,
+  enveloppe scellée à rabat en ogive. Le cachet est aussi cliquable (souris) ; clavier : le bouton. Hauteurs réglées par
   variables (`--rib-y`, `--seal`) : texte ancré au-dessus du cachet, boutons en dessous, de 360×640 au
   paysage téléphone (844×390, accroche et note masquées sous 540 px de haut).
 - **Ruban défilant** (`fillMarquee()` / `marquee()`) : le groupe est dupliqué autant que nécessaire pour
