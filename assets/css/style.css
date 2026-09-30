@@ -467,6 +467,12 @@ html:not(.js) .countdown, html:not(.js) [data-ics] { display: none; }
 .domaine__count b { color: var(--fuchsia); font-weight: 600; }
 .credit { margin: clamp(1.6rem, 4vw, 2.4rem) 0 0; text-align: center; font-size: .8rem; color: var(--ink-soft); }
 .credit a { color: inherit; }
+/* Consigne du domaine (chiens non admis) : encart discret sous le plan */
+.domaine__notice { display: flex; align-items: center; gap: 1rem; width: fit-content; max-width: 44rem; margin: clamp(1.8rem, 4vw, 2.6rem) auto 0; padding: .95rem 1.4rem .95rem 1rem; border-radius: 20px; background: var(--paper); border: 1px solid rgba(194, 24, 91, .2); box-shadow: var(--shadow-card); color: var(--ink-soft); font-size: .98rem; line-height: 1.5; }
+.domaine__notice strong { color: var(--ink); font-weight: 600; }
+.domaine__notice-icon { flex: none; display: grid; place-items: center; width: 2.9rem; height: 2.9rem; border-radius: 50%; background: linear-gradient(135deg, var(--blossom), var(--peach)); color: var(--fuchsia-deep); }
+.domaine__notice-icon .icon { width: 1.35rem; height: 1.35rem; }
+.domaine__notice + .credit { margin-top: 1.2rem; }
 
 /* Avec JavaScript : un seul lieu affiché à la fois, fondu enchaîné */
 .js .domaine__viewer { display: grid; }
@@ -586,6 +592,9 @@ html:not(.js) .countdown, html:not(.js) [data-ics] { display: none; }
 .contact-card__icon .icon { width: 2.2rem; height: 2.2rem; stroke-width: 1.3; }
 .contact-card p { color: var(--ink-soft); }
 .contact-card .email { display: inline-block; margin: .2rem 0 1.2rem; font: 500 clamp(1.2rem, 2.6vw, 1.55rem)/1.3 var(--f-display); color: var(--fuchsia); word-break: break-word; }
+.contact-card .emails { display: flex; flex-direction: column; gap: .35rem; margin: .2rem 0 1.2rem; }
+.contact-card .emails .email { margin: 0; }
+@media (max-width: 640px) { .contact-card .emails { align-items: center; } }
 @media (max-width: 640px) { .contact-card { grid-template-columns: 1fr; text-align: center; justify-items: center; } .contact-card .btn-row { justify-content: center; } .contact-card .overline--left::before { display: block; } }
 
 /* ---------- Hébergements ---------- */
@@ -871,6 +880,16 @@ html.lightbox-lock, html.lightbox-lock body { overflow: hidden; }
 .guest__child input { width: 1.1rem; height: 1.1rem; accent-color: var(--fuchsia); margin: 0; }
 .guest__child:has(input:checked) { border-color: var(--peony); background: var(--blossom-soft); color: var(--fuchsia-deep); }
 .guest__child:has(input:focus-visible) { outline: 2px solid var(--fuchsia); outline-offset: 2px; }
+/* « Enfant » coché : l'âge apparaît juste à côté (demandé par le traiteur) */
+.guest__kid { display: flex; align-items: center; gap: .45rem; min-width: 0; }
+.guest__age { min-height: 52px; padding: 0 2.3rem 0 .95rem; border: 1px solid var(--peony); border-radius: 14px; background: var(--blossom-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A3144D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right .8rem center / 1rem; color: var(--fuchsia-deep); font: inherit; font-size: .9rem; -webkit-appearance: none; appearance: none; cursor: pointer; animation: guestIn .35s var(--ease); transition: border-color .25s, box-shadow .25s, background-color .25s; }
+.guest__age:hover { border-color: var(--fuchsia); }
+.guest__age:focus-visible { outline: none; border-color: var(--fuchsia); box-shadow: 0 0 0 4px rgba(240, 98, 146, .18); }
+.guest__age[aria-invalid="true"] { border-color: var(--fuchsia); background-color: #FFF5F8; box-shadow: 0 0 0 3px rgba(240, 98, 146, .22); }
+.guest__age[hidden] { display: none; }
+/* Précision sous une question (ex. pas de menu végétarien) */
+.form-note { display: flex; align-items: flex-start; gap: .6rem; margin: -.3rem 0 .9rem 2.6rem; padding: .7rem 1rem; border-radius: 14px; background: var(--blossom-soft); border: 1px dashed rgba(194, 24, 91, .3); color: var(--fuchsia-deep); font-size: .92rem; line-height: 1.45; }
+.form-note .icon { flex: none; width: 1.15rem; height: 1.15rem; margin-top: .1rem; }
 .guest__remove { display: grid; place-items: center; width: 44px; height: 44px; border: 0; border-radius: 50%; background: transparent; color: var(--ink-soft); cursor: pointer; transition: background-color .25s, color .25s; }
 .guest__remove:hover { background: var(--blossom-soft); color: var(--fuchsia); }
 .guest__remove[hidden] { display: none; }

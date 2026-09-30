@@ -58,6 +58,7 @@
       const input = $(".input", row);
       const label = $("label.visually-hidden", row);
       const child = $(".guest__child input", row);
+      const age = $(".guest__age", row);
       const remove = $(".guest__remove", row);
       input.id = `guest-${n}`;
       input.name = `Invité ${n}`;
@@ -66,6 +67,8 @@
       label.textContent = `Prénom et nom de la personne ${n}`;
       child.name = `Enfant ${n}`;
       child.setAttribute("aria-label", `Personne ${n} : enfant`);
+      age.name = `Âge ${n}`;
+      age.setAttribute("aria-label", `Âge de l’enfant (personne ${n})`);
       remove.setAttribute("aria-label", `Retirer la personne ${n}`);
       remove.hidden = rows.length === 1;
     });
@@ -74,12 +77,27 @@
   }
   function guests() {
     return guestRows()
-      .map((row) => ({ name: $(".input", row).value.trim().replace(/\s+/g, " "), child: $(".guest__child input", row).checked }))
+      .map((row) => {
+        const child = $(".guest__child input", row).checked;
+        return { name: $(".input", row).value.trim().replace(/\s+/g, " "), child, age: child ? $(".guest__age", row).value : "" };
+      })
       .filter((g) => g.name);
+  }
+  // Âge des enfants (demandé par le traiteur) : obligatoire pour les enfants inscrits quand on vient
+  const AGE_MSG = "Indiquez l’âge de chaque enfant (c’est pour le traiteur).";
+  const missingAges = () => guestRows().filter((r) => $(".input", r).value.trim() && $(".guest__child input", r).checked && !$(".guest__age", r).value);
+  const withAge = (g) => (g.child ? `${g.name} (enfant${g.age ? `, ${g.age}` : ""})` : g.name);
+  function toggleAge(row) {
+    const on = $(".guest__child input", row).checked;
+    const age = $(".guest__age", row);
+    age.hidden = !on;
+    if (!on) { age.value = ""; age.removeAttribute("aria-invalid"); }
   }
   function updateCount() {
     const g = guests();
-    if (g.length) { setError("guests", ""); $$(".guest .input", list).forEach((i) => i.removeAttribute("aria-invalid")); }
+    $$(".guest__age", list).forEach((a) => { if (a.value || a.hidden) a.removeAttribute("aria-invalid"); });
+    const ageError = $("[data-error='guests']", form).textContent === AGE_MSG;
+    if (g.length && !(ageError && missingAges().length)) { setError("guests", ""); $$(".guest .input", list).forEach((i) => i.removeAttribute("aria-invalid")); }
     const kids = g.filter((x) => x.child).length;
     countEl.textContent = g.length
       ? `${g.length} personne${g.length > 1 ? "s" : ""}${kids ? `, dont ${kids} enfant${kids > 1 ? "s" : ""}` : ""}`
@@ -93,6 +111,7 @@
     $(".input", row).value = "";
     $(".input", row).removeAttribute("aria-invalid");
     $(".guest__child input", row).checked = false;
+    toggleAge(row);
     list.appendChild(row);
     renumber();
     if (focus) $(".input", row).focus();
@@ -119,7 +138,10 @@
     else done();
   });
   list.addEventListener("input", updateCount);
-  list.addEventListener("change", updateCount);
+  list.addEventListener("change", (e) => {
+    if (e.target.matches(".guest__child input")) toggleAge(e.target.closest(".guest"));
+    updateCount();
+  });
   // « Entrée » dans le dernier champ ajoute une personne au lieu d’envoyer le formulaire
   list.addEventListener("keydown", (e) => {
     if (e.key === "Enter" && e.target.matches(".guest__child input")) { e.preventDefault(); e.target.click(); return; }
@@ -178,6 +200,12 @@
       setError("guests", "");
       $$(".guest .input", list).forEach((i) => i.removeAttribute("aria-invalid"));
     }
+    const noAge = presence() === "Oui" && guests().length ? missingAges() : [];
+    if (noAge.length) {
+      setError("guests", AGE_MSG);
+      noAge.forEach((r) => $(".guest__age", r).setAttribute("aria-invalid", "true"));
+      firstInvalid = firstInvalid || $(".guest__age", noAge[0]);
+    }
     if (!presence()) {
       setError("presence", "Dites-nous si vous serez présent(s) ou non.");
       $("[data-choices]", form).setAttribute("aria-invalid", "true");
@@ -226,7 +254,7 @@
       names: g.map((x) => x.name).join(", "),
       lines: [
         `Présence : ${p === "Oui" ? "Oui, présent(s)" : "Non, absent(s)"}`,
-        `Invités : ${g.map((x) => (x.child ? `${x.name} (enfant)` : x.name)).join(", ")}`,
+        `Invités : ${g.map(withAge).join(", ")}`,
         p === "Oui" ? `Allergies / intolérances : ${$("#allergies").value.trim() || "—"}` : null,
         `Petit mot : ${$("#message").value.trim() || "—"}`,
       ].filter(Boolean),
@@ -381,7 +409,10 @@
     const many = g.length > 1;
     const count = (n, word) => `${n} ${word}${n > 1 ? "s" : ""}`;
     const adults = g.filter((x) => !x.child).length, kids = g.length - adults;
+    const ages = g.filter((x) => x.child && x.age).map((x) => x.age);
     const seats = [adults ? count(adults, "adulte") : "", kids ? count(kids, "enfant") : ""].filter(Boolean).join(" et ");
+    // Pour le traiteur : l'âge des enfants à côté du nombre de couverts
+    const seatsAges = ages.length ? `${seats} (${kids > 1 ? "âges" : "âge"} : ${ages.join(", ")})` : seats;
     const payload = {
       _subject: yes
         ? `💌 Oui ! ${who} ${many ? "seront" : "sera"} là le 3 juillet (${seats})`
@@ -391,9 +422,9 @@
       "💌 Réponse": yes
         ? `Oui, avec joie ! ${who} ${many ? "seront des nôtres" : "sera des nôtres"} le samedi 3 juillet 2027 🎉`
         : `${who} ne ${many ? "pourront" : "pourra"} malheureusement pas être des nôtres le 3 juillet.`,
-      "👥 Invités": g.map((x) => (x.child ? `${x.name} (enfant)` : x.name)).join(" · "),
+      "👥 Invités": g.map(withAge).join(" · "),
     };
-    if (yes) payload["🍽️ À prévoir"] = seats;
+    if (yes) payload["🍽️ À prévoir"] = seatsAges;
     if (yes && allergy) payload["🥗 Allergies ou régime"] = allergy;
     if (note) payload["💬 Petit mot"] = `« ${note} »`;
     if (email) payload["✉️ Adresse e-mail"] = `${email} (il suffit de répondre à ce message pour ${many ? "leur" : "lui"} écrire)`;

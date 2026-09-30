@@ -69,8 +69,10 @@
 
   $$("[data-copy]").forEach((btn) => {
     btn.addEventListener("click", async () => {
-      const ok = await copyText(btn.getAttribute("data-copy"));
-      toast(ok ? "Adresse copiée dans le presse-papiers ✓" : "Impossible de copier, sélectionnez l’adresse manuellement");
+      const text = btn.getAttribute("data-copy");
+      const many = text.indexOf(",") > -1; // plusieurs adresses séparées par des virgules
+      const ok = await copyText(text);
+      toast(ok ? `${many ? "Adresses copiées" : "Adresse copiée"} dans le presse-papiers ✓` : `Impossible de copier, sélectionnez ${many ? "les adresses" : "l’adresse"} manuellement`);
     });
   });
 

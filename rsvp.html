@@ -33,7 +33,7 @@
   <link rel="preload" href="assets/fonts/pinyon-script-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/cormorant-garamond-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/jost-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css?v=68e6b2dd">
+  <link rel="stylesheet" href="assets/css/style.css?v=9ddde415">
   <script>
     /* Active les animations si le visiteur ne les a pas désactivées ; filet de sécurité si le JS ne se charge pas */
     (function (d) {
@@ -82,7 +82,7 @@
       <p class="gate-screen__over">Bienvenue</p>
       <p class="gate-screen__names script" id="gate-title">Clémentine <span>&amp;</span>&nbsp;Romain</p>
       <p class="gate-screen__date" id="gate-desc">Samedi 3&nbsp;juillet&nbsp;2027 · Héry-sur-Alby</p>
-      <button class="btn gate-screen__open" type="button" data-gate-open><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=d767b459#i-heart"/></svg>Ouvrir l’invitation</button>
+      <button class="btn gate-screen__open" type="button" data-gate-open><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=7fa75719#i-heart"/></svg>Ouvrir l’invitation</button>
       <p class="gate-screen__note">La musique démarre à l’ouverture</p>
       <button class="gate-screen__silent" type="button" data-gate-silent>Entrer sans musique</button>
     </div>
@@ -109,7 +109,7 @@
           <li><a class="nav__link" data-nav="temoins" href="temoins.html">Témoins</a></li>
           <li><a class="nav__link" data-nav="environs" href="environs.html">Environs</a></li>
         </ul>
-        <a class="btn btn--sm" data-nav="rsvp" aria-current="page" href="rsvp.html" data-magnetic><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=d767b459#i-mail"/></svg>Je réponds</a>
+        <a class="btn btn--sm" data-nav="rsvp" aria-current="page" href="rsvp.html" data-magnetic><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=7fa75719#i-mail"/></svg>Je réponds</a>
       </nav>
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu-mobile"><span></span><span></span><span></span><b class="visually-hidden">Menu</b></button>
     </div>
@@ -125,7 +125,7 @@
       </ul>
     </nav>
     <div class="mobile-menu__foot">
-      <a class="btn" data-nav="rsvp" aria-current="page" href="rsvp.html"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=d767b459#i-mail"/></svg>Répondre à l’invitation</a>
+      <a class="btn" data-nav="rsvp" aria-current="page" href="rsvp.html"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=7fa75719#i-mail"/></svg>Répondre à l’invitation</a>
       <p class="mobile-menu__date">Samedi 3 juillet 2027</p>
     </div>
   </div>
@@ -139,7 +139,7 @@
         <p class="overline" data-hero>RSVP</p>
         <h1 id="page-title" data-hero>Serez-vous <em>des nôtres</em>&nbsp;?</h1>
         <p data-hero>Votre réponse nous est directement transmise. Il suffit de quelques secondes&nbsp;!</p>
-        <a class="hero-deadline" href="#rsvp-form" data-hero><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=d767b459#i-calendar-heart"/></svg><span>Réponse souhaitée avant le <strong>15&nbsp;mars&nbsp;2027</strong></span><svg class="icon hero-deadline__arrow" aria-hidden="true"><use href="assets/img/icons.svg?v=d767b459#i-arrow-down"/></svg></a>
+        <a class="hero-deadline" href="#rsvp-form" data-hero><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=7fa75719#i-calendar-heart"/></svg><span>Réponse souhaitée avant le <strong>15&nbsp;mars&nbsp;2027</strong></span><svg class="icon hero-deadline__arrow" aria-hidden="true"><use href="assets/img/icons.svg?v=7fa75719#i-arrow-down"/></svg></a>
       </div>
     </section>
 
@@ -164,7 +164,7 @@
           </div>
 
           <div class="rsvp-card" data-reveal>
-            <p class="rsvp-already" data-rsvp-already hidden><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=d767b459#i-check"/></svg><span></span></p>
+            <p class="rsvp-already" data-rsvp-already hidden><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=7fa75719#i-check"/></svg><span></span></p>
 
             <form class="rsvp-form" id="rsvp-form" action="https://formsubmit.co/clementine.leytier@hotmail.fr" method="POST"
                   data-web3forms-key="17df42f6-596c-448c-8252-759fc30c13fb"
@@ -179,16 +179,39 @@
 
               <fieldset class="form-step">
                 <legend><span class="step-num">1</span>Vos noms et prénoms <small class="text-soft">(enfants compris)</small> <span class="req" aria-hidden="true">*</span></legend>
-                <p class="hint" id="guests-hint">Une ligne par personne. Cochez «&nbsp;Enfant&nbsp;» pour les plus petits.</p>
+                <p class="hint" id="guests-hint">Une ligne par personne. Cochez «&nbsp;Enfant&nbsp;» pour les plus petits et indiquez leur âge (pour le traiteur).</p>
                 <ul class="guests" data-guests>
                   <li class="guest">
                     <label class="visually-hidden" for="guest-1">Prénom et nom de la personne 1</label>
                     <input class="input" id="guest-1" name="Invité 1" type="text" autocomplete="name" placeholder="Prénom Nom" required aria-describedby="guests-hint guests-error">
-                    <label class="guest__child"><input type="checkbox" name="Enfant 1" value="oui">Enfant</label>
-                    <button class="guest__remove" type="button" aria-label="Retirer la personne 1" hidden><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=d767b459#i-x"/></svg></button>
+                    <div class="guest__kid">
+                      <label class="guest__child"><input type="checkbox" name="Enfant 1" value="oui">Enfant</label>
+                      <select class="guest__age" name="Âge 1" aria-label="Âge de l’enfant (personne 1)" hidden>
+                        <option value="">Âge&nbsp;?</option>
+                        <option value="moins d’1 an">moins d’1 an</option>
+                        <option value="1 an">1 an</option>
+                        <option value="2 ans">2 ans</option>
+                        <option value="3 ans">3 ans</option>
+                        <option value="4 ans">4 ans</option>
+                        <option value="5 ans">5 ans</option>
+                        <option value="6 ans">6 ans</option>
+                        <option value="7 ans">7 ans</option>
+                        <option value="8 ans">8 ans</option>
+                        <option value="9 ans">9 ans</option>
+                        <option value="10 ans">10 ans</option>
+                        <option value="11 ans">11 ans</option>
+                        <option value="12 ans">12 ans</option>
+                        <option value="13 ans">13 ans</option>
+                        <option value="14 ans">14 ans</option>
+                        <option value="15 ans">15 ans</option>
+                        <option value="16 ans">16 ans</option>
+                        <option value="17 ans">17 ans</option>
+                      </select>
+                    </div>
+                    <button class="guest__remove" type="button" aria-label="Retirer la personne 1" hidden><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=7fa75719#i-x"/></svg></button>
                   </li>
                 </ul>
-                <button class="btn btn--soft btn--sm guest-add" type="button" data-guest-add hidden><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=d767b459#i-user-plus"/></svg>Ajouter une personne</button>
+                <button class="btn btn--soft btn--sm guest-add" type="button" data-guest-add hidden><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=7fa75719#i-user-plus"/></svg>Ajouter une personne</button>
                 <p class="guest-count" data-guest-count aria-live="polite"></p>
                 <p class="field-error" id="guests-error" data-error="guests"></p>
               </fieldset>
@@ -198,11 +221,11 @@
                 <div class="choices" data-choices role="radiogroup" aria-labelledby="presence-legend" aria-describedby="presence-error" aria-required="true">
                   <div class="choice">
                     <input type="radio" id="presence-oui" name="Présence" value="Oui" required aria-describedby="presence-error">
-                    <label for="presence-oui"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=d767b459#i-party-popper"/></svg><strong>Oui</strong><span>Avec grand plaisir&nbsp;!</span></label>
+                    <label for="presence-oui"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=7fa75719#i-party-popper"/></svg><strong>Oui</strong><span>Avec grand plaisir&nbsp;!</span></label>
                   </div>
                   <div class="choice choice--no">
                     <input type="radio" id="presence-non" name="Présence" value="Non" aria-describedby="presence-error">
-                    <label for="presence-non"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=d767b459#i-heart"/></svg><strong>Non</strong><span>Malheureusement, nous ne pourrons pas venir</span></label>
+                    <label for="presence-non"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=7fa75719#i-heart"/></svg><strong>Non</strong><span>Malheureusement, nous ne pourrons pas venir</span></label>
                   </div>
                 </div>
                 <p class="field-error" id="presence-error" data-error="presence"></p>
@@ -212,7 +235,8 @@
                 <div>
                   <div class="form-step field">
                     <label for="allergies"><span class="step-num">3</span>Une allergie ou intolérance alimentaire&nbsp;? C’est le moment de nous en faire part&nbsp;!</label>
-                    <textarea class="textarea" id="allergies" name="Allergies / intolérances" rows="3" placeholder="Ex.&nbsp;: Lucie est allergique aux fruits à coque"></textarea>
+                    <p class="form-note" id="allergies-note"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=7fa75719#i-salad"/></svg><span>À noter&nbsp;: nous ne proposons malheureusement pas de menu végétarien.</span></p>
+                    <textarea class="textarea" id="allergies" name="Allergies / intolérances" rows="3" placeholder="Ex.&nbsp;: Lucie est allergique aux fruits à coque" aria-describedby="allergies-note"></textarea>
                   </div>
                 </div>
               </div>
@@ -231,13 +255,13 @@
 
               <div class="form-footer">
                 <p>Votre réponse est envoyée directement par e-mail à Clémentine&nbsp;&amp;&nbsp;Romain.</p>
-                <button class="btn" type="submit" data-submit data-magnetic><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=d767b459#i-send"/></svg><span data-label>Envoyer ma réponse</span></button>
+                <button class="btn" type="submit" data-submit data-magnetic><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=7fa75719#i-send"/></svg><span data-label>Envoyer ma réponse</span></button>
               </div>
               <div class="form-status" role="alert" data-status></div>
             </form>
 
             <div class="rsvp-success" data-success hidden tabindex="-1">
-              <div class="rsvp-success__icon"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=d767b459#i-check"/></svg></div>
+              <div class="rsvp-success__icon"><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=7fa75719#i-check"/></svg></div>
               <p class="overline">Réponse envoyée</p>
               <h2 data-success-title>Merci&nbsp;!</h2>
               <p data-success-text></p>
@@ -273,7 +297,7 @@
             <li><a href="rsvp.html">Répondre</a></li>
           </ul>
         </nav>
-        <p class="site-footer__small">Réponse souhaitée avant le 15 mars 2027 · Fait avec <svg class="icon" aria-label="amour" role="img"><use href="assets/img/icons.svg?v=d767b459#i-heart"/></svg> pour notre grand jour</p>
+        <p class="site-footer__small">Réponse souhaitée avant le 15 mars 2027 · Fait avec <svg class="icon" aria-label="amour" role="img"><use href="assets/img/icons.svg?v=7fa75719#i-heart"/></svg> pour notre grand jour</p>
       </div>
     </div>
   </footer>
@@ -283,7 +307,7 @@
   </button>
   <button class="to-top" type="button" data-to-top aria-label="Revenir en haut de la page" tabindex="-1">
     <svg class="to-top__ring" viewBox="0 0 52 52" aria-hidden="true" focusable="false"><circle cx="26" cy="26" r="24"/><circle class="to-top__progress" cx="26" cy="26" r="24" pathLength="1"/></svg>
-    <svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=d767b459#i-arrow-up"/></svg>
+    <svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=7fa75719#i-arrow-up"/></svg>
     <span class="to-top__label" aria-hidden="true">Haut de page</span>
   </button>
   <div class="toast" role="status" aria-live="polite" data-toast></div>
@@ -296,8 +320,8 @@
   <script src="assets/vendor/SplitText.min.js?v=6c4c7716" defer></script>
   <script src="assets/vendor/lenis.min.js?v=b5cf15f0" defer></script>
   <script src="assets/js/nav.js?v=5ff0fe07" defer></script>
-  <script src="assets/js/main.js?v=f93e7616" defer></script>
+  <script src="assets/js/main.js?v=008becf0" defer></script>
   <!-- SCRIPTS:END -->
-  <script src="assets/js/rsvp.js?v=65da7ccb" defer></script>
+  <script src="assets/js/rsvp.js?v=4ac8ee9f" defer></script>
 </body>
 </html>

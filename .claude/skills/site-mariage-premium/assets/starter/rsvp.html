@@ -174,12 +174,35 @@
 
               <fieldset class="form-step">
                 <legend><span class="step-num">1</span>Vos noms et prénoms <small class="text-soft">(enfants compris)</small> <span class="req" aria-hidden="true">*</span></legend>
-                <p class="hint" id="guests-hint">Une ligne par personne. Cochez «&nbsp;Enfant&nbsp;» pour les plus petits.</p>
+                <p class="hint" id="guests-hint">Une ligne par personne. Cochez «&nbsp;Enfant&nbsp;» pour les plus petits et indiquez leur âge (pour le traiteur).</p>
                 <ul class="guests" data-guests>
                   <li class="guest">
                     <label class="visually-hidden" for="guest-1">Prénom et nom de la personne 1</label>
                     <input class="input" id="guest-1" name="Invité 1" type="text" autocomplete="name" placeholder="Prénom Nom" required aria-describedby="guests-hint guests-error">
-                    <label class="guest__child"><input type="checkbox" name="Enfant 1" value="oui">Enfant</label>
+                    <div class="guest__kid">
+                      <label class="guest__child"><input type="checkbox" name="Enfant 1" value="oui">Enfant</label>
+                      <select class="guest__age" name="Âge 1" aria-label="Âge de l’enfant (personne 1)" hidden>
+                        <option value="">Âge&nbsp;?</option>
+                        <option value="moins d’1 an">moins d’1 an</option>
+                        <option value="1 an">1 an</option>
+                        <option value="2 ans">2 ans</option>
+                        <option value="3 ans">3 ans</option>
+                        <option value="4 ans">4 ans</option>
+                        <option value="5 ans">5 ans</option>
+                        <option value="6 ans">6 ans</option>
+                        <option value="7 ans">7 ans</option>
+                        <option value="8 ans">8 ans</option>
+                        <option value="9 ans">9 ans</option>
+                        <option value="10 ans">10 ans</option>
+                        <option value="11 ans">11 ans</option>
+                        <option value="12 ans">12 ans</option>
+                        <option value="13 ans">13 ans</option>
+                        <option value="14 ans">14 ans</option>
+                        <option value="15 ans">15 ans</option>
+                        <option value="16 ans">16 ans</option>
+                        <option value="17 ans">17 ans</option>
+                      </select>
+                    </div>
                     <button class="guest__remove" type="button" aria-label="Retirer la personne 1" hidden><svg class="icon" aria-hidden="true"><use href="assets/img/icons.svg?v=d767b459#i-x"/></svg></button>
                   </li>
                 </ul>

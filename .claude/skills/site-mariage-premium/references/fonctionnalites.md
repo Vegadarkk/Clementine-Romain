@@ -171,6 +171,16 @@ calligraphié qui se dessine, puis le statut. Les témoins qui entrent ensemble 
   directe à l'invité). Repli : lien mailto pré-rempli si l'envoi échoue.
 - Invités multiples (ajout/suppression, case « Enfant »), présence Oui/Non en `radiogroup`,
   allergies, petit mot avec compteur, barre de progression du formulaire.
+- **Âge des enfants** (demande du traiteur) : cocher « Enfant » fait apparaître une liste « Âge ? »
+  (moins d'1 an, 1 an … 17 ans) à côté ; décocher la masque et la vide. Obligatoire seulement si la
+  réponse est « Oui » (message « Indiquez l'âge de chaque enfant (c'est pour le traiteur). », focus sur la
+  première liste vide). Dans l'e-mail : « Léa Martin (enfant, 4 ans) » et « À prévoir : 1 adulte et
+  2 enfants (âges : 4 ans, moins d'1 an) » ; l'objet reste court (sans les âges).
+- Précision sous une question : `<p class="form-note">` (icône + texte, relié au champ par
+  `aria-describedby`), par ex. « À noter : nous ne proposons malheureusement pas de menu végétarien. ».
+  Consigne du lieu sous le plan du domaine : `<p class="domaine__notice">` (ex. chiens non admis).
+  Plusieurs adresses de contact (témoins) : `<p class="emails">` + `mailto:a,b` + `data-copy="a, b"`
+  (le message de copie passe au pluriel tout seul).
 - Validation douce : les erreurs s'effacent **à la saisie** et pas à la perte de focus (sinon le
   décalage de mise en page fait rater le clic sur « Envoyer »). `form.noValidate = true` est posé en JS,
   pas dans le HTML, pour que le repli sans JS garde la validation native.
