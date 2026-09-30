@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Faire-part par e-mail · Clémentine &amp; Romain</title>
+  <meta name="description" content="Deux faire-part par e-mail prêts à envoyer aux invités de Clémentine et Romain.">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#FFF3E6">
+  <meta name="color-scheme" content="only light">
+  <meta name="darkreader-lock">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <style>
+    /* Page d'aide (privée) : aperçu des deux faire-part et copie en un clic pour la messagerie */
+    @font-face { font-family: "Cormorant Garamond"; font-weight: 500; font-display: swap; src: url("assets/fonts/cormorant-garamond-latin-500-normal.woff2") format("woff2"); }
+    @font-face { font-family: "Cormorant Garamond"; font-weight: 500; font-style: italic; font-display: swap; src: url("assets/fonts/cormorant-garamond-latin-500-italic.woff2") format("woff2"); }
+    @font-face { font-family: "Jost"; font-weight: 400; font-display: swap; src: url("assets/fonts/jost-latin-400-normal.woff2") format("woff2"); }
+    @font-face { font-family: "Jost"; font-weight: 500; font-display: swap; src: url("assets/fonts/jost-latin-500-normal.woff2") format("woff2"); }
+    @font-face { font-family: "Pinyon Script"; font-display: swap; src: url("assets/fonts/pinyon-script-latin-400-normal.woff2") format("woff2"); }
+    :root {
+      --paper: #FFF9F2; --ivory: #FFF3E6; --ground: #F3E7DC; --ink: #2F3829; --ink-soft: #55604C;
+      --fuchsia: #C2185B; --fuchsia-deep: #A3144D; --moss: #6B7F5E; --moss-deep: #4E5E43; --line: rgba(107, 127, 94, .26);
+      --blossom-soft: #FFEADF; --sage-soft: #E4ECE0;
+      --f-display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+      --f-body: "Jost", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+      color-scheme: only light;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body { margin: 0; background: var(--ivory); color: var(--ink); font: 400 1rem/1.65 var(--f-body); }
+    a { color: var(--fuchsia-deep); }
+    .wrap { width: min(100%, 1180px); margin: 0 auto; padding-inline: max(16px, 4vw); }
+    header { padding-block: clamp(2.5rem, 7vw, 4.5rem) 1.5rem; text-align: center; }
+    .over { margin: 0; font: 500 .72rem/1.3 var(--f-body); letter-spacing: .34em; text-transform: uppercase; color: var(--fuchsia-deep); }
+    h1 { margin: .5rem 0 .4rem; font: 400 clamp(2.6rem, 7vw, 4.2rem)/1.1 "Pinyon Script", cursive; text-wrap: balance; }
+    h1 span { color: var(--fuchsia); }
+    .lead { max-width: 38rem; margin: 0 auto; color: var(--ink-soft); text-wrap: pretty; }
+    .steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; margin: 2.2rem 0 0; padding: 0; list-style: none; counter-reset: s; }
+    .steps li { position: relative; padding: 1.1rem 1.1rem 1.1rem 3.3rem; background: var(--paper); border: 1px solid var(--line); border-radius: 16px; font-size: .92rem; line-height: 1.5; color: var(--ink-soft); text-align: left; counter-increment: s; }
+    .steps li::before { content: counter(s); position: absolute; left: 1rem; top: 1rem; width: 1.6rem; height: 1.6rem; border-radius: 50%; display: grid; place-items: center; background: var(--fuchsia); color: #fff; font: 500 .8rem/1 var(--f-body); }
+    .steps strong { display: block; color: var(--ink); font-weight: 500; }
+    .props { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(1.5rem, 3vw, 2.5rem); padding-block: 2.5rem 1rem; }
+    .prop { min-width: 0; display: flex; flex-direction: column; gap: 1rem; }
+    .prop__head { display: flex; flex-direction: column; gap: .35rem; text-align: center; }
+    .prop__letter { font: 500 .72rem/1 var(--f-body); letter-spacing: .3em; text-transform: uppercase; color: var(--moss-deep); }
+    .prop h2 { margin: 0; font: 500 clamp(1.8rem, 3.4vw, 2.3rem)/1.15 var(--f-display); }
+    .prop p { margin: 0; color: var(--ink-soft); font-size: .95rem; }
+    .subject { display: flex; align-items: center; gap: .6rem; padding: .7rem .8rem .7rem 1rem; background: var(--paper); border: 1px solid var(--line); border-radius: 14px; font-size: .9rem; text-align: left; }
+    .subject span { flex: 1; min-width: 0; }
+    .subject b { display: block; font: 500 .66rem/1.4 var(--f-body); letter-spacing: .22em; text-transform: uppercase; color: var(--moss-deep); }
+    .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: .55rem; min-height: 48px; padding: .8rem 1.5rem; border-radius: 999px; border: 1px solid var(--fuchsia-deep); background: var(--fuchsia); color: #fff; font: 500 .8rem/1.2 var(--f-body); letter-spacing: .16em; text-transform: uppercase; text-decoration: none; cursor: pointer; transition: background-color .2s, transform .2s; }
+    .btn:hover { background: var(--fuchsia-deep); }
+    .btn:active { transform: translateY(1px); }
+    .btn--ghost { background: transparent; color: var(--fuchsia-deep); }
+    .btn--ghost:hover { background: var(--blossom-soft); }
+    .btn--small { min-height: 40px; padding: .5rem 1rem; font-size: .7rem; }
+    .btn svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+    .btn.is-done { background: var(--moss-deep); border-color: var(--moss-deep); color: #fff; }
+    .frame { border-radius: 18px; overflow: hidden; border: 1px solid var(--line); background: var(--ground); box-shadow: 0 24px 60px -34px rgba(78, 94, 67, .5); }
+    .frame iframe { display: block; width: 100%; height: 1300px; border: 0; transform-origin: 0 0; }
+    .tips { margin: 1.5rem 0 3.5rem; padding: clamp(1.4rem, 3vw, 2rem); background: var(--paper); border: 1px solid var(--line); border-radius: 22px; }
+    .tips h2 { margin: 0 0 .8rem; font: 500 1.7rem/1.2 var(--f-display); }
+    .tips__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.4rem; }
+    .tips h3 { margin: 0 0 .3rem; font: 500 .74rem/1.4 var(--f-body); letter-spacing: .2em; text-transform: uppercase; color: var(--fuchsia-deep); }
+    .tips ul { margin: 0; padding-left: 1.1rem; color: var(--ink-soft); font-size: .92rem; }
+    .tips li + li { margin-top: .3rem; }
+    .toast { position: fixed; left: 50%; bottom: max(1.2rem, env(safe-area-inset-bottom, 0px)); transform: translate(-50%, calc(100% + 2rem)); visibility: hidden; padding: .8rem 1.3rem; border-radius: 999px; background: var(--ink); color: var(--paper); font-size: .9rem; box-shadow: 0 14px 30px -14px rgba(0, 0, 0, .5); transition: transform .35s cubic-bezier(.22, .8, .24, 1), visibility 0s .35s; z-index: 9; max-width: calc(100% - 32px); text-align: center; }
+    .toast.is-on { transform: translate(-50%, 0); visibility: visible; transition-delay: 0s; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .clip { position: fixed; left: -9999px; top: 0; width: 600px; }
+    footer { padding-block: 0 2.5rem; text-align: center; font-size: .85rem; color: var(--ink-soft); }
+    @media (max-width: 960px) { .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } .props { grid-template-columns: minmax(0, 1fr); } .tips__grid { grid-template-columns: minmax(0, 1fr); } }
+    @media (max-width: 520px) { .steps { grid-template-columns: minmax(0, 1fr); } .subject { flex-wrap: wrap; } }
+    @media (prefers-reduced-motion: reduce) { .toast, .btn { transition: none; } }
+  </style>
+</head>
+<body>
+  <svg width="0" height="0" style="position: absolute" aria-hidden="true" focusable="false">
+    <symbol id="ic-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="14" height="14" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
+    <symbol id="ic-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="ic-eye" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
+  </svg>
+
+  <header class="wrap">
+    <p class="over">Faire-part par e-mail</p>
+    <h1>Clémentine <span>&amp;</span> Romain</h1>
+    <p class="lead">Deux faire-part prêts à envoyer, qui mènent vos invités vers le site. Choisissez celui que vous préférez, copiez-le en un clic, puis collez-le dans un nouveau message.</p>
+    <ol class="steps">
+      <li><strong>Copier</strong>Cliquez sur « Copier le faire-part » sous celui que vous préférez.</li>
+      <li><strong>Nouveau message</strong>Dans Hotmail / Outlook ou Gmail, ouvrez un nouveau message.</li>
+      <li><strong>Coller</strong>Cliquez dans le corps du message puis collez (Ctrl + V, ou ⌘ + V sur Mac).</li>
+      <li><strong>Envoyer</strong>Ajoutez l’objet et vos invités en « Cci », puis envoyez.</li>
+    </ol>
+  </header>
+
+  <main class="wrap">
+    <div class="props">
+      <section class="prop" aria-labelledby="t-a" data-prop="a">
+        <div class="prop__head">
+          <span class="prop__letter">Proposition A</span>
+          <h2 id="t-a">Le pli scellé</h2>
+          <p>Le ruban de satin et le cachet de cire C &amp; R : l’e-mail est l’enveloppe, le site l’ouvre.</p>
+        </div>
+        <div class="subject"><span><b>Objet proposé</b><span data-subject>Clémentine &amp; Romain · Votre invitation à notre mariage</span></span><button class="btn btn--ghost btn--small" type="button" data-copy-subject><svg aria-hidden="true"><use href="#ic-copy"></use></svg>Copier l’objet</button></div>
+        <div class="actions">
+          <button class="btn" type="button" data-copy-mail="assets/faire-part/pli-scelle.html"><svg aria-hidden="true"><use href="#ic-copy"></use></svg><span>Copier le faire-part</span></button>
+          <a class="btn btn--ghost" href="assets/faire-part/pli-scelle.html" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#ic-eye"></use></svg>Voir en grand</a>
+        </div>
+        <div class="frame"><iframe src="assets/faire-part/pli-scelle.html" title="Aperçu du faire-part « Le pli scellé »" loading="lazy" data-preview></iframe></div>
+      </section>
+
+      <section class="prop" aria-labelledby="t-b" data-prop="b">
+        <div class="prop__head">
+          <span class="prop__letter">Proposition B</span>
+          <h2 id="t-b">L’arche en fleurs</h2>
+          <p>Votre photo dans l’arche fleurie, l’essentiel en trois lignes et les montagnes des Bauges.</p>
+        </div>
+        <div class="subject"><span><b>Objet proposé</b><span data-subject>Nous nous marions ! Clémentine &amp; Romain · 3 juillet 2027</span></span><button class="btn btn--ghost btn--small" type="button" data-copy-subject><svg aria-hidden="true"><use href="#ic-copy"></use></svg>Copier l’objet</button></div>
+        <div class="actions">
+          <button class="btn" type="button" data-copy-mail="assets/faire-part/arche-en-fleurs.html"><svg aria-hidden="true"><use href="#ic-copy"></use></svg><span>Copier le faire-part</span></button>
+          <a class="btn btn--ghost" href="assets/faire-part/arche-en-fleurs.html" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#ic-eye"></use></svg>Voir en grand</a>
+        </div>
+        <div class="frame"><iframe src="assets/faire-part/arche-en-fleurs.html" title="Aperçu du faire-part « L’arche en fleurs »" loading="lazy" data-preview></iframe></div>
+      </section>
+    </div>
+
+    <section class="tips" aria-labelledby="t-tips">
+      <h2 id="t-tips">Bon à savoir</h2>
+      <div class="tips__grid">
+        <div>
+          <h3>Hotmail / Outlook</h3>
+          <ul>
+            <li>« Nouveau message », cliquez dans le corps du message, puis collez.</li>
+            <li>Les invités en <strong>Cci</strong> (bouton « Cci » à droite de « À ») : personne ne voit les adresses des autres.</li>
+            <li>Mettez votre propre adresse dans « À ».</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Gmail</h3>
+          <ul>
+            <li>« Nouveau message », collez dans le corps, ajoutez les invités en « Cci ».</li>
+            <li>Évitez d’écrire au-dessus du faire-part : ajoutez plutôt un petit mot personnel en dessous.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Avant le grand envoi</h3>
+          <ul>
+            <li>Envoyez-vous d’abord un test, et ouvrez-le sur votre téléphone.</li>
+            <li>Envoyez par petits groupes (une vingtaine de personnes) pour ne pas tomber en courrier indésirable.</li>
+            <li>Si les images n’apparaissent pas chez un invité, il lui suffit de cliquer sur « Afficher les images ».</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap">Page privée pour préparer l’envoi · <a href="./">Voir le site du mariage</a></footer>
+  <div class="toast" role="status" aria-live="polite" data-toast></div>
+  <div class="clip" aria-hidden="true" data-clip></div>
+
+  <script>
+    (function () {
+      "use strict";
+      var toast = document.querySelector("[data-toast]");
+      var clip = document.querySelector("[data-clip]");
+      var timer;
+      function say(msg) {
+        toast.textContent = msg;
+        toast.classList.add("is-on");
+        clearTimeout(timer);
+        timer = setTimeout(function () { toast.classList.remove("is-on"); }, 4200);
+      }
+      function done(btn, label) {
+        var span = btn.querySelector("span") || btn;
+        var old = span.textContent;
+        btn.classList.add("is-done");
+        btn.querySelector("use").setAttribute("href", "#ic-check");
+        span.textContent = label;
+        setTimeout(function () { btn.classList.remove("is-done"); btn.querySelector("use").setAttribute("href", "#ic-copy"); span.textContent = old; }, 3200);
+      }
+      // Copie « riche » : ce que l'on voit, avec les images et le bouton, et une version texte en secours
+      function copyRich(html, text) {
+        if (navigator.clipboard && window.ClipboardItem && window.isSecureContext) {
+          return navigator.clipboard.write([new ClipboardItem({
+            "text/html": new Blob([html], { type: "text/html" }),
+            "text/plain": new Blob([text], { type: "text/plain" })
+          })]).catch(function () { return copyBySelection(html); });
+        }
+        return copyBySelection(html);
+      }
+      // Secours : on affiche le faire-part hors écran, on le sélectionne et on le copie comme un copier-coller manuel
+      function copyBySelection(html) {
+        return new Promise(function (resolve, reject) {
+          clip.innerHTML = html;
+          var range = document.createRange();
+          range.selectNodeContents(clip);
+          var sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(range);
+          var ok = false;
+          try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+          sel.removeAllRanges();
+          clip.innerHTML = "";
+          if (ok) resolve(); else reject(new Error("copie refusée"));
+        });
+      }
+      function copyText(text) {
+        if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text).catch(function () { return copyBySelection(text.replace(/&/g, "&amp;").replace(/</g, "&lt;")); });
+        return copyBySelection(text.replace(/&/g, "&amp;").replace(/</g, "&lt;"));
+      }
+      // Les faire-part sont chargés d'avance : la copie se fait pendant le clic (exigé par Safari)
+      var mails = {};
+      function plain(doc) {
+        var t = doc.querySelector("[data-fp-mail]");
+        var out = [];
+        t.querySelectorAll("td").forEach(function (td) {
+          if (td.querySelector("td")) return;
+          var s = td.textContent.replace(/\s+/g, " ").trim();
+          var a = td.querySelector("a[href]");
+          if (a && s && a.textContent.trim() === s) s += " : " + a.href;
+          else if (!s) { var img = td.querySelector("img[alt]"); if (img && img.alt) s = img.alt; }
+          if (s) out.push(s);
+        });
+        return out.join("\n\n");
+      }
+      document.querySelectorAll("[data-copy-mail]").forEach(function (btn) {
+        var url = btn.getAttribute("data-copy-mail");
+        fetch(url, { cache: "no-cache" }).then(function (r) { return r.text(); }).then(function (src) {
+          var doc = new DOMParser().parseFromString(src, "text/html");
+          var base = new URL(url, location.href);
+          doc.querySelectorAll("img[src], a[href]").forEach(function (el) {
+            var k = el.tagName === "IMG" ? "src" : "href";
+            el.setAttribute(k, new URL(el.getAttribute(k), base).href);
+          });
+          mails[url] = { html: doc.querySelector("[data-fp-mail]").outerHTML, text: plain(doc) };
+        }).catch(function () { /* copie indisponible hors connexion : le bouton le signalera */ });
+        btn.addEventListener("click", function () {
+          var m = mails[url];
+          if (!m) { say("Le faire-part n’est pas encore chargé, réessayez dans un instant."); return; }
+          copyRich(m.html, m.text).then(function () {
+            done(btn, "Copié !");
+            say("Faire-part copié : collez-le dans un nouveau message (Ctrl + V ou ⌘ + V).");
+          }).catch(function () {
+            say("La copie automatique n’a pas fonctionné : ouvrez « Voir en grand », sélectionnez tout (Ctrl + A) puis copiez.");
+          });
+        });
+      });
+      document.querySelectorAll("[data-copy-subject]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var text = btn.parentNode.querySelector("[data-subject]").textContent.trim();
+          copyText(text).then(function () {
+            btn.classList.add("is-done");
+            say("Objet copié : « " + text + " »");
+            setTimeout(function () { btn.classList.remove("is-done"); }, 2500);
+          }).catch(function () { say("Copie impossible : sélectionnez l’objet à la main."); });
+        });
+      });
+      // Aperçus : rendu « ordinateur » réduit à la largeur de la colonne (rendu téléphone sur petit écran),
+      // à la hauteur exacte de chaque faire-part
+      function fit(frame) {
+        try {
+          var d = frame.contentDocument;
+          if (!d || !d.body) return;
+          var box = frame.parentNode, w = box.clientWidth, desk = w >= 460;
+          var k = desk ? Math.min(1, w / 680) : 1;
+          frame.style.width = (desk ? Math.max(680, w) : w) + "px";
+          frame.style.transform = k < 1 ? "scale(" + k + ")" : "";
+          var mail = d.querySelector("[data-fp-mail]");
+          var h = Math.ceil(mail ? mail.getBoundingClientRect().height : d.documentElement.scrollHeight);
+          frame.style.height = h + "px";
+          box.style.height = Math.ceil(h * k) + "px";
+        } catch (e) { /* aperçu d'une autre origine : hauteur par défaut */ }
+      }
+      window.addEventListener("resize", function () { document.querySelectorAll("[data-preview]").forEach(fit); });
+      document.querySelectorAll("[data-preview]").forEach(function (frame) {
+        var ready = function () {
+          fit(frame);
+          try { frame.contentDocument.querySelectorAll("img").forEach(function (img) { if (!img.complete) img.addEventListener("load", function () { fit(frame); }); }); } catch (e) { /* idem */ }
+        };
+        frame.addEventListener("load", ready);
+        try { if (frame.contentDocument && frame.contentDocument.readyState === "complete" && frame.contentDocument.querySelector("[data-fp-mail]")) ready(); } catch (e) { /* idem */ }
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -92,6 +92,7 @@ Détail et fichiers dans `references/fonctionnalites.md`. Le socle habituel :
 | Environs | idées du .docx par catégorie, filtres, carte Leaflet, idées bonus | filtres en fondu en cascade, carte synchronisée |
 | RSVP | date limite, noms (enfants compris), présence Oui/Non, allergies, petit mot, envoi automatique par e-mail | confettis, validation douce, réponse mémorisée |
 | 404 + `logos.html` | page d'erreur ; comparatif des pistes de logo à montrer au couple | — |
+| `faire-part.html` (privée) | deux faire-part par e-mail prêts à copier-coller dans Hotmail/Gmail, lien vers le site | e-mail en tableaux, visuels @2x rendus depuis le site |
 
 Sur toutes les pages : rideau de transition et navigation sans rechargement (`nav.js` : la musique
 continue sans coupure), barre de progression, bouton « haut de page » (en fin de page), bouton de musique

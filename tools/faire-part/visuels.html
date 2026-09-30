@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Visuels faire-part e-mail</title>
+<style>
+@font-face { font-family: "Pinyon Script"; src: url("/assets/fonts/pinyon-script-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Cormorant Garamond"; font-weight: 500; src: url("/assets/fonts/cormorant-garamond-latin-500-normal.woff2") format("woff2"); }
+@font-face { font-family: "Cormorant Garamond"; font-weight: 600; src: url("/assets/fonts/cormorant-garamond-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Jost"; font-weight: 500; src: url("/assets/fonts/jost-latin-500-normal.woff2") format("woff2"); }
+:root { --paper: #FFF9F2; --ink: #2F3829; --fuchsia: #C2185B; --fuchsia-deep: #A3144D; --moss: #6B7F5E; --moss-deep: #4E5E43; --sage: #A8BFA6; --sage-soft: #E4ECE0; --blossom: #FFD9C7; --blossom-soft: #FFEADF; --peony: #F06292; --peach: #FFB085; }
+body { margin: 0; padding: 20px; background: #ddd; display: flex; flex-direction: column; gap: 20px; align-items: flex-start; }
+.plate { position: relative; overflow: hidden; background: var(--paper); flex: none; }
+.over { font: 500 11px/1.3 "Jost", sans-serif; letter-spacing: .38em; text-transform: uppercase; color: var(--fuchsia-deep); text-align: center; }
+.script { font-family: "Pinyon Script", cursive; font-weight: 400; color: var(--ink); white-space: nowrap; }
+.amp { color: var(--fuchsia); }
+.abs { position: absolute; }
+.sprig { position: absolute; width: 40px; height: 40px; fill: none; stroke: var(--moss); stroke-width: 1.2; stroke-linecap: round; opacity: .8; }
+.sprig .dot { fill: var(--fuchsia); stroke: none; }
+
+/* ---------- A : le pli scellé ---------- */
+#a-hero { width: 584px; height: 336px; }
+#a-hero .glow { position: absolute; inset: -40px; background: radial-gradient(60% 55% at 50% 38%, #FFF0E4 0%, rgba(255, 240, 228, 0) 70%); }
+#a-hero .over { position: absolute; left: 0; right: 0; top: 62px; }
+#a-hero .names { position: absolute; left: 0; right: 0; top: 86px; text-align: center; font-size: 60px; line-height: 1.1; }
+#a-hero .rib { position: absolute; left: 0; right: 0; top: 214px; height: 44px; background: linear-gradient(180deg, #7E0B3A 0%, #A3144D 12%, #C8286A 30%, #E0578C 44%, #EB86A9 50%, #D2407A 58%, #B01752 78%, #850C3E 100%); box-shadow: 0 14px 18px -12px rgba(110, 10, 51, .5); }
+#a-hero .rib::before { content: ""; position: absolute; left: 0; right: 0; top: 5px; bottom: 5px; border-top: 1px dashed rgba(255, 214, 229, .42); border-bottom: 1px dashed rgba(255, 214, 229, .42); }
+#a-hero .rib::after { content: ""; position: absolute; top: 0; bottom: 0; left: 18%; width: 22%; background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .2), transparent); }
+#a-hero .seal { position: absolute; left: 50%; top: 236px; width: 112px; height: 112px; margin: -56px 0 0 -56px; filter: drop-shadow(0 9px 10px rgba(78, 6, 35, .3)) drop-shadow(0 2px 2px rgba(78, 6, 35, .32)); }
+#a-hero .fl1 { position: absolute; width: 176px; left: -44px; bottom: 8px; }
+#a-hero .fl2 { position: absolute; width: 140px; right: -34px; top: -38px; transform: rotate(160deg); }
+
+#a-foot { width: 584px; height: 118px; }
+#a-foot .fl1 { position: absolute; width: 220px; right: -46px; bottom: -70px; transform: scaleX(-1); }
+#a-foot .fl2 { position: absolute; width: 96px; left: -24px; bottom: -30px; transform: rotate(-20deg); }
+#a-foot .leaf { position: absolute; width: 150px; left: 50%; margin-left: -75px; top: 24px; opacity: .9; }
+
+#a-sign { width: 584px; height: 76px; }
+#a-sign .names { position: absolute; left: 0; right: 0; top: 6px; text-align: center; font-size: 42px; line-height: 1.2; }
+
+#a-orn { width: 584px; height: 30px; }
+#a-orn img { position: absolute; left: 50%; width: 170px; margin-left: -85px; top: 0; }
+
+/* ---------- B : l'arche en fleurs ---------- */
+#b-logo { width: 600px; height: 118px; }
+#b-logo img { position: absolute; left: 50%; top: 22px; height: 84px; transform: translateX(-50%); }
+
+#b-hero { width: 600px; height: 540px; }
+#b-hero .glow { position: absolute; inset: 0; background: radial-gradient(46% 50% at 50% 50%, #FFE3D5 0%, rgba(255, 227, 213, .55) 45%, rgba(255, 249, 242, 0) 75%); }
+#b-hero .line { position: absolute; left: 136px; top: 22px; width: 328px; height: 460px; border: 1px solid rgba(107, 127, 94, .45); border-bottom: 0; border-radius: 999px 999px 0 0; }
+#b-hero .arch { position: absolute; left: 150px; top: 36px; width: 300px; height: 440px; border-radius: 999px 999px 18px 18px; overflow: hidden; box-shadow: 0 24px 50px -28px rgba(78, 94, 67, .55); background: var(--sage-soft); }
+#b-hero .arch img { width: 100%; height: 100%; object-fit: cover; object-position: 44% 60%; }
+#b-hero .fl1 { position: absolute; width: 190px; left: 60px; bottom: 36px; filter: drop-shadow(0 10px 18px rgba(163, 20, 77, .18)); }
+#b-hero .fl2 { position: absolute; width: 104px; right: 104px; top: 92px; transform: rotate(160deg); filter: drop-shadow(0 10px 18px rgba(163, 20, 77, .16)); }
+#b-hero .stamp { position: absolute; right: 112px; bottom: 34px; width: 108px; height: 108px; border-radius: 50%; background: var(--paper); box-shadow: 0 18px 36px -20px rgba(78, 94, 67, .55); display: grid; place-items: center; text-align: center; font: 500 10px/1.3 "Jost", sans-serif; letter-spacing: .18em; color: #55604C; }
+#b-hero .stamp svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-28deg); }
+#b-hero .stamp text { font: 500 9.4px/1 "Jost", sans-serif; letter-spacing: .24em; text-transform: uppercase; fill: var(--fuchsia); }
+#b-hero .stamp strong { display: block; font: 500 36px/1 "Cormorant Garamond", serif; letter-spacing: 0; color: var(--ink); }
+.petal { position: absolute; width: 14px; height: 9px; border-radius: 80% 10% 80% 10%; background: var(--peony); opacity: .75; }
+
+#b-names { width: 600px; height: 112px; }
+#b-names .names { position: absolute; left: 0; right: 0; top: 8px; text-align: center; font-size: 60px; line-height: 1.2; }
+
+.ico { width: 48px; height: 48px; border-radius: 50%; background: var(--blossom-soft); display: grid; place-items: center; background-clip: padding-box; }
+.ico svg { width: 22px; height: 22px; fill: none; stroke: var(--fuchsia); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+
+#b-mont { width: 600px; height: 150px; }
+#b-mont svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs>
+  <symbol id="sprig" viewBox="0 0 46 46"><path d="M4 42C5 24 15 10 38 4"/><path d="M9 33c5-2 9 0 10 4"/><path d="M9 33c1-5 5-8 9-8"/><path d="M15 22c5-3 9-1 11 2"/><path d="M15 22c1-5 6-7 10-7"/><path d="M24 13c4-2 8-1 10 1"/><circle class="dot" cx="39.5" cy="4" r="1.8"/></symbol>
+</defs></svg>
+
+<!-- A · visuel principal : ruban de satin scellé -->
+<div class="plate" id="a-hero">
+  <div class="glow"></div>
+  <svg class="sprig" style="left: 22px; top: 22px"><use href="#sprig"/></svg>
+  <svg class="sprig" style="right: 22px; bottom: 22px; transform: scale(-1)"><use href="#sprig"/></svg>
+  <img class="fl2" src="/assets/img/fleur-pivoine.svg" alt="">
+  <p class="over" style="margin:0">Invitation</p>
+  <p class="names script" style="margin:0">Clémentine <span class="amp">&amp;</span> Romain</p>
+  <div class="rib"></div>
+  <img class="fl1" src="/assets/img/bouquet.svg" alt="">
+  <img class="seal" src="/assets/img/cachet.svg" alt="">
+</div>
+
+<!-- A · filet ornemental -->
+<div class="plate" id="a-orn"><img src="/assets/img/ornement.svg" alt=""></div>
+
+<!-- A · signature -->
+<div class="plate" id="a-sign"><p class="names script" style="margin:0">Clémentine <span class="amp">&amp;</span> Romain</p></div>
+
+<!-- A · pied fleuri -->
+<div class="plate" id="a-foot">
+  <svg class="sprig" style="left: 22px; top: 22px; transform: scaleY(-1)"><use href="#sprig"/></svg>
+  <img class="fl2" src="/assets/img/fleur-rose.svg" alt="">
+  <img class="fl1" src="/assets/img/bouquet.svg" alt="">
+</div>
+
+<!-- B · monogramme -->
+<div class="plate" id="b-logo"><img src="/assets/img/logos/arche.svg" alt=""></div>
+
+<!-- B · photo en arche décorée -->
+<div class="plate" id="b-hero">
+  <div class="glow"></div>
+  <div class="line"></div>
+  <div class="arch"><img src="/assets/img/photos/couple-jardin-1446.webp" alt=""></div>
+  <img class="fl2" src="/assets/img/fleur-pivoine.svg" alt="">
+  <img class="fl1" src="/assets/img/bouquet.svg" alt="">
+  <div class="stamp">
+    <svg viewBox="0 0 120 120"><defs><path id="sc" d="M60 60m-47 0a47 47 0 1 1 94 0a47 47 0 1 1-94 0"/></defs><text><textPath href="#sc">Clémentine &amp; Romain · Save the date · </textPath></text></svg>
+    <div><strong>03</strong>07 · 27</div>
+  </div>
+  <span class="petal" style="left: 96px; top: 120px; transform: rotate(24deg)"></span>
+  <span class="petal" style="left: 490px; top: 250px; transform: rotate(-40deg); background: var(--peach)"></span>
+  <span class="petal" style="left: 470px; top: 40px; transform: rotate(70deg) scale(.8)"></span>
+  <span class="petal" style="left: 70px; top: 300px; transform: rotate(-12deg) scale(.7); background: var(--peach)"></span>
+  <span class="petal" style="left: 520px; top: 400px; transform: rotate(140deg) scale(.9)"></span>
+</div>
+
+<!-- B · prénoms -->
+<div class="plate" id="b-names"><p class="names script" style="margin:0">Clémentine <span class="amp">&amp;</span> Romain</p></div>
+
+<!-- B · pictogrammes -->
+<div class="plate" id="b-ico-date" style="width: 48px; height: 48px"><div class="ico"><svg><use href="/assets/img/icons.svg#i-calendar-heart"/></svg></div></div>
+<div class="plate" id="b-ico-lieu" style="width: 48px; height: 48px"><div class="ico"><svg><use href="/assets/img/icons.svg#i-castle"/></svg></div></div>
+<div class="plate" id="b-ico-rsvp" style="width: 48px; height: 48px"><div class="ico"><svg><use href="/assets/img/icons.svg#i-mail"/></svg></div></div>
+
+<!-- B · montagnes des Bauges -->
+<div class="plate" id="b-mont">
+  <svg viewBox="0 0 600 150" preserveAspectRatio="none">
+    <defs>
+      <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF9F2" stop-opacity="1"/><stop offset=".35" stop-color="#FFF9F2" stop-opacity="0"/></linearGradient>
+    </defs>
+    <path d="M0 150V92l38-18 30 10 44-40 30 22 26-14 48 36 36-24 30 16 52-48 40 30 30-10 44 30 34-18 36 20 44-30 38 26V150Z" fill="#E4ECE0"/>
+    <path d="M0 150v-40l52-20 40 18 46-30 40 26 36-12 50 30 44-34 52 30 40-16 46 24 40-22 38 18 56-26V150Z" fill="#C9D8C5"/>
+    <path d="M0 150v-26l60-14 48 12 54-22 52 20 46-8 58 18 50-22 56 18 44-10 48 14 38-8 46 8V150Z" fill="#A8BFA6"/>
+    <path d="M0 150v-30c60-10 120-12 180-5s120 9 190 2 150-12 230 0V150Z" fill="#6B7F5E"/>
+    <path d="M0 150v-16c70-7 140-9 210-3s130 7 200 1 120-8 190-2V150Z" fill="#4E5E43"/>
+    <rect width="600" height="150" fill="url(#fade)"/>
+  </svg>
+</div>
+</body>
+</html>

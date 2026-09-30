@@ -11,6 +11,7 @@
 8. Logo et page de choix
 9. Musique d'ambiance
 10. Navigation sans rechargement (musique continue)
+11. Faire-part par e-mail
 
 Chaque entrée indique **où** la trouver dans le kit (`assets/starter/`) et **ce qui compte** pour
 l'adapter. Les fonctions JS citées sont dans `assets/js/main.js`, sauf mention contraire.
@@ -265,3 +266,19 @@ Chaque page reste un vrai fichier HTML (adresse, référencement, accès direct,
   globaux, animations orphelines, un seul lecteur audio, `currentTime` qui continue) ; Précédent/Suivant ;
   ancre ; mobile + menu ; mouvement réduit ; 30 navigations d'affilée (mémoire stable).
 
+## 11. Faire-part par e-mail (`faire-part.html`, `assets/faire-part/`)
+
+- **Deux propositions** montrées au couple sur un canevas Claude Design (ordinateur + téléphone), puis
+  livrées en e-mails HTML « à l'ancienne » : tableaux, styles en ligne, largeur 600 px, `bgcolor`,
+  bouton en cellule colorée, textes en Georgia / Helvetica (Cormorant et Jost chargés seulement là où la
+  messagerie l'accepte). Tout ce qui est en écriture manuscrite (prénoms, signature) ou décoratif est une
+  **image** @2x hébergée sur le site (`assets/img/faire-part/`, adresses absolues, **ne jamais les
+  renommer** : des e-mails déjà envoyés y pointent), avec un texte de remplacement.
+- Visuels rendus depuis `tools/faire-part/visuels.html` (mêmes fleurs, cachet, ruban, photo en arche
+  que le site) par `node faire-part/rendre.mjs` ; images sur le fond papier exact de l'e-mail, fleurs
+  coupées seulement par le cadre, jamais au milieu de la carte.
+- **Page d'aide privée** `faire-part.html` (hors menu, `noindex`) : aperçu de chaque e-mail, bouton
+  « Copier le faire-part » (presse-papiers HTML + texte, chargé d'avance pour Safari, repli par sélection),
+  « Copier l'objet », mode d'emploi Hotmail/Outlook et Gmail (invités en Cci, test à soi-même, envois par
+  petits groupes). Le couple colle le faire-part dans un nouveau message : aucun service d'envoi.
+- Tests : rendu 680 et 390 px, copie puis collage dans un éditeur (images et liens absolus), axe.
