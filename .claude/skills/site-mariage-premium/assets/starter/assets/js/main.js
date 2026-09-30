@@ -244,12 +244,12 @@
         if (window.__lenis) window.__lenis.start();
         gateDone();
       };
-      // Ouverture (CSS) : le cachet se brise, le ruban glisse, une lumière et une gerbe de pétales naissent
-      // du cachet ; l'accueil commence à s'animer sous la lumière, qui se dissipe ensuite
+      // L'enveloppe scellée (CSS) : le cachet se brise, le ruban glisse, le rabat se soulève, l'enveloppe
+      // descend et libère la carte ; l'accueil commence à s'animer derrière pendant qu'elle s'efface
       if (motion) {
         gate.classList.add("is-opening");
-        setTimeout(gateDone, 1000);
-        setTimeout(end, 2700);
+        setTimeout(gateDone, 1500);
+        setTimeout(end, 2900);
       } else end();
     };
     if (gateOn) {

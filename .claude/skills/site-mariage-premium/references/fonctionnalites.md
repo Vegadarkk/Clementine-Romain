@@ -86,16 +86,16 @@ l'adapter. Les fonctions JS citées sont dans `assets/js/main.js`, sauf mention 
   **On entre toujours par l'accueil** : une première visite arrivée sur une autre page (lien « Répondre »
   d'un e-mail, adresse tapée) est renvoyée à l'accueil dès le `<head>` (page masquée le temps du renvoi,
   une seule fois par visite, jamais pour les robots ni si la mémoire de visite est indisponible).
-  Mise en scène « l'envolée de pétales » (tout en CSS, `gf-*`) : un faire-part d'un seul tenant
-  (`gateArt()` dans `build-pages.mjs` ; pas de rainure au milieu, qui ferait « livre »), ruban de satin
-  scellé par un cachet de cire réaliste (`assets/img/cachet.svg`, généré par `node build-logo.mjs --cachet`).
-  Entrée : cadre, fleurs, « Bienvenue », prénoms qui s'écrivent, ruban qui glisse, cachet qui se pose
-  (onde), bouton. Ouverture (classe `.is-opening`) : le cachet se brise en deux avec des éclats, le ruban
-  glisse, une lumière crème naît du cachet et couvre l'écran (elle masque le fondu entre les deux
-  « Clémentine & Romain »), une gerbe de pétales jaillit (`GATE_BURST`, tirage fixe au build, portée
-  `--spread`), puis la lumière se dissipe ; le héros démarre à 1 s sous la lumière (`gateDone`), l'écran
-  disparaît à 2,7 s. Variantes proposées au couple (branches et adresses d'aperçu) : volets qui pivotent,
-  enveloppe scellée à rabat en ogive. Le cachet est aussi cliquable (souris) ; clavier : le bouton. Hauteurs réglées par
+  Mise en scène « l'enveloppe scellée » (tout en CSS, `gf-*` et `ge-*`) : le dos d'une enveloppe plein
+  écran, grand rabat en ogive (polygone calculé en `calc(var(--rib-y) * f)`, donc toujours pointé sur le
+  cachet) qui porte les prénoms, ruban de satin et cachet de cire réaliste (`assets/img/cachet.svg`,
+  `node build-logo.mjs --cachet`) sur la pointe ; dedans, la carte d'invitation. Entrée : le rabat se
+  referme, prénoms qui s'écrivent, ruban, cachet qui se pose (onde), bouton. Ouverture (classe
+  `.is-opening`) : le cachet se brise, le ruban glisse, le rabat se soulève en 3D (doublure au-delà de
+  90°, puis passe derrière la carte), l'enveloppe descend et libère la carte, qui s'efface sur l'accueil ;
+  le héros démarre à 1,5 s (`gateDone`), l'écran disparaît à 2,9 s. Téléphones : date et lieu sur deux
+  lignes pour rester dans le rabat. Variantes proposées au couple (adresses d'aperçu) : volets qui
+  pivotent, envolée de pétales. Le cachet est aussi cliquable (souris) ; clavier : le bouton. Hauteurs réglées par
   variables (`--rib-y`, `--seal`) : texte ancré au-dessus du cachet, boutons en dessous, de 360×640 au
   paysage téléphone (844×390, accroche et note masquées sous 540 px de haut).
 - **Ruban défilant** (`fillMarquee()` / `marquee()`) : le groupe est dupliqué autant que nécessaire pour
