@@ -178,7 +178,8 @@ calligraphié qui se dessine, puis le statut. Les témoins qui entrent ensemble 
   2 enfants (âges : 4 ans, moins d'1 an) » ; l'objet reste court (sans les âges).
 - Précision sous une question : `<p class="form-note">` (icône + texte, relié au champ par
   `aria-describedby`), par ex. « À noter : nous ne proposons malheureusement pas de menu végétarien. ».
-  Consigne du lieu sous le plan du domaine : `<p class="domaine__notice">` (ex. chiens non admis).
+  Consigne du lieu sous le plan du domaine : `<p class="domaine__notice">` (ex. chiens non admis), rappelée
+  dans la carte du lieu de réception par une pastille `<p class="venue__rule">`.
   Plusieurs adresses de contact (témoins) : `<p class="emails">` + `mailto:a,b` + `data-copy="a, b"`
   (le message de copie passe au pluriel tout seul).
 - Validation douce : les erreurs s'effacent **à la saisie** et pas à la perte de focus (sinon le
