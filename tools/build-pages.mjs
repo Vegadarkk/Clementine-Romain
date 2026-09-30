@@ -23,15 +23,15 @@ function bustCache(html) {
     .replace(/assets\/img\/icons\.svg(?:\?v=[0-9a-f]+)?#/g, () => `assets/img/icons.svg?v=${fingerprint("assets/img/icons.svg")}#`);
 }
 
-const PAGES = ["index.html", "hebergements.html", "temoins.html", "environs.html", "rsvp.html", "404.html", "logos.html", "choix-faire-part.html", "faire-part.html"];
+const PAGES = ["index.html", "hebergements.html", "temoins.html", "environs.html", "rsvp.html", "404.html", "logos.html", "choix-faire-part.html", "faire-part.html", "choix-ouverture.html"];
 // Adresse publique du site (avec la barre finale). Pour changer d'hébergeur : modifier ici, puis `npm run pages`.
 const SITE_URL = "https://clementine-et-romain.pages.dev/";
 // Référencement : true = le site peut apparaître sur Google ; false = caché (noindex + robots.txt fermé).
 const INDEXABLE = true;
 // Anciennes adresses redirigées automatiquement vers SITE_URL (ex. l'adresse GitHub Pages après un déménagement).
 const OLD_SITES = ["https://vegadarkk.github.io/Clementine-Romain/"];
-// Pages jamais référencées (page d'erreur, pages réservées aux mariés : choix du logo, choix et envoi du faire-part).
-const PRIVATE_PAGES = ["404.html", "logos.html", "choix-faire-part.html", "faire-part.html"];
+// Pages jamais référencées (page d'erreur, pages réservées aux mariés : choix du logo, du faire-part et de l'écran d'accueil, envoi du faire-part).
+const PRIVATE_PAGES = ["404.html", "logos.html", "choix-faire-part.html", "faire-part.html", "choix-ouverture.html"];
 const pageUrl = (page) => SITE_URL + (page === "index.html" ? "" : page.replace(/\.html$/, ""));
 
 /* ----------------------------------------------------- Paysage de montagnes */

@@ -244,12 +244,12 @@
         if (window.__lenis) window.__lenis.start();
         gateDone();
       };
-      // Faire-part à volets (CSS) : le cachet se brise, les rubans glissent, puis les volets s'ouvrent ;
-      // l'accueil commence à s'animer derrière pendant qu'ils pivotent
+      // L'enveloppe scellée (CSS) : le cachet se brise, le ruban glisse, le rabat se soulève, l'enveloppe
+      // descend et libère la carte ; l'accueil commence à s'animer derrière pendant qu'elle s'efface
       if (motion) {
         gate.classList.add("is-opening");
-        setTimeout(gateDone, 1000);
-        setTimeout(end, 2700);
+        setTimeout(gateDone, 1500);
+        setTimeout(end, 2900);
       } else end();
     };
     if (gateOn) {
