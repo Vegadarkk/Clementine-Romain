@@ -82,6 +82,15 @@ l'adapter. Les fonctions JS citées sont dans `assets/js/main.js`, sauf mention 
   clic autorise la musique, qui continue ensuite de page en page (Chrome garde l'autorisation lors d'une
   navigation par lien). Ne se ferme **jamais** seul (demande du couple : l'invité clique pour entrer, même si le navigateur permettrait le son) ; la musique attend ce clic ; « Entrer sans musique » est mémorisé ;
   jamais pour les robots ; l'intro du monogramme et le héros attendent sa fermeture (`window.__crGate`).
+  Mise en scène « faire-part à volets » (tout en CSS, `gf-*`) : deux volets de papier portant chacun le
+  même décor (`gateArt()` dans `build-pages.mjs`, le second masqué aux lecteurs d'écran), ruban de satin
+  scellé par un cachet de cire réaliste (`assets/img/cachet.svg`, généré par `node build-logo.mjs --cachet`).
+  Entrée : cadre, fleurs, « Bienvenue », prénoms qui s'écrivent, ruban qui glisse, cachet qui se pose
+  (onde), bouton. Ouverture (classe `.is-opening`) : le cachet se brise en deux avec des éclats, les rubans
+  glissent, les volets pivotent en 3D (`rotateY ±104°`) ; le héros démarre à 1 s (`gateDone`), l'écran
+  disparaît à 2,7 s. Le cachet est aussi cliquable (souris) ; clavier : le bouton. Hauteurs réglées par
+  variables (`--rib-y`, `--seal`) : texte ancré au-dessus du cachet, boutons en dessous, de 360×640 au
+  paysage téléphone (844×390, accroche et note masquées sous 540 px de haut).
 - **Ruban défilant** (`fillMarquee()` / `marquee()`) : le groupe est dupliqué autant que nécessaire pour
   couvrir l'écran, et le décalage vaut exactement la largeur d'un groupe (`--marquee-shift`). Il
   accélère et s'incline selon la vitesse de défilement.
