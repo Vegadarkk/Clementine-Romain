@@ -893,6 +893,7 @@ html.lightbox-lock, html.lightbox-lock body { overflow: hidden; }
 /* Précision sous une question (ex. pas de menu végétarien) */
 .form-note { display: flex; align-items: flex-start; gap: .6rem; margin: -.3rem 0 .9rem 2.6rem; padding: .7rem 1rem; border-radius: 14px; background: var(--blossom-soft); border: 1px dashed rgba(194, 24, 91, .3); color: var(--fuchsia-deep); font-size: .92rem; line-height: 1.45; }
 .form-note .icon { flex: none; width: 1.15rem; height: 1.15rem; margin-top: .1rem; }
+.form-note--kids { margin: .2rem 0 .9rem; }
 .guest__remove { display: grid; place-items: center; width: 44px; height: 44px; border: 0; border-radius: 50%; background: transparent; color: var(--ink-soft); cursor: pointer; transition: background-color .25s, color .25s; }
 .guest__remove:hover { background: var(--blossom-soft); color: var(--fuchsia); }
 .guest__remove[hidden] { display: none; }
@@ -1359,6 +1360,8 @@ html:not(.motion) .reveal-photo__deco { display: none; }
 .moment h3 { font-size: clamp(1.55rem, 3vw, 1.9rem); margin: .3rem 0 .25rem; }
 .moment__place { display: inline-flex; align-items: center; gap: .4rem; margin: 0 0 .5rem; font: 500 .72rem/1.4 var(--f-body); letter-spacing: .16em; text-transform: uppercase; color: var(--moss-deep); }
 .moment__place .icon { width: 1em; height: 1em; }
+.moment__note { display: flex; align-items: flex-start; gap: .5rem; margin-top: .7rem; padding: .55rem .8rem; border-radius: 12px; background: var(--blossom-soft); border: 1px dashed rgba(194, 24, 91, .3); color: var(--fuchsia-deep); font-size: .85rem; line-height: 1.45; }
+.moment__note .icon { flex: none; width: 1rem; height: 1rem; margin-top: .12rem; }
 .moment > p:last-child { color: var(--ink-soft); margin: 0; }
 .moment:not(.moment--travel) { padding: 1.3rem 1.3rem 1.4rem; margin-left: 0; border-radius: var(--radius-lg); background: rgba(255, 249, 242, .92); border: 1px solid rgba(255, 255, 255, .7); box-shadow: var(--shadow-card); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
 .moment--travel { align-items: center; padding: .2rem 0; }
