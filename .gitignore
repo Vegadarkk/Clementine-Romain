@@ -1,1 +1,5 @@
 dist/
+
+# Clés locales (skill llm-council) : jamais dans le dépôt
+.env
+*.env
